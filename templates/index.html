@@ -13,18 +13,25 @@ Home Page
 
 <div class="container">
     <div class="row">
+    {% for com in comments%}
 <div class="col s12 m4">
   <div class="card small horizontal">   
       <div class="card-stacked">
         <div class="card-content">
-          <p>I am a very simple card. I am good at containing small bits of information.</p>
+        <div class="card-image">
+          <img src="{{com.photo}}">
+        </div>
+        <span class="card-title">{{com.author}}</span>
+          <p>{{com.body}}</p>
         </div>
         <div class="card-action">
-          <a href="#">This is a link</a>
+          <a href="#">{{com.track}}</a>
+          <footer> {{com.date_comment}}</footer>
         </div>
       </div>
   </div>
-</div>  
+</div> 
+    {% endfor %}
     </div>
 </div>
 
