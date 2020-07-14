@@ -1,3 +1,27 @@
 nav{
     background-color: #1d3030;
 }
+
+span.stars span {
+    display: block;
+    background: url("../image/star-yellow.png") 0 0 repeat-x;
+    width: 120px;
+    height: 2rem;
+    float: left;
+}
+
+span.stars {
+    display: block;
+    background: url("../image/star-grey.png") 0 0px repeat-x;
+    width: 120px;
+    height: 2rem;
+    float: right;
+}
+
+span.stars span {
+    background-position: 0 0;
+}
+
+.trail-details-container{
+    border: 1px solid #757575 ;
+}

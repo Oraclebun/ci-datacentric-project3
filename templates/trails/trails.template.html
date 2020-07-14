@@ -39,14 +39,26 @@
     <div class="container">
         {% for com in trail.comments %}
       <div class="card-panel row">
-      <div class="col card-content">
+      <div class="col s10 m8 card-content">
+      <div class="col s4 m2">
       <img src="{{com.author.profile_pic}}" alt="" class="circle responsive-img">
-      <div class="col m4">{{com.author.fname}},{{com.author.lname}}</div>
+      </div>
+      <div class="row card-title valign-wrapper left-align">
+      <div class="col m4 card-title"><h6>{{com.author.fname}}&nbsp;&nbsp;{{com.author.lname}}</h6></div>
       <div class="col m4">{{com.date_comment}}</div>
-      <span>{{com.ratings}}</span>
+      <span class="stars">{{com.ratings}}</span>
+      </div>
+      <div class="row">
+          {% for keywords in com.sightings %}
+          <div class="chip">
+            {{keywords}}
+          </div>
+          {% endfor %}
+        </div>
         <div class="row">
           <p>{{com.body}}</p>
         </div>
+        <hr/>
         <div class="card-action">
           <span>Hiked on: {{com.date_started}}</span>
           <span>Time taken: {{com.hours_taken}} hour(s),{{com.minutes_taken}} minute(s)</span>
