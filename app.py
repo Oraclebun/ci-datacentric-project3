@@ -8,8 +8,9 @@ app = Flask(__name__)
 def index():
     all_trails = Trails.objects.values().all()
     all_trail_loc = Trails.objects.only('location')
-    print(all_trails)
-    return "Test display"
+    for t in all_trails:
+        print(t)
+    return render_template('index.html')
 
 # "magic code" -- boilerplate
 if __name__ == '__main__':
