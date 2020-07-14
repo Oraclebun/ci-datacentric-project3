@@ -1,0 +1,61 @@
+{% extends "base.template.html" %}
+
+{% block content %}
+ <div class="container section">
+      <div class="row">
+        
+        <h3 class="trail-title">{{trail.trail_name}}</h3>
+        
+          <div class="col s12 m7">
+            <img class="materialboxed responsive-img" width="600" src="{{ url_for('static', filename='image/')}}"/>
+          </div>
+          <div class="col s12 m5 box-map">
+              {{trail.embed_route}}
+          </div>
+      </div>
+
+      <div class="divider"></div>
+      <div class="row trail-details-container">
+        <div class="col s12 m6">
+         <p> {{trail.description}}</p>
+        </div>
+        <div class="col s6 m2">
+          <span class="details-title">Distance:</span>
+         <p class="trail-details">{{trail.distance}} km</p>
+         <span class="details-title">Route Type:</span>
+         <p class="trail-details">{{trail.route_type}}</p>
+        </div>
+        <div class="col s6 m2">
+          <span class="details-title">Elevation:</span>
+          <p class="trail-details">{{trail.elevation}} m</p>
+          <span class="details-title">Difficulty Level:</span>
+          <p class="trail-details">{{trail.difficulty}}</p>
+        </div>
+      </div>
+      
+    </div>  
+
+<div class="section">
+    <div class="container">
+        {% for com in trail.comments %}
+      <div class="card-panel row">
+      <div class="col card-content">
+      <img src="{{com.author.profile_pic}}" alt="" class="circle responsive-img">
+      <div class="col m4">{{com.author.fname}},{{com.author.lname}}</div>
+      <div class="col m4">{{com.date_comment}}</div>
+      <span>{{com.ratings}}</span>
+        <div class="row">
+          <p>{{com.body}}</p>
+        </div>
+        <div class="card-action">
+          <span>Hiked on: {{com.date_started}}</span>
+          <span>Time taken: {{com.hours_taken}} hour(s),{{com.minutes_taken}} minute(s)</span>
+        </div>
+      </div>
+        </div>
+        {% endfor %}
+
+    </div>
+</div>
+
+{% endblock %}

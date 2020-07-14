@@ -2,6 +2,7 @@ from flask import Flask, render_template, request, redirect, url_for
 from models import Hiker, Trails, Location, Comment
 import os
 import pymongo
+from bson.objectid import ObjectId
 
 app = Flask(__name__)
 
@@ -21,7 +22,7 @@ def index():
             'author': all_comm[i:(i+1)][0].comments[0].author.fname+' '+all_comm[i:(i+1)][0].comments[0].author.lname,
             'photo' : all_comm[i:(i+1)][0].comments[0].author.profile_pic,
             'body':all_comm[i:(i+1)][0].comments[0].body,
-            'date':all_comm[i:(i+1)][0].comments[0].date_comment,
+            'date':all_comm[i:(i+1)][0].comments[0].date_comment.strftime("%d-%b-%Y"),
             'track':Trails.objects.get({'_id':all_comm[i:i+1][0]._id}),
             'country':Trails.objects.get({'_id':all_comm[i:i+1][0]._id}).location.country
         }
@@ -36,6 +37,15 @@ def index():
         }
         trails_loc.append(locations)
     return render_template('index.html', location = trails_loc, comments=reviews)
+
+
+@app.route('/trails/<trail_id>')
+def get_trail(trail_id):
+    trail = Trails.objects.get({'_id': ObjectId(trail_id)})
+    #for c in trail:
+    #    print(c)
+
+    return render_template('trails/trails.template.html', trail=trail)
 
 # "magic code" -- boilerplate
 if __name__ == '__main__':
