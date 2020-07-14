@@ -12,8 +12,8 @@ def index():
     all_trails = Trails.objects.values().all()
     all_trail_loc = Trails.objects.only('location')
     trails_loc = []
-    for t in comments:
-        print(t)
+    #for t in comments:
+    #    print(t)
     for loc in all_trail_loc:
         locations = {
             'trail_id': loc._id,
@@ -23,8 +23,7 @@ def index():
             'town': loc.location.province[0].town.town
         }
         trails_loc.append(locations)
-    print(trails_loc)
-    return render_template('index.html')
+    return render_template('index.html', location = trails_loc)
 
 # "magic code" -- boilerplate
 if __name__ == '__main__':
