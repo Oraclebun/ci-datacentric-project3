@@ -1,2 +1,9 @@
 .env
 __pycache__
+*.pyc
+# Unit test / coverage reports
+.tox/
+.coverage
+.cache
+nosetests.xml
+coverage.xml

@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, redirect, url_for
+from flask import Flask, render_template, request, redirect, url_for, flash
 from models import Hiker, Trails, Location, Comment
 import os
 import pymongo
@@ -31,23 +31,20 @@ login_manager = flask_login.LoginManager()
 login_manager.init_app(app)
 
 # get the user object from flask-login mixin
-
-
 class User(flask_login.UserMixin):
     pass
 
 # user loader for the Flask-Login login manager
 
-
 @login_manager.user_loader
-def user_loader(username):
+def user_loader(id):
     try:
         # find the user from the database by its username
-        user_in_db = Hiker.objects.get({"username": username})
+        user_in_db = Hiker.objects.get({"_id": ObjectId(id)})
         print(user_in_db)
         user = User()
         # set the id of the user object to be the user's email
-        user.id = user_in_db['username']
+        user.id = user_in_db._id
         return user
     except Hiker.DoesNotExist:
         return None
@@ -122,16 +119,32 @@ def login():
             db_user = Hiker.objects.get({"username": form.username.data})
             if db_user:
                 user = User()
-                print(db_user.email)
-                print(form.email.data)
-                user.id = db_user.email
-                if (user.id == form.email.data):
+                user.id = db_user._id
+                if (db_user.email == form.email.data):
                     flask_login.login_user(user)
-                    return 'Login Success'
+                    flash(f" You logged in successfully as {db_user.username}")
+                    return redirect(url_for('index'))
+                else:
+                    flash(f" Wrong e-mail address")
+                    return render_template('trails/403_error.html', error = "Forbidden")
         except Hiker.DoesNotExist:
-            return 'Login Failed'
+            return 'Login Failed, Please register'
     return render_template('trails/login.template.html', form=form)
 
+@app.route('/logout')
+def logout():
+    flask_login.logout_user()
+    return "logged out"
+
+""" 
+Route to show user profiles.
+"""
+@app.route('/profile')
+@flask_login.login_required
+def show_profile():
+    user = flask_login.current_user
+    profile = Hiker.objects.get({'_id': user.id})
+    return render_template('trails/profile.template.html', profile=profile)
 
 """
 Route to create profile. 
@@ -139,8 +152,6 @@ Route to create profile.
 2. If form validated, save profile information into Database
 3. Show homepage if form is validated
 """
-
-
 @app.route('/create_profile', methods=['GET', 'POST'])
 def create_profile():
     form = CreateProfile()
@@ -156,6 +167,28 @@ def create_profile():
         return redirect(url_for('index'))
     return render_template('trails/create_profile.template.html', form=form, cloud_name=CLOUD_NAME, upload_preset=UPLOAD_PRESET, api_key=API_KEY)
 
+"""
+Route to edit profile
+"""
+@flask_login.login_required
+@app.route('/profiles/edit/<hiker_id>', methods=['GET', 'POST'])
+def edit_profile(hiker_id):
+    profile_to_edit = Hiker.objects.get({'_id': ObjectId(hiker_id)})
+    form = CreateProfile(obj=profile_to_edit)
+    if form.validate_on_submit():
+        try:
+            Hiker.objects.raw({"_id": ObjectId(hiker_id)}).update({"$set": {"fname": form.fname.data,
+                                                                            "lname": form.lname.data,
+                                                                            "origin": form.origin.data,
+                                                                            "email": form.email.data,
+                                                                            "trails_completed": form.trails_completed.data,
+                                                                            "profile_pic":form.profile_pic.data
+                                                                            }}, upsert=False)
+        except ValidationError as ve:
+            errors = ve.message
+        return redirect(url_for('index'))
+    return render_template('trails/edit_profile.template.html', form=form, profileId=profile_to_edit._id, cloud_name=CLOUD_NAME,
+                           upload_preset=UPLOAD_PRESET, api_key=API_KEY)
 
 # "magic code" -- boilerplate
 if __name__ == '__main__':

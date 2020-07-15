@@ -8,6 +8,13 @@ nav{
     background-color: #1d3030;
 }
 
+.error-background{
+    background: url("../image/403status.jpg") no-repeat;
+    background-position: center;
+    height: 100vh;
+    text-align: center;
+}
+
 span.stars span {
     display: block;
     background: url("../image/star-yellow.png") 0 0 repeat-x;

@@ -7,6 +7,7 @@ $(document).ready(function(){
     $('.sidenav').sidenav();
     //initialize tooltip
     $('.tooltipped').tooltip();
+    $('.modal').modal();
 
     $.fn.stars = function () {
         return $(this).each(function () {

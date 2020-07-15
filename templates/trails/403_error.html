@@ -1,0 +1,20 @@
+{% extends "base.template.html" %}
+
+{% block title %}
+403 Forbidden
+{% endblock %}
+
+{% block content %}
+<div> 
+<h1>{{error}}</h1>
+{% with messages = get_flashed_messages() %}
+{% if messages %}
+<div class="flashes">
+	{% for message in messages %}
+	<span>{{ message }}</span>
+	{% endfor %}
+</div>
+{% endif %}
+{% endwith %}
+</div>
+{% endblock %}

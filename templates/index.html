@@ -5,11 +5,22 @@ Home Page
 {% endblock %}
 
 {%block content%}
+
 <div class="parallax-container">
 	<div class="parallax">
 		<img src="{{url_for('static', filename='image/parallax.jpg')}}">
     </div>
 </div>
+
+{% with messages = get_flashed_messages() %}
+{% if messages %}
+<div class="flashes">
+	{% for message in messages %}
+	<span>{{ message }}</span>
+	{% endfor %}
+</div>
+{% endif %}
+{% endwith %}
 
 <div class="container">
     <h3>Most Recent Comments</h3>
