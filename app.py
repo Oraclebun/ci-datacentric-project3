@@ -24,6 +24,25 @@ UPLOAD_PRESET = os.environ.get("UPLOAD_PRESET")
 API_SECRET = os.environ.get("API_SECRET")
 API_KEY = os.environ.get("API_KEY")
 
+def compute_hex_hash(s):
+    """
+    Compute hash and convert the result to HEX string
+    :param s: string to process
+    :return: HEX string
+    """
+    return hashlib.sha1(str(s).encode('utf-8')).hexdigest()
+
+def api_sign_request(params_to_sign, api_secret):
+    params = [(k + "=" + (",".join(v) if isinstance(v, list) else str(v))) for k, v in params_to_sign.items() if v]
+    to_sign = "&".join(sorted(params))
+    return compute_hex_hash(to_sign + api_secret)
+
+
+@app.route('/generateKey')
+def signUploadRequest():
+    params_to_sign = request.args.to_dict()
+    signature = api_sign_request(params_to_sign, API_SECRET)
+    return {"signature": signature}
 
 @app.route('/')
 def index():
@@ -76,6 +95,7 @@ def create_profile():
             pass
         Hiker(fname=form.fname.data,
               lname=form.lname.data,
+              username = form.username.data,
               origin=form.origin.data,
               email=form.email.data,
               trails_completed=form.trails_completed.data,

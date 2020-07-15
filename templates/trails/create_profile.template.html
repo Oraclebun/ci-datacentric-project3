@@ -21,7 +21,7 @@
 
         <div class="row">
         <div class="input-field col s12 m6">
-            {{form.username}}
+            {{form.username(size=20)}}
             {{form.username.label}}
           </div>
           <div class="input-field col s12 m6">
@@ -126,6 +126,16 @@ var generateSignature = function(callback, params_to_sign){
       myWidget.open();
     }, false);
 
+
+
+$('form').on('submit', function(event) {
+    let fileUploaded = $('.file-path').text();
+    if (fileUploaded == '' || fileUploaded == null){
+        var toastHTML = '<span>Profile Picture cannot be empty!</span>';
+        M.toast({html: toastHTML, classes: 'rounded'});
+        event.preventDefault();
+    }
+});
 </script>
 
 
