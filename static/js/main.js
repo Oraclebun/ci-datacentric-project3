@@ -3,6 +3,10 @@ $(document).ready(function(){
     $('.parallax').parallax();
     //initialize collapsible (accordion)
     $('.collapsible').collapsible();
+    //initialize sidenav 
+    $('.sidenav').sidenav();
+    //initialize tooltip
+    $('.tooltipped').tooltip();
 
     $.fn.stars = function () {
         return $(this).each(function () {

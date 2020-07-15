@@ -15,8 +15,6 @@ def index():
     all_trail_loc = Trails.objects.only('location')
     trails_loc = []
     reviews=[]
-    #for t in all_comm:
-    #    print(t.comments[0].author, t.comments[0].body)
     for i in range(3):
         comments={
             'author': all_comm[i:(i+1)][0].comments[0].author.fname+' '+all_comm[i:(i+1)][0].comments[0].author.lname,
@@ -38,13 +36,29 @@ def index():
         trails_loc.append(locations)
     return render_template('index.html', location = trails_loc, comments=reviews)
 
+"""
+Route to create profile. 
+1. If method = GET, create form from CreateProfile class in form.py
+2. If form validated, save profile information into Database
+3. Show homepage if form is validated
+"""
+@app.route('/create_profile', methods=['GET', 'POST'])
+def create_profile():
+    form = CreateProfile()
+    if form.validate_on_submit():
+        Hiker(fname=form.fname.data,
+              lname=form.lname.data,
+              origin=form.origin.data,
+              email=form.email.data,
+              trails_completed=form.trails_completed.data,
+              profile_pic=form.profile_pic.data
+              ).save()
+        return redirect(url_for('index'))
+    return render_template('trails/create_profile.template.html', form=form)
 
 @app.route('/trails/<trail_id>')
 def get_trail(trail_id):
     trail = Trails.objects.get({'_id': ObjectId(trail_id)})
-    #for c in trail:
-    #    print(c)
-
     return render_template('trails/trails.template.html', trail=trail)
 
 # "magic code" -- boilerplate
