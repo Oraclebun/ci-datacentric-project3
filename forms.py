@@ -11,7 +11,7 @@ class CreateProfile(FlaskForm):
     origin = StringField('Origin', validators=[InputRequired()])
     email = EmailField('E-mail', validators=[InputRequired()])      
     trails_completed = IntegerField('Trails Completed')
-    profile_pic = HiddenField("Profile Picture")
+    profile_pic = HiddenField("Profile Picture", validators=[Optional()])
     submit = SubmitField('Submit')
 
 class SightingsForm(FlaskForm):

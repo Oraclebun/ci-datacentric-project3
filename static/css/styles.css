@@ -1,3 +1,9 @@
+.btn.cloudinary-button{
+    background-color:#2f4f4f;
+    color: #fff8e1;
+    text-align: center;
+}
+
 nav{
     background-color: #1d3030;
 }

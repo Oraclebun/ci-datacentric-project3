@@ -28,8 +28,7 @@ class Hiker(MongoModel):
     origin = fields.CharField(max_length=30)
     email = fields.EmailField()
     trails_completed = fields.IntegerField(min_value=0)
-    profile_pic = fields.URLField(
-        default="https://res.cloudinary.com/c7oud0311/image/upload/v1594654152/project3/profile2_vcog5c.jpg")
+    profile_pic = fields.URLField(required = True)
 
     def __str__(self):
         return f'{self.fname}({self.lname})'

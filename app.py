@@ -2,6 +2,7 @@ from flask import Flask, render_template, request, redirect, url_for
 from models import Hiker, Trails, Location, Comment
 import os
 import pymongo
+import hashlib
 from dotenv import load_dotenv
 from bson.objectid import ObjectId
 from forms import CreateProfile
@@ -11,12 +12,18 @@ load_dotenv()
 
 MONGODB_URI = os.environ.get('MONGO_URI')
 SECRET_KEY = os.environ.get("SECRET_KEY")
+
 # Connect to MongoDB first. PyMODM supports all URI options supported by
 # PyMongo. Specify a database in the connection string:
 connect(MONGODB_URI)
 
 app = Flask(__name__)
 app.secret_key = SECRET_KEY
+CLOUD_NAME = os.environ.get("CLOUD_NAME")
+UPLOAD_PRESET = os.environ.get("UPLOAD_PRESET")
+API_SECRET = os.environ.get("API_SECRET")
+API_KEY = os.environ.get("API_KEY")
+
 
 @app.route('/')
 def index():
@@ -64,6 +71,9 @@ Route to create profile.
 def create_profile():
     form = CreateProfile()
     if form.validate_on_submit():
+        print(os.path)
+        if form.profile_pic.data == "":
+            pass
         Hiker(fname=form.fname.data,
               lname=form.lname.data,
               origin=form.origin.data,
@@ -72,7 +82,7 @@ def create_profile():
               profile_pic=form.profile_pic.data
               ).save()
         return redirect(url_for('index'))
-    return render_template('trails/create_profile.template.html', form=form)
+    return render_template('trails/create_profile.template.html', form=form, cloud_name = CLOUD_NAME, upload_preset = UPLOAD_PRESET, api_key = API_KEY)
 
 # "magic code" -- boilerplate
 if __name__ == '__main__':
