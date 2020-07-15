@@ -27,7 +27,7 @@ class Hiker(MongoModel):
     username = fields.CharField(min_length=5, max_length=20)
     origin = fields.CharField(max_length=30)
     email = fields.EmailField()
-    trails_completed = fields.IntegerField(min_value=0)
+    trails_completed = fields.IntegerField(min_value=0, default=0)
     profile_pic = fields.URLField(required = True)
 
     def __str__(self):
