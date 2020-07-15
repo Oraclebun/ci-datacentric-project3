@@ -2,9 +2,21 @@ from flask import Flask, render_template, request, redirect, url_for
 from models import Hiker, Trails, Location, Comment
 import os
 import pymongo
+from dotenv import load_dotenv
 from bson.objectid import ObjectId
+from forms import CreateProfile
+from pymodm import connect
+
+load_dotenv()
+
+MONGODB_URI = os.environ.get('MONGO_URI')
+SECRET_KEY = os.environ.get("SECRET_KEY")
+# Connect to MongoDB first. PyMODM supports all URI options supported by
+# PyMongo. Specify a database in the connection string:
+connect(MONGODB_URI)
 
 app = Flask(__name__)
+app.secret_key = SECRET_KEY
 
 @app.route('/')
 def index():
@@ -36,6 +48,12 @@ def index():
         trails_loc.append(locations)
     return render_template('index.html', location = trails_loc, comments=reviews)
 
+
+@app.route('/trails/<trail_id>')
+def get_trail(trail_id):
+    trail = Trails.objects.get({'_id': ObjectId(trail_id)})
+    return render_template('trails/trails.template.html', trail=trail)
+
 """
 Route to create profile. 
 1. If method = GET, create form from CreateProfile class in form.py
@@ -55,11 +73,6 @@ def create_profile():
               ).save()
         return redirect(url_for('index'))
     return render_template('trails/create_profile.template.html', form=form)
-
-@app.route('/trails/<trail_id>')
-def get_trail(trail_id):
-    trail = Trails.objects.get({'_id': ObjectId(trail_id)})
-    return render_template('trails/trails.template.html', trail=trail)
 
 # "magic code" -- boilerplate
 if __name__ == '__main__':
