@@ -23,7 +23,7 @@ class Hiker(MongoModel):
     to the no. of trails completed by hiker currently.
     """
     fname = fields.CharField(min_length=2, max_length=30)
-    lname = fields.CharField(max_length=20)
+    lname = fields.CharField(min_length=2, max_length=20)
     username = fields.CharField(min_length=5, max_length=20)
     origin = fields.CharField(max_length=30)
     email = fields.EmailField()

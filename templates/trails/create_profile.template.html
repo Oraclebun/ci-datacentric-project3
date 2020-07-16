@@ -63,6 +63,16 @@
         <a class="waves-effect waves-light btn blue-grey lighten-1 cloudinary-fileupload" id="profile-submit" data-cloudinary-field="image_id">{{form.submit()}}</a>
       </form>
     </div>
+
+	{% with messages = get_flashed_messages() %}
+	{% if messages %}
+	<div class="deep-orange lighten-4">
+		{% for message in messages %}
+		<p>{{ message }}</p>
+		{% endfor %}
+	</div>
+	{% endif %}
+	{% endwith %}
  
 </div>
 
@@ -105,7 +115,7 @@ var generateSignature = function(callback, params_to_sign){
         //get the url of the uploaded profile picture
         let pictureURL = document.querySelector("#uploaded_file_url");
             pictureURL.value = result.info.url;
-  
+
         //get the container for showing file name
         let picNameDisplay = document.querySelector(".file-path-wrapper");
         // show it
@@ -118,6 +128,7 @@ var generateSignature = function(callback, params_to_sign){
         $('.btn.cloudinary-button').hide();
         var toastHTML = '<span>Picture Upload Successful!</span>';
         M.toast({html: toastHTML, classes: 'rounded'});
+
       }
     }
   )
@@ -125,21 +136,28 @@ var generateSignature = function(callback, params_to_sign){
   document.getElementById("upload_widget").addEventListener("click", function(){
       myWidget.open();
     }, false);
+        
+$('#profile-submit').on('click', function(event){
+        let urlTag = $("#uploaded_file_url").val(); 
+        let picNameDisplayInput = $(".file-path");
+        picNameDisplayInput.html(urlTag);
+        if(urlTag){
+            $('.btn.cloudinary-button').hide();
+        }
+    });
 
-
-/*
 $('form').on('submit', function(event) {
-    let fileUploaded = $('.file-path').text();
-    if (fileUploaded == '' || fileUploaded == null){
-        var toastHTML = '<span>Profile Picture cannot be empty!</span>';
-        M.toast({html: toastHTML, classes: 'rounded'});
-        event.preventDefault();
-    } else {
-    var noticeHTML = '<span>Profile Created Successfully!</span>';
-    M.toast({html: noticeHTML, classes: 'rounded'});
-    }
-});
-*/
+    let urlTag = $("#uploaded_file_url").val();
+        if (urlTag == '' || urlTag == null){
+            var toastHTML = '<span>Profile Picture is empty!</span>';
+            M.toast({html: toastHTML, classes: 'rounded'});
+            event.preventDefault();
+        } 
+        if(urlTag){
+            $('.btn.cloudinary-button').hide();
+        }
+        }); //jquery end form submit
+
 </script>
 
 

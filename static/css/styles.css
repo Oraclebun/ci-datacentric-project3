@@ -4,15 +4,15 @@
     text-align: center;
 }
 
-nav{
-    background-color: #1d3030;
-}
-
 .error-background{
     background: url("../image/403status.jpg") no-repeat;
     background-position: center;
     height: 100vh;
     text-align: center;
+}
+
+nav{
+    background-color: #1d3030;
 }
 
 span.stars span {

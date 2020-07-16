@@ -5,30 +5,34 @@ from wtforms.fields.html5 import EmailField, IntegerField
 from bson.objectid import ObjectId
 from models import Hiker
 
+
 class CreateProfile(FlaskForm):
-    username = StringField('Username',validators=[InputRequired()])
-    db_user = HiddenField('Username')
-    fname = StringField('First Name', validators=[InputRequired()])
-    lname = StringField('Last Name', validators=[InputRequired()])
+    username = StringField('Username',validators=[InputRequired(), Length(min=5, max=20, message="Username have to be 5-20 Chars")])
+    fname = StringField('First Name', validators=[InputRequired(), Length(min=2, max=20, message="First Name have to be 2-30 Chars")])
+    lname = StringField('Last Name', validators=[InputRequired(), Length(min=2, max=20, message="Last Name have to be 2-20 Chars")])
     origin = StringField('Origin', validators=[InputRequired()])
-    email = EmailField('E-mail', validators=[InputRequired()])      
+    email = EmailField('E-mail', validators=[InputRequired()])     
     trails_completed = IntegerField('Trails Completed')
-    profile_pic = HiddenField("Profile Picture", validators=[InputRequired()])
+    profile_pic = HiddenField("Profile Picture", validators=[InputRequired(message="Profile Picture is required.")])
     submit = SubmitField('Submit')
+
     def validate_username(self, username):
         try:
+            message = 'User already exists. Please choose another username.'
             db_user = Hiker.objects.get({"username": username.data})
             if db_user:
-                raise ValidationError("The username already exists.")
-                return db_user
+                raise ValidationError(message)    
         except Hiker.DoesNotExist:
-            return "Pass"
+            pass
         
 
 class SightingsForm(FlaskForm):
     tag = StringField('e.g. Birds', validators=[Optional()])
+
+
     class Meta:
         csrf = False
+
 
 class CommentsForm(FlaskForm):
     profile = SelectField('Profile', validators=[InputRequired()], coerce=ObjectId)
@@ -40,7 +44,8 @@ class CommentsForm(FlaskForm):
     minutes_taken = IntegerField('Minutes Taken')
     submit = SubmitField('Submit')
 
+
 class LoginForm(FlaskForm):
-    username = StringField('Username',validators=[InputRequired()])
+    username = StringField('Username',validators=[InputRequired(), Length(min=5, max=20, message="Username have to be 5-20 Chars")]])
     email = EmailField('E-mail', validators=[InputRequired()]) 
     submit = SubmitField('Submit')

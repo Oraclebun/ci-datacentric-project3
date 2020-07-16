@@ -8,6 +8,7 @@ from dotenv import load_dotenv
 from bson.objectid import ObjectId
 from forms import CreateProfile, LoginForm
 from pymodm import connect
+from wtforms.validators import ValidationError
 
 load_dotenv()
 
@@ -157,19 +158,20 @@ Route to create profile.
 @app.route('/create_profile', methods=['GET', 'POST'])
 def create_profile():
     form = CreateProfile()
-    print(form.username.data)
-    print(form.db_user.data)
-    print(form.validate_username.__str__)
     if form.validate_on_submit():
         Hiker(fname=form.fname.data,
               lname=form.lname.data,
               username=form.username.data,
               origin=form.origin.data,
               email=form.email.data,
-              trails_completed=form.trails_completed.data
-              #profile_pic=form.profile_pic.data
+              trails_completed=form.trails_completed.data,
+              profile_pic=form.profile_pic.data
               ).save()
         return redirect(url_for('index'))
+    else:
+        if form.errors:
+            message = [v for k, v in form.errors.items()]
+            flash(message)
     return render_template('trails/create_profile.template.html', form=form, cloud_name=CLOUD_NAME, upload_preset=UPLOAD_PRESET, api_key=API_KEY)
 
 
