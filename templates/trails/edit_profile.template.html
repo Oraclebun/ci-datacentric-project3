@@ -2,10 +2,9 @@
 
 {% block content %}
 <div class="container">
-  <h4>Update Profile</h4>
+  <h4>Update Profile For: {{profile.username}}</h4>
     
   <div class="row">
-    {{hiker_id}}
       <form class="col s12" action = "{{url_for('edit_profile', hiker_id=profileId)}}" method="POST">
         <div class="row">
           {{form.csrf_token}}
@@ -46,7 +45,7 @@
               <div class="file-path-wrapper">
                 <p class="file-path"></p>
               </div>
-              <div class="btn" id="upload_widget" class="cloudinary-button">
+              <div class="btn cloudinary-button" id="upload_widget">
                 <span>Upload File</span>
                 {{form.profile_pic (id="uploaded_file_url") }}
               </div>
@@ -62,6 +61,16 @@
       </form>
     </div>
  
+{% with messages = get_flashed_messages() %}
+{% if messages %}
+<div class="deep-orange lighten-4">
+	{% for message in messages %}
+	<p>{{ message }}</p>
+	{% endfor %}
+</div>
+{% endif %}
+{% endwith %}
+
 </div>
 
 {% endblock %}
@@ -124,11 +133,16 @@ var generateSignature = function(callback, params_to_sign){
       myWidget.open();
     }, false);
 
-
+$('#profile-submit').on('click', function(event){
+        let urlTag = $("#uploaded_file_url").val(); 
+        let picNameDisplayInput = $(".file-path");
+        picNameDisplayInput.html(urlTag);
+        if(urlTag){
+            $('.btn.cloudinary-button').hide();
+        }
+    });
 
 $('form').on('submit', function(event) {
-    var noticeHTML = '<span>Profile Updated Successfully!</span>';
-    M.toast({html: noticeHTML, classes: 'rounded'});
 });
 </script>
 

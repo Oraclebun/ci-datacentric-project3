@@ -24,6 +24,16 @@ class CreateProfile(FlaskForm):
                 raise ValidationError(message)    
         except Hiker.DoesNotExist:
             pass
+
+
+class UpdateProfile(FlaskForm):
+    fname = StringField('First Name', validators=[InputRequired(), Length(min=2, max=20, message="First Name have to be 2-30 Chars")])
+    lname = StringField('Last Name', validators=[InputRequired(), Length(min=2, max=20, message="Last Name have to be 2-20 Chars")])
+    origin = StringField('Origin', validators=[InputRequired()])
+    email = EmailField('E-mail', validators=[InputRequired()])     
+    trails_completed = IntegerField('Trails Completed', validators=[InputRequired()])
+    profile_pic = HiddenField("Profile Picture", validators=[Optional()])
+    submit = SubmitField('Submit')
         
 
 class SightingsForm(FlaskForm):
@@ -46,6 +56,6 @@ class CommentsForm(FlaskForm):
 
 
 class LoginForm(FlaskForm):
-    username = StringField('Username',validators=[InputRequired(), Length(min=5, max=20, message="Username have to be 5-20 Chars")]])
+    username = StringField('Username',validators=[InputRequired(), Length(min=5, max=20, message="Username have to be 5-20 Chars")])
     email = EmailField('E-mail', validators=[InputRequired()]) 
     submit = SubmitField('Submit')

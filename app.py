@@ -6,9 +6,8 @@ import hashlib
 import flask_login
 from dotenv import load_dotenv
 from bson.objectid import ObjectId
-from forms import CreateProfile, LoginForm
+from forms import CreateProfile, LoginForm, UpdateProfile
 from pymodm import connect
-from wtforms.validators import ValidationError
 
 load_dotenv()
 
@@ -115,7 +114,6 @@ def get_trail(trail_id):
 def login():
     form = LoginForm()
     if form.validate_on_submit():
-        print(form.db_user.data)
         try:
             db_user = Hiker.objects.get({"username": form.username.data})
             if db_user:
@@ -135,7 +133,9 @@ def login():
 @app.route('/logout')
 def logout():
     flask_login.logout_user()
-    return "logged out"
+    form = LoginForm()
+    flash(f'You logged out successfully')
+    return render_template('trails/login.template.html', form=form)
 
 
 """ 
@@ -167,11 +167,13 @@ def create_profile():
               trails_completed=form.trails_completed.data,
               profile_pic=form.profile_pic.data
               ).save()
+        flash("Profile Created Successfully.")
         return redirect(url_for('index'))
     else:
         if form.errors:
             message = [v for k, v in form.errors.items()]
             flash(message)
+            return redirect(url_for('index'))
     return render_template('trails/create_profile.template.html', form=form, cloud_name=CLOUD_NAME, upload_preset=UPLOAD_PRESET, api_key=API_KEY)
 
 
@@ -181,11 +183,11 @@ Route to edit profile
 2. If form validated, save profile information into Database
 3. Show homepage if form is validated
 """
-@flask_login.login_required
 @app.route('/profiles/edit/<hiker_id>', methods=['GET', 'POST'])
+@flask_login.login_required
 def edit_profile(hiker_id):
     profile_to_edit = Hiker.objects.get({'_id': ObjectId(hiker_id)})
-    form = CreateProfile(obj=profile_to_edit)
+    form = UpdateProfile(obj=profile_to_edit)
     if form.validate_on_submit():
         try:
             Hiker.objects.raw({"_id": ObjectId(hiker_id)}).update({"$set": {"fname": form.fname.data,
@@ -195,11 +197,23 @@ def edit_profile(hiker_id):
                                                                             "trails_completed": form.trails_completed.data,
                                                                             "profile_pic":form.profile_pic.data
                                                                             }}, upsert=False)
+            flash("Profile Updated Successfully.")
+            return redirect(url_for('index'))
         except ValidationError as ve:
             errors = ve.message
-        return redirect(url_for('index'))
-    return render_template('trails/edit_profile.template.html', form=form, profileId=profile_to_edit._id, cloud_name=CLOUD_NAME,
+            flash(errors)
+    return render_template('trails/edit_profile.template.html', form=form, profile=profile_to_edit, cloud_name=CLOUD_NAME,
                            upload_preset=UPLOAD_PRESET, api_key=API_KEY)
+
+
+@app.route('/profiles/delete/<hiker_id>', methods=['POST'])
+@flask_login.login_required
+def delete_profile(hiker_id):
+    flask_login.logout_user()
+    profile_to_delete = Hiker.objects.get({'_id': ObjectId(hiker_id)})
+    profile_to_delete.delete()
+    flash("Profile Deleted Successfully.")
+    return redirect(url_for('index'))
 
 # "magic code" -- boilerplate
 if __name__ == '__main__':
