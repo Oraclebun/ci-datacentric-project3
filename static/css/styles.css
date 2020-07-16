@@ -38,3 +38,7 @@ span.stars span {
 .trail-details-container{
     border: 1px solid #757575 ;
 }
+
+textarea{
+    height: 6rem;
+}

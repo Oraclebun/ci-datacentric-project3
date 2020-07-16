@@ -49,8 +49,8 @@ class CommentsForm(FlaskForm):
     sightings = FieldList(FormField(SightingsForm, label='e.g. Birds'), label=None, min_entries=1, max_entries=6)
     ratings = RadioField('Ratings', coerce=int, choices = [(1,'1'),(2,'2'),(3,'3'),(4,'4'),(5,'5')])      #, Unique(model= Hiker)])
     date_started = DateField('Date Started Hiking', format='%b %d, %Y')
-    hours_taken = IntegerField('Hours Taken')
-    minutes_taken = IntegerField('Minutes Taken')
+    hours_taken = IntegerField('Hours Taken', validators=[NumberRange(min=0, max=23, message="Number of hours cannot exceed 23")])
+    minutes_taken = IntegerField('Minutes Taken',validators=[NumberRange(min=0, max=59, message="Number of minutes cannot exceed 59")])
     submit = SubmitField('Submit')
 
 

@@ -3,11 +3,13 @@ from models import Hiker, Trails, Location, Comment
 import os
 import pymongo
 import hashlib
+import datetime
 import flask_login
 from dotenv import load_dotenv
 from bson.objectid import ObjectId
 from forms import CreateProfile, LoginForm, UpdateProfile, CommentsForm
 from pymodm import connect
+from pymodm.errors import ValidationError
 
 load_dotenv()
 
@@ -236,14 +238,37 @@ Route to add new comment
 3. 
 """
 @app.route('/trails/new-comments/<trail_id>', methods=['GET', 'POST'])
-#@flask_login.login_required
+@flask_login.login_required
 def add_comment(trail_id):
     user = flask_login.current_user
+    profile = Hiker.objects.get({'_id': user.id})
     current_trail = Trails.objects.get({'_id': ObjectId(trail_id)})
     form = CommentsForm()
     print(form.errors)
-    #return redirect(url_for('get_trail', trail_id=trail_id))
+    if form.validate_on_submit():
+        sightings = [objects['tag'] for objects in form.sightings.data]
+        comment = Comment(
+            author=profile,
+            date_comment=datetime.datetime.now(),
+            body=form.body.data,
+            sightings=sightings,
+            date_started=form.date_started.data,
+            ratings=form.ratings.data,
+            hours_taken=form.hours_taken.data,
+            minutes_taken=form.minutes_taken.data
+        )
+        current_trail.comments.append(comment)
+        comment_date = comment.date_comment.strftime("%b, %d %Y, %H:%M")
+        try:
+            current_trail.save()
+            flash(f"New comments by '{comment}', on '{comment_date}' have been created")
+        except ValidationError as ve:
+            current_trail.comments.pop()
+            comment_errors = ve.message['comments'][-1]
+            flash(comment_errors)
+        return redirect(url_for('get_trail', trail_id=trail_id))
     return render_template('trails/new_comments.template.html', form=form, current_trail=current_trail)
+
 
 # "magic code" -- boilerplate
 if __name__ == '__main__':

@@ -25,11 +25,11 @@
         <div class="pre-label col s12 m4">
           Time spent hiking this trail:
           <div class="input-field inline">
-            {{form.hours_taken (max="23")}}
+            {{form.hours_taken (type = "number")}}
             {{form.hours_taken.label}}
           </div>
           <div class="input-field inline">
-            {{form.minutes_taken (max="59")}}
+            {{form.minutes_taken (type = "number")}}
             {{form.minutes_taken.label}}
           </div>
         </div>
