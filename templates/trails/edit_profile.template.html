@@ -58,10 +58,78 @@
         </div>
         </div>
 
-        <a class="waves-effect waves-light btn blue-grey lighten-1">{{form.submit()}}</a>
+        <a class="waves-effect waves-light btn blue-grey lighten-1 cloudinary-fileupload" id="profile-submit" data-cloudinary-field="image_id">{{form.submit()}}</a>
       </form>
     </div>
  
 </div>
+
+{% endblock %}
+
+{% block js %}
+<script src="https://widget.cloudinary.com/v2.0/global/all.js" type="text/javascript"></script> 
+<script>
+
+var generateSignature = function(callback, params_to_sign){
+    $.ajax({
+     url     : "{{url_for('signUploadRequest')}}",
+     type    : "GET",
+     dataType: 'json',
+     contentType:'application/json',
+     data    : params_to_sign,
+     complete: function() {console.log("complete")},
+     success : function(signature, textStatus, xhr) { callback(signature); },
+     error   : function(xhr, status, error) { console.log(xhr, status, error); }
+    });
+  }
+
+  var myWidget = cloudinary.createUploadWidget({
+    cloudName: '{{cloud_name}}', 
+    uploadPreset: '{{upload_preset}}', 
+    apiKey: '{{api_key}}',
+    multiple: false, 
+    maxFiles : 1, 
+    cropping: true,
+    folder: "project3",
+    clientAllowedFormats: ["png", "gif", "jpg", "jpeg"],
+    maxImageFileSize: 180000,
+    maxImageWidth: 300,
+    maxImageHeight: 300,
+    showCompletedButton : true,
+    singleUploadAutoClose: true,
+    uploadSignature: generateSignature}, (error, result) => { 
+      if (!error && result && result.event === "success") { 
+        console.log('Done! Here is the image info: ', result.info); 
+        //get the url of the uploaded profile picture
+        let pictureURL = document.querySelector("#uploaded_file_url");
+            pictureURL.value = result.info.url;
+  
+        //get the container for showing file name
+        let picNameDisplay = document.querySelector(".file-path-wrapper");
+        // show it
+        picNameDisplay.style.display = "block-inline";
+  
+        // fill in the file name
+        let picNameDisplayInput = document.querySelector(".file-path");
+          picNameDisplayInput.innerText = result.info.original_filename + '.' + result.info.format;
+
+        $('.btn.cloudinary-button').hide();
+        var toastHTML = '<span>Picture Upload Successful!</span>';
+        M.toast({html: toastHTML, classes: 'rounded'});
+      }
+    }
+  )
+  
+  document.getElementById("upload_widget").addEventListener("click", function(){
+      myWidget.open();
+    }, false);
+
+
+
+$('form').on('submit', function(event) {
+    var noticeHTML = '<span>Profile Updated Successfully!</span>';
+    M.toast({html: noticeHTML, classes: 'rounded'});
+});
+</script>
 
 {% endblock %}

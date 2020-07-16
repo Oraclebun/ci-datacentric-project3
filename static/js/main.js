@@ -1,13 +1,17 @@
 $(document).ready(function(){
-    //initialize parallax
+    //activate parallax
     $('.parallax').parallax();
-    //initialize collapsible (accordion)
+    //activate collapsible (accordion)
     $('.collapsible').collapsible();
     //initialize sidenav 
     $('.sidenav').sidenav();
-    //initialize tooltip
+    //activate tooltip
     $('.tooltipped').tooltip();
+    //activate modal
     $('.modal').modal();
+    //activate drop down menu
+    $(".dropdown-trigger").dropdown();
+        
 
     $.fn.stars = function () {
         return $(this).each(function () {

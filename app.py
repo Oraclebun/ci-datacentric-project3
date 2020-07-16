@@ -113,8 +113,8 @@ def get_trail(trail_id):
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     form = LoginForm()
-    #form.db_user.data = user_loader
     if form.validate_on_submit():
+        print(form.db_user.data)
         try:
             db_user = Hiker.objects.get({"username": form.username.data})
             if db_user:
@@ -136,6 +136,7 @@ def logout():
     flask_login.logout_user()
     return "logged out"
 
+
 """ 
 Route to show user profiles.
 """
@@ -146,6 +147,7 @@ def show_profile():
     profile = Hiker.objects.get({'_id': user.id})
     return render_template('trails/profile.template.html', profile=profile)
 
+
 """
 Route to create profile. 
 1. If method = GET, create form from CreateProfile class in form.py
@@ -155,20 +157,27 @@ Route to create profile.
 @app.route('/create_profile', methods=['GET', 'POST'])
 def create_profile():
     form = CreateProfile()
+    print(form.username.data)
+    print(form.db_user.data)
+    print(form.validate_username.__str__)
     if form.validate_on_submit():
         Hiker(fname=form.fname.data,
               lname=form.lname.data,
               username=form.username.data,
               origin=form.origin.data,
               email=form.email.data,
-              trails_completed=form.trails_completed.data,
-              profile_pic=form.profile_pic.data
+              trails_completed=form.trails_completed.data
+              #profile_pic=form.profile_pic.data
               ).save()
         return redirect(url_for('index'))
     return render_template('trails/create_profile.template.html', form=form, cloud_name=CLOUD_NAME, upload_preset=UPLOAD_PRESET, api_key=API_KEY)
 
+
 """
 Route to edit profile
+1. If method = GET, populate CreateProfile form from form.py
+2. If form validated, save profile information into Database
+3. Show homepage if form is validated
 """
 @flask_login.login_required
 @app.route('/profiles/edit/<hiker_id>', methods=['GET', 'POST'])

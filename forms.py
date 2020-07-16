@@ -16,9 +16,14 @@ class CreateProfile(FlaskForm):
     profile_pic = HiddenField("Profile Picture", validators=[InputRequired()])
     submit = SubmitField('Submit')
     def validate_username(self, username):
-        user_name = Hiker.objects.get({"username": username.data})
-        if user_name != self.db_user.data:
-            raise ValidationError("The username already exists.")
+        try:
+            db_user = Hiker.objects.get({"username": username.data})
+            if db_user:
+                raise ValidationError("The username already exists.")
+                return db_user
+        except Hiker.DoesNotExist:
+            return "Pass"
+        
 
 class SightingsForm(FlaskForm):
     tag = StringField('e.g. Birds', validators=[Optional()])
