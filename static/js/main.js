@@ -28,8 +28,25 @@ $(document).ready(function(){
         $('span.stars').stars();
     });
 
+ $('label .radio-star').click(function() {
+  //1. unbind mouseleave
+  //2. remove class selected for all spans
+  //3. add back the selected class
+  //4. style the color
+  $('.radio-star').unbind('mouseleave');
+  $(this).removeClass('selected')
+  $(this).parent().siblings().children('span').removeClass('selected');
+  $(this).css('color','#9e9e9e')
+  $(this).parent().siblings().children('span').css('color','#9e9e9e')
+  //leave this here just in case
+  let onStar = $(this).prev('input').val();
+  
+  $(this).addClass('selected')
+  $(this).parent().nextAll().children('span').addClass('selected');
+  $('.selected').css('color',"#ea0");
+});
 
-    /**
+/**
  * Adjust the indices of form fields when removing items.
  */
 function adjustIndices(removedIndex) {

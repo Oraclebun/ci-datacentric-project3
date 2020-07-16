@@ -115,7 +115,13 @@ def index():
 @app.route('/trails/<trail_id>')
 def get_trail(trail_id):
     trail = Trails.objects.get({'_id': ObjectId(trail_id)})
-    return render_template('trails/trails.template.html', trail=trail)
+    user = flask_login.current_user
+    if(user.is_authenticated):
+        try:
+            auth_user = Hiker.objects.get({"_id": user.id})
+        except ValidationError as ve:
+            return 'Unauthorised' + ve.message
+    return render_template('trails/trails.template.html', trail=trail, login_user=auth_user)
 
 
 @app.route('/login', methods=['GET', 'POST'])
@@ -233,7 +239,7 @@ def delete_profile(hiker_id):
 
 """
 Route to add new comment
-1. 
+1. get current logged in user, get 
 2. 
 3. 
 """
@@ -269,6 +275,14 @@ def add_comment(trail_id):
         return redirect(url_for('get_trail', trail_id=trail_id))
     return render_template('trails/new_comments.template.html', form=form, current_trail=current_trail)
 
+
+@app.route('/trails/edit-comment/<trail_id>/<int:n>', methods=['GET', 'POST'])
+@flask_login.login_required
+def edit_comment(trail_id, n):
+    current_trail = Trails.objects.get({'_id': ObjectId(trail_id)})
+    comments_to_edit = current_trail.comments[n]
+    print(current_trail.comments[n].author)
+    return "test"
 
 # "magic code" -- boilerplate
 if __name__ == '__main__':

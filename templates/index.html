@@ -71,7 +71,7 @@ Home Page
 								            {{places.grouper}}
 								            <ul>
 									        {% for trails in places.list %}
-									            <li><a href="#">{{trails.trail_name}}</a></li>
+									            <li><a href="{{url_for('get_trail', trail_id = trails.trail_id)}}">{{trails.trail_name}}</a></li>
 									        {% endfor %}
 								            </ul>
 						                </li>

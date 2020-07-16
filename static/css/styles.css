@@ -15,6 +15,34 @@ nav{
     background-color: #1d3030;
 }
 
+[type="radio"]:not(:checked)+span.radio-star:before, 
+[type="radio"]:not(:checked)+span.radio-star:after,
+[type="radio"]:checked+span.radio-star:before,
+[type="radio"]:checked+span.radio-star:after {
+    content: '★';
+    font-size: 2rem;
+    border: none;
+}
+
+[type="radio"]:checked+span.radio-star:after
+{
+    border: none;
+    color: none;
+    background: none;
+    background-color: none;
+}
+
+[type="radio"]:checked+span.radio-star.hover{
+    color: 'gold';
+}
+
+.rating{
+    float:left;
+}
+.rating > label{
+    float:right;
+}
+
 span.stars span {
     display: block;
     background: url("../image/star-yellow.png") 0 0 repeat-x;
