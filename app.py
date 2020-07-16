@@ -6,7 +6,7 @@ import hashlib
 import flask_login
 from dotenv import load_dotenv
 from bson.objectid import ObjectId
-from forms import CreateProfile, LoginForm, UpdateProfile
+from forms import CreateProfile, LoginForm, UpdateProfile, CommentsForm
 from pymodm import connect
 
 load_dotenv()
@@ -49,6 +49,12 @@ def user_loader(id):
     except Hiker.DoesNotExist:
         return None
 
+
+"""
+Signature generator for signed image upload to cloudinary
+The compute_hex_hash and api_sign_request is taken from
+cloudinary-django
+"""
 
 def compute_hex_hash(s):
     """
@@ -140,6 +146,7 @@ def logout():
 
 """ 
 Route to show user profiles.
+Route only accessible if user is logged in.
 """
 @app.route('/profile')
 @flask_login.login_required
@@ -206,6 +213,12 @@ def edit_profile(hiker_id):
                            upload_preset=UPLOAD_PRESET, api_key=API_KEY)
 
 
+"""
+Route to delete profile
+1. Log current user out
+2. Delete user from database
+3. Show homepage if request == 'POST'
+"""
 @app.route('/profiles/delete/<hiker_id>', methods=['POST'])
 @flask_login.login_required
 def delete_profile(hiker_id):
@@ -214,6 +227,23 @@ def delete_profile(hiker_id):
     profile_to_delete.delete()
     flash("Profile Deleted Successfully.")
     return redirect(url_for('index'))
+
+
+"""
+Route to add new comment
+1. 
+2. 
+3. 
+"""
+@app.route('/trails/new-comments/<trail_id>', methods=['GET', 'POST'])
+#@flask_login.login_required
+def add_comment(trail_id):
+    user = flask_login.current_user
+    current_trail = Trails.objects.get({'_id': ObjectId(trail_id)})
+    form = CommentsForm()
+    print(form.errors)
+    #return redirect(url_for('get_trail', trail_id=trail_id))
+    return render_template('trails/new_comments.template.html', form=form, current_trail=current_trail)
 
 # "magic code" -- boilerplate
 if __name__ == '__main__':

@@ -45,7 +45,6 @@ class SightingsForm(FlaskForm):
 
 
 class CommentsForm(FlaskForm):
-    profile = SelectField('Profile', validators=[InputRequired()], coerce=ObjectId)
     body = TextAreaField('Comments', validators=[InputRequired()])
     sightings = FieldList(FormField(SightingsForm, label='e.g. Birds'), label=None, min_entries=1, max_entries=6)
     ratings = RadioField('Ratings', coerce=int, choices = [(1,'1'),(2,'2'),(3,'3'),(4,'4'),(5,'5')])      #, Unique(model= Hiker)])
