@@ -68,13 +68,15 @@
       <div class="row">
         <fieldset class="rating">
           Rate your hike experience:
-          {% for rating in form.ratings | reverse%}
+          <span class="star-form">
+          {% for rating in form.ratings %}
           <label>
             {{rating}}
             <span class="radio-star">
             </span>
           </label>
           {% endfor %}
+          </span>
         </fieldset>
       </div>
 

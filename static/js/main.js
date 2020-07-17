@@ -36,13 +36,15 @@ $(document).ready(function(){
   $('.radio-star').unbind('mouseleave');
   $(this).removeClass('selected')
   $(this).parent().siblings().children('span').removeClass('selected');
+  
   $(this).css('color','#9e9e9e')
   $(this).parent().siblings().children('span').css('color','#9e9e9e')
-  //leave this here just in case
-  let onStar = $(this).prev('input').val();
   
+  //query current star value
+  let onStar = $(this).prev('input').val();
   $(this).addClass('selected')
-  $(this).parent().nextAll().children('span').addClass('selected');
+  //$(this).parent().nextAll().children('span').addClass('selected');
+  $(this).parent().prevAll().children('span').addClass('selected');
   $('.selected').css('color',"#ea0");
 });
 

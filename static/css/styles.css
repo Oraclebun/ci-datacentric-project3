@@ -5,7 +5,16 @@
 }
 
 .card-title{
-    display: inline;
+    display: flow-root;
+}
+
+.com-date{
+    margin-top: 10px;
+}
+
+.com-ratings{
+    margin-top: 10px;
+    margin-left: -5px;
 }
 
 .error-background{
@@ -65,6 +74,14 @@ span.stars {
 
 span.stars span {
     background-position: 0 0;
+}
+
+.sightings{
+    margin-top: 10px;
+}
+
+.star-form{
+    display: inline-block;
 }
 
 .trail-details-container{

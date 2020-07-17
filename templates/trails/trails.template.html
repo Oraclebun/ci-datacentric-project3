@@ -44,22 +44,24 @@
       <div class="col s4 m2">
       <img src="{{com.author.profile_pic}}" alt="" class="circle responsive-img">
       </div>
-      
-      <div class="col s6 m3 card-title"><h6>{{com.author.fname}}&nbsp;&nbsp;{{com.author.lname}}</h6></div>
-      
-      <div>
-      <div class="col s12 m3">{{com.date_comment.strftime('%d %b %Y')}}</div>
-      <div class="col s6 m4">
+
+      <div class="card-title valign-wrapper">
+      <div class="col s12 m4">
+      <h6>{{com.author.fname}}&nbsp;&nbsp;{{com.author.lname}}</h6>
+      </div>
+      <div class="col s12 m4 com-date">{{com.date_comment.strftime('%d %b %Y')}}</div>
+      <div class="col s12 m4 com-ratings">
       <span class="stars">{{com.ratings}}</span>
       </div>
       </div>
-      <div class="col s6 m4">
+
+      <div class="row sightings">
           {% for keywords in com.sightings %}
-          <div class="chip">
+          <div class="chip blue-grey darken-2 white-text">
             {{keywords}}
           </div>
           {% endfor %}
-        </div>
+    </div>
         <div class="row">
           <p>{{com.body}}</p>
         </div>
@@ -70,11 +72,13 @@
         </div>
       </div>
       {% if login_user._id == com.author._id %}
-      <div class="col s2">
+      <div class = "col m4">
+      <div class="col s6">
           <a class="waves-effect waves-light blue darken-1 btn" href="{{ url_for('edit_comment', trail_id = trail._id, n=loop.index0) }}"><i class="material-icons left">content_cut</i><span class="hide-on-small-only">Edit</span></a>
         </div>
-        <div class="col s2">
+        <div class="col s6">
           <a class="waves-effect waves-light red darken-1 btn modal-trigger" href="#delete-comment-confirm-{{loop.index}}"><i class="material-icons left">delete_forever</i><span class="hide-on-small-only">Delete</span></a>
+        </div>
         </div>
         {% endif %}
 
@@ -83,7 +87,7 @@
                 <h4>Do you want to delete this comment?</h4>
               <p>Deleting a comment will remove it permanently. This action cannot be undone.</p>
             </div>
-            <form action ="{{url_for('delete_comment', trail_id=trail_id, n=loop.index0)}}" method="POST">
+            <form action ="{{url_for('delete_comment', trail_id=trail._id, n=loop.index0)}}" method="POST">
             <div class="modal-footer">
               <a href="#!" class="modal-close waves-effect waves-blue btn">Cancel</a>
               <input type="submit" class="waves-effect waves-yellow red darken-1 btn" value ="CONFIRM"/>

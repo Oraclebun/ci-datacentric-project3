@@ -83,21 +83,60 @@ def signUploadRequest():
 
 @app.route('/')
 def index():
-    comments = Trails.objects.order_by(
-        [('comments.date_comment', pymongo.DESCENDING)])
-    all_comm = list(comments.only('comments'))
-    all_trails = Trails.objects.values().all()
+    qs = Trails.objects.raw({})
+    cursor = qs.aggregate(
+        {
+            "$unwind": "$comments"
+        },
+        {"$lookup":
+         {
+             "from": "hiker",
+             "localField": "comments.author",
+             "foreignField": "_id",
+             "as": "hiker"
+         }
+         },
+        {
+            "$sort": {
+                "comments.date_comment": pymongo.DESCENDING
+            }
+        },
+        {"$lookup":
+         {
+             "from": "location",
+             "localField": "location",
+             "foreignField": "_id",
+             "as": "location"
+         }
+         },
+        {"$unwind": "$location"},
+        {"$unwind": "$hiker"},
+        {
+            "$project": {
+                "trail_name": 1,
+                "location.country": 1,
+                "hiker.fname": 1,
+                "hiker.lname": 1,
+                "hiker.profile_pic": 1,
+                "comments.body": 1,
+                "comments.date_comment": 1
+            }
+        }
+    )
+
+    all_reviews = list(cursor)[0:3]
     all_trail_loc = Trails.objects.only('location')
     trails_loc = []
     reviews = []
-    for i in range(3):
+    for attr in all_reviews:
         comments = {
-            'author': all_comm[i:(i+1)][0].comments[0].author.fname+' '+all_comm[i:(i+1)][0].comments[0].author.lname,
-            'photo': all_comm[i:(i+1)][0].comments[0].author.profile_pic,
-            'body': all_comm[i:(i+1)][0].comments[0].body,
-            'date': all_comm[i:(i+1)][0].comments[0].date_comment.strftime("%d-%b-%Y"),
-            'track': Trails.objects.get({'_id': all_comm[i:i+1][0]._id}),
-            'country': Trails.objects.get({'_id': all_comm[i:i+1][0]._id}).location.country
+            '_id': attr['_id'],
+            'author': attr['hiker']['fname']+' '+attr['hiker']['lname'],
+            'photo': attr['hiker']['profile_pic'],
+            'body': attr['comments']['body'],
+            'date': attr['comments']['date_comment'].strftime("%d-%b-%Y"),
+            'trail_name': attr['trail_name'],
+            'country': attr['location']['country']
         }
         reviews.append(comments)
     for loc in all_trail_loc:
@@ -312,6 +351,7 @@ def delete_comment(trail_id, n):
     user = flask_login.current_user
     current_trail = Trails.objects.get({'_id': ObjectId(trail_id)})
     comment_to_delete = current_trail.comments[n]
+    print(comment_to_delete.body)
     if(user.id == comment_to_delete.author._id):
         try:
             Trails.objects.raw({'_id': ObjectId(trail_id)}).update(
