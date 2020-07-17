@@ -250,7 +250,6 @@ def add_comment(trail_id):
     profile = Hiker.objects.get({'_id': user.id})
     current_trail = Trails.objects.get({'_id': ObjectId(trail_id)})
     form = CommentsForm()
-    print(form.errors)
     if form.validate_on_submit():
         sightings = [objects['tag'] for objects in form.sightings.data]
         comment = Comment(
@@ -279,10 +278,32 @@ def add_comment(trail_id):
 @app.route('/trails/edit-comment/<trail_id>/<int:n>', methods=['GET', 'POST'])
 @flask_login.login_required
 def edit_comment(trail_id, n):
+    user = flask_login.current_user
     current_trail = Trails.objects.get({'_id': ObjectId(trail_id)})
-    comments_to_edit = current_trail.comments[n]
-    print(current_trail.comments[n].author)
-    return "test"
+    comment_to_edit = current_trail.comments[n]
+    trail_name = current_trail.trail_name
+    if(user.id == comment_to_edit.author._id):
+        form = CommentsForm(obj=comment_to_edit)
+    if form.validate_on_submit():
+        sightings = [objects['tag'] for objects in form.sightings.data]
+        try:
+            Trails.objects.raw({'_id': ObjectId(trail_id)}).update(
+                {"$set": {
+                    "comments."+str(n)+".date_comment": datetime.datetime.now(),
+                    "comments."+str(n)+".body": form.body.data,
+                    "comments."+str(n)+".sightings": sightings,
+                    "comments."+str(n)+".date_started": datetime.datetime.combine(form.date_started.data, datetime.time()),
+                    "comments."+str(n)+".ratings": form.ratings.data,
+                    "comments."+str(n)+".hours_taken": form.hours_taken.data,
+                    "comments."+str(n)+".minutes_taken": form.minutes_taken.data
+                }
+                })
+        except ValidationError as ve:
+            current_trail.comments.pop()
+            comment_errors = ve.message['comments'][-1]
+            flash(comment_errors)
+        return redirect(url_for('get_trail', trail_id=trail_id))
+    return render_template('trails/edit_comments.template.html', form=form, comment = comment_to_edit, n=n, trailId=trail_id, trailName = trail_name)
 
 # "magic code" -- boilerplate
 if __name__ == '__main__':

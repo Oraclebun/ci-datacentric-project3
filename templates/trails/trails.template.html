@@ -40,16 +40,20 @@
     <a class="btn-floating btn-large waves-effect waves-light blue-grey tooltipped" data-position="bottom" data-tooltip="Add Comments" href = "{{url_for('add_comment', trail_id=trail._id)}}"><i class="material-icons">add</i></a>
         {% for com in trail.comments %}
       <div class="card-panel row">
-      <div class="col s10 m8 card-content">
+      <div class="col s12 m8 card-content">
       <div class="col s4 m2">
       <img src="{{com.author.profile_pic}}" alt="" class="circle responsive-img">
       </div>
-      <div class="row card-title valign-wrapper left-align">
-      <div class="col m4 card-title"><h6>{{com.author.fname}}&nbsp;&nbsp;{{com.author.lname}}</h6></div>
-      <div class="col m4">{{com.date_comment}}</div>
+      
+      <div class="col s6 m3 card-title"><h6>{{com.author.fname}}&nbsp;&nbsp;{{com.author.lname}}</h6></div>
+      
+      <div>
+      <div class="col s12 m3">{{com.date_comment.strftime('%d %b %Y')}}</div>
+      <div class="col s6 m4">
       <span class="stars">{{com.ratings}}</span>
       </div>
-      <div class="row">
+      </div>
+      <div class="col s6 m4">
           {% for keywords in com.sightings %}
           <div class="chip">
             {{keywords}}

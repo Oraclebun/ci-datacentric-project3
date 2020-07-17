@@ -4,6 +4,10 @@
     text-align: center;
 }
 
+.card-title{
+    display: inline;
+}
+
 .error-background{
     background: url("../image/403status.jpg") no-repeat;
     background-position: center;
