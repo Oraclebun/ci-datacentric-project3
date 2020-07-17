@@ -303,7 +303,37 @@ def edit_comment(trail_id, n):
             comment_errors = ve.message['comments'][-1]
             flash(comment_errors)
         return redirect(url_for('get_trail', trail_id=trail_id))
-    return render_template('trails/edit_comments.template.html', form=form, comment = comment_to_edit, n=n, trailId=trail_id, trailName = trail_name)
+    return render_template('trails/edit_comments.template.html', form=form, comment = comment_to_edit, n=n, trail_id=trail_id, trailName = trail_name)
+
+
+@app.route('/trails/delete-comment/<trail_id>/<int:n>', methods=['POST'])
+@flask_login.login_required
+def delete_comment(trail_id, n):
+    user = flask_login.current_user
+    current_trail = Trails.objects.get({'_id': ObjectId(trail_id)})
+    comment_to_delete = current_trail.comments[n]
+    if(user.id == comment_to_delete.author._id):
+        try:
+            Trails.objects.raw({'_id': ObjectId(trail_id)}).update(
+                {"$pull": {
+                    "comments": {
+                        "author": ObjectId(comment_to_delete.author._id),
+                        "date_comment": comment_to_delete.date_comment,
+                        "body": comment_to_delete.body,
+                        "date_started": comment_to_delete.date_started,
+                        "ratings": comment_to_delete.ratings,
+                        "hours_taken": comment_to_delete.hours_taken,
+                        "minutes_taken": comment_to_delete.minutes_taken
+                    }
+                }
+                })
+        except ValidationError as ve:
+            comment_errors = ve.message
+            flash(comment_errors)
+    else:
+        flash("You're not authorized to delete this comment")
+    return redirect(url_for('get_trail', trail_id=trail_id))
+
 
 # "magic code" -- boilerplate
 if __name__ == '__main__':

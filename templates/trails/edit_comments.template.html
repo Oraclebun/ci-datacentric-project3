@@ -5,7 +5,7 @@
   <h4>Edit Comments for {{trailName}}</h4>
 
   <div class="row">
-    <form class="col s12" action="{{url_for('edit_comment', trail_id=trailId, n=n)}}" method="POST">
+    <form class="col s12" action="{{url_for('edit_comment', trail_id=trail_id, n=n)}}" method="POST">
       <div class="row">
         {{form.csrf_token}}
         <div class="input-field col s12 m6">
