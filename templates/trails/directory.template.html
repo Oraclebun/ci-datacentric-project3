@@ -1,0 +1,40 @@
+{% extends "base.template.html" %} 
+
+{%block title%}All Trails Directory{%endblock%}
+
+{% block content %}
+
+<div class="container">
+    <h3>Trails</h3>
+<form methods="GET">
+    <div class="row">
+    <div class="input-field col s4">
+      <input id="search" type="search" name="query">
+      <label for="search"><i class="material-icons">search</i></label>
+    </div>
+    <div class="input-field col s4">
+      <button class="btn waves-effect waves-light" type="submit">Search</button>
+    </div>
+</div>
+  </form>
+
+<ul class="collection">
+    {% for trail in all_trails %}
+    <li class="collection-item avatar">
+      <img src="" alt="" class="circle"/>
+      <div class="row">
+          <div class="col s12">
+            <a href="trails/{{trail._id}}" class="green-text text-darken-2">{{trail.trail_name}}</a>
+            <p>
+            Location: {{trail.location.province.town.town}},{{trail.location.province.state}}, {{trail.location.country}},
+            </p>
+            <p>Trail Difficulty: {{trail.difficulty}}</p>
+            <p>Trail Description: {{trail.description}}</p>
+          </div>
+      </div>    
+    </li>
+    {% endfor %}
+</ul>
+</div>
+
+{% endblock %}

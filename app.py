@@ -151,6 +151,58 @@ def index():
     return render_template('index.html', location=trails_loc, comments=reviews)
 
 
+@app.route('/directory')
+def show_all():
+    search_terms = request.args.get('query')
+    criteria = {}
+    qs = Trails.objects.raw({})
+
+    # if there are search terms, add it to the critera dictionary
+    if search_terms != "" and search_terms is not None:
+        cursor = qs.aggregate(
+            {"$lookup":
+             {
+                 "from": "location",
+                 "localField": "location",
+                 "foreignField": "_id",
+                 "as": "location"
+             }
+             },
+            {"$match": {
+                "$or": [
+                    {"location.country": {"$regex": search_terms, "$options": 'i'}},
+                    {"location.province.state": {
+                        "$regex": search_terms, "$options": 'i'}},
+                    {"location.province.town.town": {
+                        "$regex": search_terms, "$options": 'i'}},
+                    {"location.town": {"$regex": search_terms, "$options": 'i'}},
+                    {"trail_name": {"$regex": search_terms, "$options": 'i'}},
+                    {"difficulty": {"$regex": search_terms, "$options": 'i'}},
+                    {"description": {"$regex": search_terms, "$options": 'i'}}
+                ]
+            }
+            },
+            {"$unwind": "$location"},
+            {"$unwind": "$location.province"},
+            {"$unwind": "$location.province.town"}
+        )
+    else:
+        cursor = qs.aggregate(
+            {"$lookup":
+             {
+                 "from": "location",
+                 "localField": "location",
+                 "foreignField": "_id",
+                 "as": "location"
+             }
+             },
+            {"$unwind": "$location"},
+            {"$unwind": "$location.province"},
+            {"$unwind": "$location.province.town"}
+        )
+    return render_template('trails/directory.template.html', all_trails=cursor)
+
+
 @app.route('/trails/<trail_id>')
 def get_trail(trail_id):
     trail = Trails.objects.get({'_id': ObjectId(trail_id)})
@@ -278,9 +330,10 @@ def delete_profile(hiker_id):
 
 """
 Route to add new comment
-1. get current logged in user, get 
-2. 
-3. 
+1. get current logged in user, 
+2. get trails object, get user profile, display form
+3. if form is validated, try save the comments into the database.
+4. if there's an exception, flash the 
 """
 @app.route('/trails/new-comments/<trail_id>', methods=['GET', 'POST'])
 @flask_login.login_required
@@ -314,6 +367,12 @@ def add_comment(trail_id):
     return render_template('trails/new_comments.template.html', form=form, current_trail=current_trail)
 
 
+"""
+Route to edit new comment
+1. get current logged in user, 
+2. check that logged in user is the author of the comment
+3. if form is validated, save the comments into the database.
+"""
 @app.route('/trails/edit-comment/<trail_id>/<int:n>', methods=['GET', 'POST'])
 @flask_login.login_required
 def edit_comment(trail_id, n):
