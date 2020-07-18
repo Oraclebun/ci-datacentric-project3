@@ -74,13 +74,16 @@ def api_sign_request(params_to_sign, api_secret):
     return compute_hex_hash(to_sign + api_secret)
 
 
-@app.route('/generateKey')
+@app.route('/generateKey', methods= ['POST'])
 def signUploadRequest():
     params_to_sign = request.args.to_dict()
     signature = api_sign_request(params_to_sign, API_SECRET)
     return {"signature": signature}
 
 
+""" 
+Route to show homepage
+"""
 @app.route('/')
 def index():
     qs = Trails.objects.raw({})
@@ -151,6 +154,9 @@ def index():
     return render_template('index.html', location=trails_loc, comments=reviews)
 
 
+""" 
+Route to show all trails (searchable) in database as a directory
+"""
 @app.route('/directory')
 def show_all():
     search_terms = request.args.get('query')
@@ -203,6 +209,54 @@ def show_all():
     return render_template('trails/directory.template.html', all_trails=cursor)
 
 
+""" 
+Route to show trail in database sorted by average user ratings
+"""
+@app.route('/top-rated')
+def show_by_rating():
+    qs = Trails.objects.raw({})
+    cursor = qs.aggregate(
+            {"$addFields": {
+                "rating_average": {"$avg": "$comments.ratings"}
+            }},
+            {"$lookup":
+             {
+                 "from": "location",
+                 "localField": "location",
+                 "foreignField": "_id",
+                 "as": "location"
+             }
+             },
+            {"$unwind": "$location"},
+            {"$unwind": "$location.province"},
+            {"$unwind": "$location.province.town"},
+            {"$project": {
+                "_id": 1,
+                "trail_name": 1,
+                "description": 1,
+                "embed_route": 1,
+                "distance": 1,
+                "route_type": 1,
+                "elevation": 1,
+                "difficulty": 1,
+                "centrepoint": 1,
+                "waypoints": 1,
+                "location": 1,
+                "rating_average": {"$ifNull": ['$rating_average', 0]}
+            }
+            },
+            {
+                "$sort": {
+                    "rating_average": pymongo.DESCENDING
+                }
+            }
+        )
+    return render_template('trails/top_rated.template.html', all_trails=cursor)
+
+
+""" 
+Route to show trail in database and it's comments
+"""
 @app.route('/trails/<trail_id>')
 def get_trail(trail_id):
     trail = Trails.objects.get({'_id': ObjectId(trail_id)})
@@ -212,9 +266,14 @@ def get_trail(trail_id):
             auth_user = Hiker.objects.get({"_id": user.id})
         except ValidationError as ve:
             return 'Unauthorised' + ve.message
+    else:
+        auth_user = None
     return render_template('trails/trails.template.html', trail=trail, login_user=auth_user)
 
 
+""" 
+Route to login user.
+"""
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     form = LoginForm()
@@ -235,6 +294,10 @@ def login():
             return 'Login Failed, Please register'
     return render_template('trails/login.template.html', form=form)
 
+
+""" 
+Route to logout user.
+"""
 @app.route('/logout')
 def logout():
     flask_login.logout_user()
@@ -333,7 +396,8 @@ Route to add new comment
 1. get current logged in user, 
 2. get trails object, get user profile, display form
 3. if form is validated, try save the comments into the database.
-4. if there's an exception, flash the 
+4. if there's an exception, pull the save comment from database
+5. flash the error message
 """
 @app.route('/trails/new-comments/<trail_id>', methods=['GET', 'POST'])
 @flask_login.login_required
@@ -404,13 +468,20 @@ def edit_comment(trail_id, n):
     return render_template('trails/edit_comments.template.html', form=form, comment = comment_to_edit, n=n, trail_id=trail_id, trailName = trail_name)
 
 
+"""
+Route to delete comment
+1. get current logged in user, 
+2. check that logged in user is the author of the comment
+3. if he/she/they are the authenticated user, delete the comments from the database
+4. else flash the error message
+5. return back to the trails view
+"""
 @app.route('/trails/delete-comment/<trail_id>/<int:n>', methods=['POST'])
 @flask_login.login_required
 def delete_comment(trail_id, n):
     user = flask_login.current_user
     current_trail = Trails.objects.get({'_id': ObjectId(trail_id)})
     comment_to_delete = current_trail.comments[n]
-    print(comment_to_delete.body)
     if(user.id == comment_to_delete.author._id):
         try:
             Trails.objects.raw({'_id': ObjectId(trail_id)}).update(

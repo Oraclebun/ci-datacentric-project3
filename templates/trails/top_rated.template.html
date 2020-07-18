@@ -1,0 +1,35 @@
+{% extends "base.template.html" %} 
+
+{%block title%}Top Rated Trails{%endblock%} 
+
+{%block content %}
+
+<div class="container">
+  <div class="row">
+    <div class="col s12 m8">
+      <ul class="collection">
+        {% for trail in all_trails %}
+        <li class="collection-item avatar">
+          <img src="" alt="" class="circle" />
+          <span class="title">{{trail.trail_name}}</span>
+          <p>{{trail.location.province.town.town}},{{trail.location.province.state}},{{trail.location.country}}</p>
+          <span>{{trail.difficulty}}</span>
+          <p>Distance: {{trail.distance}}</p>
+          <div class="row">
+          <div class="col s12 m4">
+            <span class="stars">{{trail.rating_average}}</span>
+          </div>
+        </div>
+          <p class="top-rated-body">
+            {{trail.description}} <br />
+          </p>
+          <a href="#!" class="secondary-content"
+            ><i class="material-icons">favorite_border</i></a
+          >
+        </li>
+        {% endfor %}
+      </ul>
+    </div>
+  </div>
+</div>
+{% endblock %}

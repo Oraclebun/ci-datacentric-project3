@@ -7,7 +7,7 @@
         <h3 class="trail-title">{{trail.trail_name}}</h3>
         
           <div class="col s12 m7">
-            <img class="materialboxed responsive-img" width="600" src="{{ url_for('static', filename='image/')}}"/>
+            <img class="materialboxed responsive-img" width="600" src="{{trail.image}}"/>
           </div>
           <div class="col s12 m5 box-map">
               {{trail.embed_route}}

@@ -7,6 +7,8 @@
 
     <!--Import Google Icon Font-->
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Ruluko&display=swap" rel="stylesheet">   <!--Headings-->
+    <link href="https://fonts.googleapis.com/css2?family=Crimson+Text&display=swap" rel="stylesheet">  <!--Body-->
 
     <!-- Compiled and minified Materialize CSS -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
@@ -24,7 +26,7 @@
       <a href="#" data-target="mobile-nav" class="sidenav-trigger"><i class="material-icons">menu</i></a>
       <ul class="right hide-on-med-and-down">
         <li><a href="{{url_for('show_all')}}">Directory</a></li>
-        <li><a href="#">Components</a></li>
+        <li><a href="{{url_for('show_by_rating')}}">Top Rated</a></li>
         <li><a href="{{url_for('create_profile')}}">Register</a></li>
         <li><a class="dropdown-trigger" href="#" data-target="dropdown1">My Profile<i class="material-icons right">arrow_drop_down</i></a></li>
             <!-- Dropdown Structure -->
@@ -39,7 +41,7 @@
 
   <ul class="sidenav" id="mobile-nav">
     <li><a href="{{url_for('show_all')}}">Directory</a></li>
-    <li><a href="#">Components</a></li>
+    <li><a href="{{url_for('show_by_rating')}}">Top Rated</a></li>
     <li><a href="{{url_for('create_profile')}}">Register</a></li>
     <li><a class="dropdown-trigger" href="#" data-target="dropdown2">My Profile<i class="material-icons right">arrow_drop_down</i></a></li>
     <!-- Dropdown Structure -->

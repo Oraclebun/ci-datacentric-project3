@@ -1,3 +1,8 @@
+body{
+    font-family: 'Crimson Text', serif;
+    font-size: 1rem;
+}
+
 .btn.cloudinary-button{
     background-color:#2f4f4f;
     color: #fff8e1;
@@ -6,6 +11,33 @@
 
 .card-title{
     display: flow-root;
+    font-family: 'Ruluko', sans-serif;
+}
+
+.comments-body{
+overflow: hidden;
+position: relative;
+line-height: 1.5em; /*height of a single line in body*/
+max-height: 7.5em; /*max height = 5 lines, 1.5*5 = 7.5em*/ 
+padding-right: 1em; /*set this area for ...*/
+font-style: italic;
+}
+
+.comments-body:before{
+    content: "...";     /*add the '...' behind if body too long*/
+    position: absolute;
+    right: 0;           /*position the '...'*/
+    bottom: 0;
+    
+}
+
+.comments-body:after{
+    content: "";        /*hide the'...' if body is less than max-heigh*/
+    position: absolute;
+    right: 0;
+    width: 1em;
+    height: 1em;
+    background: white;
 }
 
 .com-date{
@@ -22,6 +54,16 @@
     background-position: center;
     height: 100vh;
     text-align: center;
+}
+
+h1 {
+    font-family: 'Ruluko', sans-serif;
+    text-shadow: 2px 2px #000000;
+}
+
+h2, h3, h4, h5, h6{
+    font-family: 'Ruluko', sans-serif;
+    color: #000000;
 }
 
 nav{

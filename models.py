@@ -67,6 +67,7 @@ class Trails(MongoModel):
     description = fields.CharField(max_length=500, required=True)
     centrepoint = fields.PointField(required=False)
     waypoints = fields.LineStringField(required=False)
+    image = fields.URLField(required = True)
     embed_route = fields.CharField(max_length=800, required=True)
     location = fields.ReferenceField(Location)
     comments = fields.EmbeddedDocumentListField('Comment', required=False)
