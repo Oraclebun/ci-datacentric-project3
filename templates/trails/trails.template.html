@@ -3,7 +3,7 @@
 {% block content %}
  <div class="container section">
       <div class="row">
-        
+         {% for trail in trails %}
         <h3 class="trail-title">{{trail.trail_name}}</h3>
         
           <div class="col s12 m7">
@@ -97,7 +97,7 @@
 
         </div>
         {% endfor %}
-
+        {% endfor %}
     </div>
 </div>
 

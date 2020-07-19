@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, redirect, url_for, flash
+from flask import Flask, render_template, request, redirect, url_for, flash, Markup
 from models import Hiker, Trails, Location, Comment
 import os
 import pymongo
@@ -259,7 +259,116 @@ Route to show trail in database and it's comments
 """
 @app.route('/trails/<trail_id>')
 def get_trail(trail_id):
-    trail = Trails.objects.get({'_id': ObjectId(trail_id)})
+    pre_q = Trails.objects.raw({
+        '$and': [{
+            "_id": ObjectId(trail_id)
+        },
+            {'comments': {'$exists': True}}
+        ]
+    })
+
+    qs = Trails.objects.raw({'_id': ObjectId(trail_id)})
+    if not list(pre_q):
+        cursor = qs.aggregate(
+            {"$addFields": {
+                "rating_average": {"$avg": "$comments.ratings"}
+            }},
+            {"$project": {
+                "_id": 1,
+                "trail_name": 1,
+                "description": 1,
+                "embed_route": 1,
+                "image": 1,
+                "distance": 1,
+                "route_type": 1,
+                "elevation": 1,
+                "difficulty": 1,
+                "centrepoint": 1,
+                "waypoints": 1,
+                "location": 1,
+                "rating_average": {"$ifNull": ['$rating_average', 0]}
+            }
+            }
+        )
+    else:
+        cursor = qs.aggregate(
+            {"$addFields": {
+                "rating_average": {"$avg": "$comments.ratings"}
+            }},
+            {
+                "$unwind": "$comments"
+            },
+            {
+                "$sort": {
+                    "comments.date_comment": pymongo.DESCENDING
+                }
+            },
+            {"$lookup":
+             {
+                 "from": "hiker",
+                 "localField": "comments.author",
+                 "foreignField": "_id",
+                 "as": "comments.author"
+             }
+             },
+            {
+                "$unwind": "$comments.author"
+            },
+            {
+                "$group": {
+                    "_id": "$_id",
+                    "trail_name": {"$first": "$trail_name"},
+                    "description": {"$first": "$description"},
+                    "embed_route": {"$first": "$embed_route"},
+                    "image": {"$first": "$image"},
+                    "distance": {"$first": "$distance"},
+                    "route_type": {"$first": "$route_type"},
+                    "elevation": {"$first": "$elevation"},
+                    "difficulty": {"$first": "$difficulty"},
+                    "centrepoint": {"$first": "$centrepoint"},
+                    "waypoints": {"$first": "$waypoints"},
+                    "location": {"$first": "$location"},
+                    "rating_average": {"$first": "$rating_average"},
+                    "comments": {"$push": "$comments"}
+                }
+            },
+            {"$project": {
+                "_id": 1,
+                "trail_name": 1,
+                "description": 1,
+                "embed_route": 1,
+                "image":1,
+                "distance": 1,
+                "route_type": 1,
+                "elevation": 1,
+                "difficulty": 1,
+                "centrepoint": 1,
+                "waypoints": 1,
+                "location": 1,
+                "rating_average": 1,
+                "comments": 1
+            }
+            }
+        )
+    trails = []
+    for results in cursor:
+        dictionary = {
+            'trail_id': results['_id'],
+            'trail_name': results['trail_name'],
+            'distance': results['distance'],
+            'elevation': results['elevation'],
+            'route_type': results['route_type'],
+            'difficulty': results['difficulty'],
+            'description': results['description'],
+            'waypoints': results['waypoints'],
+            'centrepoint': results['centrepoint'],
+            'image': results['image'],
+            'embed_route': Markup(results['embed_route']),
+            'location': results['location'],
+            'avg_rating': results['rating_average'],
+            'comments': results.get("comments", [])
+        }
+        trails.append(dictionary)
     user = flask_login.current_user
     if(user.is_authenticated):
         try:
@@ -268,7 +377,7 @@ def get_trail(trail_id):
             return 'Unauthorised' + ve.message
     else:
         auth_user = None
-    return render_template('trails/trails.template.html', trail=trail, login_user=auth_user)
+    return render_template('trails/trails.template.html', trails=trails, login_user=auth_user)
 
 
 """ 
