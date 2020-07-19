@@ -74,7 +74,7 @@ def api_sign_request(params_to_sign, api_secret):
     return compute_hex_hash(to_sign + api_secret)
 
 
-@app.route('/generateKey', methods= ['POST'])
+@app.route('/generateKey')
 def signUploadRequest():
     params_to_sign = request.args.to_dict()
     signature = api_sign_request(params_to_sign, API_SECRET)

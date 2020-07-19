@@ -13,6 +13,8 @@ $(document).ready(function(){
     $(".dropdown-trigger").dropdown();
     //activate materialize built-in datepicker
     $('.datepicker').datepicker();
+    //activate materialize material box
+    $('.materialboxed').materialbox();
         
 
     $.fn.stars = function () {
