@@ -7,7 +7,7 @@ import datetime
 import flask_login
 from dotenv import load_dotenv
 from bson.objectid import ObjectId
-from forms import CreateProfile, LoginForm, UpdateProfile, CommentsForm
+from forms import CreateProfile, UpdateProfile, CommentsForm
 from pymodm import connect
 from pymodm.errors import ValidationError
 
@@ -386,23 +386,23 @@ Route to login user.
 """
 @app.route('/login', methods=['GET', 'POST'])
 def login():
-    form = LoginForm()
-    if form.validate_on_submit():
+    if request.method == 'POST':
+        username = request.form.get('username')
+        email = request.form.get('email')
         try:
-            db_user = Hiker.objects.get({"username": form.username.data})
+            db_user = Hiker.objects.get({"username": username})
             if db_user:
                 user = User()
                 user.id = db_user._id
-                if (db_user.email == form.email.data):
+                if (db_user.email == email):
                     flask_login.login_user(user)
                     flash(f" You logged in successfully as {db_user.username}")
                     return redirect(url_for('index'))
                 else:
-                    flash(f" Wrong e-mail address")
-                    return render_template('trails/403_error.html', error = "Forbidden")
+                    flash(f" Wrong e-mail address. Please try again.")
         except Hiker.DoesNotExist:
-            return 'Login Failed, Please register'
-    return render_template('trails/login.template.html', form=form)
+            flash(f" Wrong username. Please try again")
+    return render_template('trails/login.template.html')
 
 
 """ 
@@ -411,9 +411,8 @@ Route to logout user.
 @app.route('/logout')
 def logout():
     flask_login.logout_user()
-    form = LoginForm()
     flash(f'You logged out successfully')
-    return render_template('trails/login.template.html', form=form)
+    return render_template('trails/login.template.html')
 
 
 """ 

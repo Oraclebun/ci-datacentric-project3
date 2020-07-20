@@ -59,9 +59,3 @@ class CommentsForm(FlaskForm):
     hours_taken = IntegerField('Hours Taken', validators=[NumberRange(min=0, max=23, message="Number of hours cannot exceed 23")])
     minutes_taken = IntegerField('Minutes Taken',validators=[NumberRange(min=0, max=59, message="Number of minutes cannot exceed 59")])
     submit = SubmitField('Submit')
-
-
-class LoginForm(FlaskForm):
-    username = StringField('Username',validators=[InputRequired(), Length(min=5, max=20, message="Username have to be 5-20 Chars")])
-    email = EmailField('E-mail', validators=[InputRequired()]) 
-    submit = SubmitField('Submit')
