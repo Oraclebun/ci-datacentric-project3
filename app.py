@@ -451,7 +451,6 @@ def create_profile():
         if form.errors:
             message = [v for k, v in form.errors.items()]
             flash(message)
-            return redirect(url_for('index'))
     return render_template('trails/create_profile.template.html', form=form, cloud_name=CLOUD_NAME, upload_preset=UPLOAD_PRESET, api_key=API_KEY)
 
 

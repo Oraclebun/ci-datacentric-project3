@@ -83,10 +83,10 @@ class Comment(EmbeddedMongoModel):
     """
     author = fields.ReferenceField(Hiker)
     date_comment = fields.DateTimeField(default=datetime.datetime.now())
-    body = fields.CharField(max_length=250)
+    body = fields.CharField(max_length=250, blank = False)
     sightings = fields.ListField(fields.CharField(max_length=20))
     ratings = fields.IntegerField(min_value=1, max_value=5)
-    date_started = fields.DateTimeField()
+    date_started = fields.DateTimeField(blank = False)
     hours_taken = fields.IntegerField(min_value=0, max_value=48)
     minutes_taken = fields.IntegerField(min_value=0, max_value=59)
 

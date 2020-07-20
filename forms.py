@@ -1,9 +1,10 @@
 from flask_wtf import FlaskForm
 from wtforms import StringField, RadioField, SubmitField, SelectField, DateField, TextAreaField, FieldList, FormField, HiddenField, validators
-from wtforms.validators import DataRequired, InputRequired, NumberRange, Email, Length, Optional, ValidationError
+from wtforms.validators import DataRequired, InputRequired, NumberRange, Length, Optional, ValidationError
 from wtforms.fields.html5 import EmailField, IntegerField
 from bson.objectid import ObjectId
 from models import Hiker
+import re
 
 
 class CreateProfile(FlaskForm):
@@ -11,7 +12,7 @@ class CreateProfile(FlaskForm):
     fname = StringField('First Name', validators=[InputRequired(), Length(min=2, max=20, message="First Name have to be 2-30 Chars")])
     lname = StringField('Last Name', validators=[InputRequired(), Length(min=2, max=20, message="Last Name have to be 2-20 Chars")])
     origin = StringField('Origin', validators=[InputRequired()])
-    email = EmailField('E-mail', validators=[InputRequired()])     
+    email = EmailField('E-mail', validators=[InputRequired()])
     trails_completed = IntegerField('Trails Completed')
     profile_pic = HiddenField("Profile Picture", validators=[InputRequired(message="Profile Picture is required.")])
     submit = SubmitField('Submit')
@@ -24,6 +25,12 @@ class CreateProfile(FlaskForm):
                 raise ValidationError(message)    
         except Hiker.DoesNotExist:
             pass
+
+    def validate_email(self,email):
+            message = 'Not a valid e-mail address'
+            EMAIL_REGEX = re.compile(r'[^@]+@[^@]+\.[^@]+')
+            if not EMAIL_REGEX.match(email.data):
+                raise ValidationError(message)
 
 
 class UpdateProfile(FlaskForm):
