@@ -5,6 +5,7 @@ import pymongo
 from app import app
 from bson.objectid import ObjectId
 
+
 app.config['DEBUG'] = False
 app.config['TESTING'] = True
 app.config['WTF_CSRF_ENABLED']= False
@@ -59,7 +60,7 @@ class TestApp(unittest.TestCase):
         response = self.register('iamtester', 'pied', 'pipper', 'USA', 'abcde.12345@gemailcom', 0, 'http://res.cloudinary.com/c7oud0311/image/upload/v1594909482/project3/profile5_gg2qml.jpg')
         error_msg = "Not a valid e-mail address"
         self.assertIn(str.encode(error_msg), response.data)
-    
+        
     def login(self, username, email):
         return self.app.post(
             '/login',
@@ -72,7 +73,6 @@ class TestApp(unittest.TestCase):
         self.assertEqual(response.status_code, 200)
         success_msg = "You logged in successfully as ttester1"
         self.assertIn(str.encode(success_msg), response.data)
-
 
     def deregister():
         pass

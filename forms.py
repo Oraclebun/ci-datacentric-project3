@@ -42,6 +42,12 @@ class UpdateProfile(FlaskForm):
     profile_pic = HiddenField("Profile Picture", validators=[Optional()])
     submit = SubmitField('Submit')
         
+    def validate_email(self,email):
+        message = 'Not a valid e-mail address'
+        EMAIL_REGEX = re.compile(r'[^@]+@[^@]+\.[^@]+')
+        if not EMAIL_REGEX.match(email.data):
+            raise ValidationError(message)
+
 
 class SightingsForm(FlaskForm):
     tag = StringField('e.g. Birds', validators=[Optional()])

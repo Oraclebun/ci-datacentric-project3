@@ -401,7 +401,7 @@ def login():
                 else:
                     flash(f" Wrong e-mail address. Please try again.")
         except Hiker.DoesNotExist:
-            flash(f" Wrong username. Please try again")
+            flash(f" Wrong username. Please try again.")
     return render_template('trails/login.template.html')
 
 
