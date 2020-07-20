@@ -1,6 +1,5 @@
 import unittest, os
 from pymodm import connect
-from pymodm.errors import ValidationError
 from models import Hiker, Trails, Location, Comment
 import pymongo
 from app import app
@@ -14,8 +13,6 @@ app.secret_key = os.environ.get("API_SECRET")
 MONGODB_URI = os.environ.get('MONGO_URI')
 
 testTrailName = 'The Great Sugar Loaf Trail'
-
-#print(dir(app))
 
 class TestApp(unittest.TestCase):
     def setUp(self):
@@ -62,8 +59,6 @@ class TestApp(unittest.TestCase):
         response = self.register('iamtester', 'pied', 'pipper', 'USA', 'abcde.12345@gemailcom', 0, 'http://res.cloudinary.com/c7oud0311/image/upload/v1594909482/project3/profile5_gg2qml.jpg')
         error_msg = "Not a valid e-mail address"
         self.assertIn(str.encode(error_msg), response.data)
-        ### need to add test to ensure page did not redirect
-        #self.assertEqual(urlparse(response.location).path, expectedPath)
     
     def login(self, username, email):
         return self.app.post(

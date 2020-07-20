@@ -77,7 +77,7 @@ location_ids = Location.objects.bulk_create([
     Location('Singapore', province=[Province(
         state='North', town=Town(town='Yishun'))]),
     Location('Singapore', province=[Province(
-        state='North East', town=Town(town='Punggol'))])  # 32
+        state='North East', town=Town(town='Punggol'))])  # 33
 ])
 
 trail1 = Trails(
@@ -342,6 +342,6 @@ trail_ids = Trails.objects.bulk_create([
             103.928770, 1.405492], [103.923835, 1.410408], [103.921217, 1.412392], [103.915651, 1.416899, ]]},
         image="https://res.cloudinary.com/c7oud0311/image/upload/v1595142713/project3/loca18_iokayj.jpg",
         embed_route='<iframe src="https://www.google.com/maps/embed?pb=!1m46!1m12!1m3!1d7977.224160593629!2d103.91752672420884!3d1.4089282715083804!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!4m31!3e2!4m3!3m2!1d1.4161434!2d103.9154301!4m5!1s0x31da3f6ac3dc7faf%3A0xab81f99aeb9f3ecf!2sConey%20Island%20(East%20Entrance)!3m2!1d1.401541!2d103.9297304!4m3!3m2!1d1.4054579!2d103.9287963!4m5!1s0x31da3f640dcc9a15%3A0xe388968c60f2a51a!2sBeach%20Area%20B!3m2!1d1.4104742!2d103.92388539999999!4m5!1s0x31da3f7d06057693%3A0x11be4420beb547bc!2sBeach%20area%20A%20Coney%20Island!3m2!1d1.412391!2d103.9212002!4m3!3m2!1d1.4162314!2d103.91553449999999!5e0!3m2!1sen!2ssg!4v1594646564348!5m2!1sen!2ssg" width="400" height="400" frameborder="0" style="border:0;" allowfullscreen="" aria-hidden="false" tabindex="0"></iframe>',
-        location=location_ids[32]
+        location=location_ids[33]
     )
 ])

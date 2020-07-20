@@ -133,3 +133,9 @@ span.stars span {
 textarea{
     height: 6rem;
 }
+
+@media(max-width: 768px) {
+.dir-img{
+    display: none;
+}
+}

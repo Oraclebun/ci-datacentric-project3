@@ -160,7 +160,6 @@ Route to show all trails (searchable) in database as a directory
 @app.route('/directory')
 def show_all():
     search_terms = request.args.get('query')
-    criteria = {}
     qs = Trails.objects.raw({})
 
     # if there are search terms, add it to the critera dictionary
@@ -184,6 +183,7 @@ def show_all():
                     {"location.town": {"$regex": search_terms, "$options": 'i'}},
                     {"trail_name": {"$regex": search_terms, "$options": 'i'}},
                     {"difficulty": {"$regex": search_terms, "$options": 'i'}},
+                    {"route_type": {"$regex": search_terms, "$options": 'i'}},
                     {"description": {"$regex": search_terms, "$options": 'i'}}
                 ]
             }
@@ -234,6 +234,7 @@ def show_by_rating():
                 "_id": 1,
                 "trail_name": 1,
                 "description": 1,
+                "image": 1,
                 "embed_route": 1,
                 "distance": 1,
                 "route_type": 1,

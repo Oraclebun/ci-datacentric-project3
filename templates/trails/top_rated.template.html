@@ -10,7 +10,7 @@
       <ul class="collection">
         {% for trail in all_trails %}
         <li class="collection-item avatar">
-          <img src="" alt="" class="circle" />
+          <img src="{{trail.image}}" alt="" class="circle" />
           <span class="title">{{trail.trail_name}}</span>
           <p>{{trail.location.province.town.town}},{{trail.location.province.state}},{{trail.location.country}}</p>
           <span>{{trail.difficulty}}</span>
