@@ -612,6 +612,10 @@ def delete_comment(trail_id, n):
         flash("You're not authorized to delete this comment")
     return redirect(url_for('get_trail', trail_id=trail_id))
 
+@app.errorhandler(404)
+def page_not_found(e):
+    # note that we set the 404 status explicitly
+    return render_template('404_error.html'), 404
 
 # "magic code" -- boilerplate
 if __name__ == '__main__':

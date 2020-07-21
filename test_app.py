@@ -4,7 +4,7 @@ from models import Hiker, Trails, Location, Comment
 import pymongo
 from app import app
 from bson.objectid import ObjectId
-
+from bs4 import BeautifulSoup
 
 app.config['DEBUG'] = False
 app.config['TESTING'] = True
@@ -63,6 +63,9 @@ class TestApp(unittest.TestCase):
         self.assertEqual(response.status_code, 200)
         error_msg = "User already exists. Please choose another username."
         self.assertIn(str.encode(error_msg), response.data)
+        #test form did not submit and page did not redirect
+        document = BeautifulSoup(response.data, features='html.parser')
+        assert document.find("form", {"action": "/create_profile"})
 
     """
     Test if user register with an invalid e-mail address
@@ -70,7 +73,13 @@ class TestApp(unittest.TestCase):
     def test_user_registration_invalid_email(self):
         response = self.register('iamtester', 'pied', 'pipper', 'USA', 'abcde.12345@gemailcom', 0, 'http://res.cloudinary.com/c7oud0311/image/upload/v1594909482/project3/profile5_gg2qml.jpg')
         error_msg = "Not a valid e-mail address"
+        self.assertIn(str.encode(error_msg), response.data)
+        #check form did not submit and page did not redirect
+        document = BeautifulSoup(response.data, features='html.parser')
+        assert document.find("form", {"action" : "/create_profile"})
         
+        
+    
     def login(self, username, email):
         return self.app.post(
             '/login',
@@ -83,7 +92,39 @@ class TestApp(unittest.TestCase):
         self.assertEqual(response.status_code, 200)
         success_msg = "You logged in successfully as ttester1"
         self.assertIn(str.encode(success_msg), response.data)
-        
+        ### check that page redirected has a div with class=parallax-container(index.html)
+        document = BeautifulSoup(response.data, features='html.parser')
+        assert document.find("div", {"class" : "parallax-container"})
+
+    
+    def test_user_login_invalid_username(self):
+        response = self.login('ttester2', 'pied@piper.com')
+        error_msg = "Wrong username. Please try again."
+        self.assertIn(str.encode(error_msg), response.data)
+        ### check that page did not redirected
+        document = BeautifulSoup(response.data, features='html.parser')
+        assert document.find("form", {"action": "/login"})
+
+    
+    def test_user_login_invalid_email(self):
+        response = self.login('ttester1', 'piedpi@per.com')
+        error_msg = "Wrong e-mail address. Please try again."
+        self.assertIn(str.encode(error_msg), response.data)
+        ### check that page did not redirected
+        document = BeautifulSoup(response.data, features='html.parser')
+        assert document.find("form", {"action" : "/login"})
+
+    def logout(self):
+        return self.app.get('/logout',follow_redirects=True)
+
+    def test_user_logout(self):
+        response = self.app.get('/logout')
+        success_msg = "You logged out successfully."
+        self.assertIn(str.encode(success_msg), response.data)
+        ### check that page is login page
+        document = BeautifulSoup(response.data, features='html.parser')
+        assert document.find("form", {"action" : "/login"})
+
     def deregister():
         pass
 

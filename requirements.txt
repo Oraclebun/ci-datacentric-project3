@@ -1,3 +1,4 @@
+beautifulsoup4==4.9.1
 click==7.1.2
 dnspython==1.16.0
 Flask==1.1.2
@@ -8,5 +9,6 @@ itsdangerous==1.1.0
 pymodm==0.4.3
 pymongo==3.10.1
 python-dotenv==0.13.0
+soupsieve==2.0.1
 Werkzeug==1.0.1
 WTForms==2.3.1
