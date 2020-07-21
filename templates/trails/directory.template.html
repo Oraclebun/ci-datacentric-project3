@@ -27,17 +27,17 @@
 				<img src="{{trail.image}}" alt="" class="responsive-img"/>
 	        </div>
 				<div class="card-stacked">
-					<div class="card-action">
-						<a href="trails/{{trail._id}}" class="green-text text-darken-2">{{trail.trail_name}}</a>
-					</div>
 					<div class="card-content">
+                    <h6 class="dir-title">
+						<a href="trails/{{trail._id}}" class="green-text text-darken-2">{{trail.trail_name}}</a>
+                    </h6>
 						<p>
 							Location: {{trail.location.province.town.town}},{{trail.location.province.state}},
 							{{trail.location.country}},
 						</p>
 						<p>Route Type: {{trail.route_type}}</p>
 						<p>Trail Difficulty: {{trail.difficulty}}</p>
-						<p>Trail Description: {{trail.description}}</p>
+						<p class="dir-desc">Trail Description: {{trail.description}}</p>
 					</div>
 				</div>
 			</div>

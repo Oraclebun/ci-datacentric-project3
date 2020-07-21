@@ -411,7 +411,7 @@ Route to logout user.
 @app.route('/logout')
 def logout():
     flask_login.logout_user()
-    flash(f'You logged out successfully')
+    flash(f'You logged out successfully.')
     return render_template('trails/login.template.html')
 
 

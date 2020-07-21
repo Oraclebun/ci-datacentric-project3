@@ -49,6 +49,35 @@ font-style: italic;
     margin-left: -5px;
 }
 
+.dir-desc{
+overflow: hidden;
+position: relative;
+line-height: 1.5em; /*height of a single line in body*/
+max-height: 3em; /*max height = 2 lines, 1.5*2 = 3em*/ 
+padding-right: 1em; /*set this area for ...*/
+}
+
+.dir-desc:before{
+    content: "...";     /*add the '...' behind if body too long*/
+    position: absolute;
+    right: 0;           /*position the '...'*/
+    bottom: 0;
+    
+}
+
+.dir-desc:after{
+    content: "";        /*hide the'...' if body is less than max-heigh*/
+    position: absolute;
+    right: 0;
+    width: 1em;
+    height: 1em;
+    background: white;
+}
+
+.dir-title{
+    font-weight: 800;
+}
+
 .error-background{
     background: url("../image/403status.jpg") no-repeat;
     background-position: center;
