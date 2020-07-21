@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, redirect, url_for, flash, Markup
+from flask import Flask, render_template, request, redirect, url_for, session, flash, Markup
 from models import Hiker, Trails, Location, Comment
 import os
 import pymongo
@@ -151,7 +151,15 @@ def index():
             'town': loc.location.province[0].town.town
         }
         trails_loc.append(locations)
-    return render_template('index.html', location=trails_loc, comments=reviews)
+    user = flask_login.current_user
+    if(user.is_authenticated):
+        try:
+            auth_user = Hiker.objects.get({"_id": user.id})
+        except ValidationError as ve:
+            return 'Unauthorised' + ve.message
+    else:
+        auth_user = None
+    return render_template('index.html', location=trails_loc, comments=reviews, auth_user=auth_user)
 
 
 """ 
@@ -159,6 +167,7 @@ Route to show all trails (searchable) in database as a directory
 """
 @app.route('/directory')
 def show_all():
+    auth_user= session.get('_user_id')
     search_terms = request.args.get('query')
     qs = Trails.objects.raw({})
 
@@ -206,7 +215,7 @@ def show_all():
             {"$unwind": "$location.province"},
             {"$unwind": "$location.province.town"}
         )
-    return render_template('trails/directory.template.html', all_trails=cursor)
+    return render_template('trails/directory.template.html', all_trails=cursor, auth_user = auth_user)
 
 
 """ 
@@ -214,6 +223,7 @@ Route to show trail in database sorted by average user ratings
 """
 @app.route('/top-rated')
 def show_by_rating():
+    auth_user= session.get('_user_id')
     qs = Trails.objects.raw({})
     cursor = qs.aggregate(
             {"$addFields": {
@@ -252,7 +262,7 @@ def show_by_rating():
                 }
             }
         )
-    return render_template('trails/top_rated.template.html', all_trails=cursor)
+    return render_template('trails/top_rated.template.html', all_trails=cursor, auth_user=auth_user)
 
 
 """ 
@@ -354,7 +364,7 @@ def get_trail(trail_id):
     trails = []
     for results in cursor:
         dictionary = {
-            'trail_id': results['_id'],
+            '_id': results['_id'],
             'trail_name': results['trail_name'],
             'distance': results['distance'],
             'elevation': results['elevation'],
@@ -378,7 +388,7 @@ def get_trail(trail_id):
             return 'Unauthorised' + ve.message
     else:
         auth_user = None
-    return render_template('trails/trails.template.html', trails=trails, login_user=auth_user)
+    return render_template('trails/trails.template.html', trails=trails, auth_user=auth_user)
 
 
 """ 
@@ -386,6 +396,8 @@ Route to login user.
 """
 @app.route('/login', methods=['GET', 'POST'])
 def login():
+    auth_user= session.get('_user_id')
+    print(auth_user)
     if request.method == 'POST':
         username = request.form.get('username')
         email = request.form.get('email')
@@ -402,7 +414,7 @@ def login():
                     flash(f" Wrong e-mail address. Please try again.")
         except Hiker.DoesNotExist:
             flash(f" Wrong username. Please try again.")
-    return render_template('trails/login.template.html')
+    return render_template('trails/login.template.html', auth_user=auth_user)
 
 
 """ 
@@ -412,7 +424,9 @@ Route to logout user.
 def logout():
     flask_login.logout_user()
     flash(f'You logged out successfully.')
-    return render_template('trails/login.template.html')
+    auth_user= session.get('_user_id')
+    print(session)
+    return render_template('trails/login.template.html', auth_user=auth_user)
 
 
 """ 
@@ -435,6 +449,7 @@ Route to create profile.
 """
 @app.route('/create_profile', methods=['GET', 'POST'])
 def create_profile():
+    auth_user= session.get('_user_id')
     form = CreateProfile()
     if form.validate_on_submit():
         Hiker(fname=form.fname.data,
@@ -451,7 +466,7 @@ def create_profile():
         if form.errors:
             message = [v for k, v in form.errors.items()]
             flash(message)
-    return render_template('trails/create_profile.template.html', form=form, cloud_name=CLOUD_NAME, upload_preset=UPLOAD_PRESET, api_key=API_KEY)
+    return render_template('trails/create_profile.template.html', form=form, cloud_name=CLOUD_NAME, upload_preset=UPLOAD_PRESET, api_key=API_KEY, auth_user=auth_user)
 
 
 """

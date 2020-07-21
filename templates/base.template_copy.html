@@ -28,41 +28,31 @@
         <li><a href="{{url_for('index')}}">Home</a></li>
         <li><a href="{{url_for('show_all')}}">Directory</a></li>
         <li><a href="{{url_for('show_by_rating')}}">Top Rated</a></li>
-        {% if auth_user != None %}
-        <li><a class="dropdown-trigger" href="#" data-target="dropdown1">
-            <i class="material-icons right">person</i></a></li>
-        {% else %}
         <li><a href="{{url_for('create_profile')}}">Register</a></li>
+        <li><a class="dropdown-trigger" href="#" data-target="dropdown1">My Profile<i class="material-icons right">arrow_drop_down</i></a></li>
+            <!-- Dropdown Structure -->
+        <ul id="dropdown1" class="dropdown-content">
         <li><a href="{{url_for('login')}}">Login</a></li>
-        {% endif %}
+        <li><a href="{{url_for('show_profile')}}">Manage Profile</a></li>
+        <li><a href="{{url_for('logout')}}">Logout</a></li>
+        </ul>
       </ul>
     </div>
   </nav>
-
-  <!-- Dropdown Structure -->
-    <ul id="dropdown1" class="dropdown-content">
-    <li><a href="{{url_for('show_profile')}}">Manage Profile</a></li>
-    <li><a href="{{url_for('logout')}}">Logout</a></li>
-    </ul>
 
   <ul class="sidenav" id="mobile-nav">
     <li><a href="{{url_for('index')}}">Home</a></li>
     <li><a href="{{url_for('show_all')}}">Directory</a></li>
     <li><a href="{{url_for('show_by_rating')}}">Top Rated</a></li>
-    {% if auth_user != None %}
-    <li><a class="dropdown-trigger" href="#" data-target="dropdown2">My Profile<i class="material-icons">arrow_drop_down</i></a></li>
-    {% else %}
     <li><a href="{{url_for('create_profile')}}">Register</a></li>
-     <li><a href="{{url_for('login')}}">Login</a></li>
-    {% endif %}
-  </ul>
-
-  <!-- Dropdown Structure -->
+    <li><a class="dropdown-trigger" href="#" data-target="dropdown2">My Profile<i class="material-icons right">arrow_drop_down</i></a></li>
+    <!-- Dropdown Structure -->
         <ul id="dropdown2" class="dropdown-content">
+        <li><a href="{{url_for('login')}}">Login</a></li>
         <li><a href="{{url_for('show_profile')}}">Manage Profile</a></li>
         <li><a href="{{url_for('logout')}}">Logout</a></li>
         </ul>
-        
+  </ul>
     {% block content %}
     {% endblock %}
 
