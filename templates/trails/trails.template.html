@@ -71,7 +71,7 @@
           <span>Time taken: {{com.hours_taken}} hour(s),{{com.minutes_taken}} minute(s)</span>
         </div>
       </div>
-      {% if auth_user._id == com.author._id %}
+      {% if auth_user == com.author._id %}
       <div class = "col m4">
       <div class="col s6">
           <a class="waves-effect waves-light blue darken-1 btn" href="{{ url_for('edit_comment', trail_id = trail._id, n=loop.index0) }}"><i class="material-icons left">content_cut</i><span class="hide-on-small-only">Edit</span></a>

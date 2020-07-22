@@ -151,14 +151,7 @@ def index():
             'town': loc.location.province[0].town.town
         }
         trails_loc.append(locations)
-    user = flask_login.current_user
-    if(user.is_authenticated):
-        try:
-            auth_user = Hiker.objects.get({"_id": user.id})
-        except ValidationError as ve:
-            return 'Unauthorised' + ve.message
-    else:
-        auth_user = None
+    auth_user=session.get('_user_id')
     return render_template('index.html', location=trails_loc, comments=reviews, auth_user=auth_user)
 
 
@@ -380,14 +373,8 @@ def get_trail(trail_id):
             'comments': results.get("comments", [])
         }
         trails.append(dictionary)
-    user = flask_login.current_user
-    if(user.is_authenticated):
-        try:
-            auth_user = Hiker.objects.get({"_id": user.id})
-        except ValidationError as ve:
-            return 'Unauthorised' + ve.message
-    else:
-        auth_user = None
+
+    auth_user = ObjectId(session.get('_user_id'))
     return render_template('trails/trails.template.html', trails=trails, auth_user=auth_user)
 
 
@@ -397,7 +384,6 @@ Route to login user.
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     auth_user= session.get('_user_id')
-    print(auth_user)
     if request.method == 'POST':
         username = request.form.get('username')
         email = request.form.get('email')
@@ -425,7 +411,6 @@ def logout():
     flask_login.logout_user()
     flash(f'You logged out successfully.')
     auth_user= session.get('_user_id')
-    print(session)
     return render_template('trails/login.template.html', auth_user=auth_user)
 
 
@@ -627,10 +612,10 @@ def delete_comment(trail_id, n):
         flash("You're not authorized to delete this comment")
     return redirect(url_for('get_trail', trail_id=trail_id))
 
-@app.errorhandler(404)
-def page_not_found(e):
-    # note that we set the 404 status explicitly
-    return render_template('404_error.html'), 404
+#@app.errorhandler(404)
+#def page_not_found(e):
+#    # note that we set the 404 status explicitly
+#    return render_template('404_error.html'), 404
 
 # "magic code" -- boilerplate
 if __name__ == '__main__':

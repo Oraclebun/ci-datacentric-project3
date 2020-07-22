@@ -47,39 +47,40 @@ class TestApp(unittest.TestCase):
         return self.app.post('/create_profile', data=dict(
             username=username, fname=fname, lname=lname, origin=origin, email=email, trails_completed=trails_completed, profile_pic=profile_pic), follow_redirects=True)
 
-    #def test_valid_user_registration(self):
-    #    response = self.register('ttester1', 'test', 'tester', 'QADept', 'test@tester.com', 100, 'http://res.cloudinary.com/c7oud0311/image/upload/v1594909482/project3/profile5_gg2qml.jpg')
-    #    self.assertEqual(response.status_code, 200)
-    #    success_msg = "Profile Created Successfully"
-    #    self.assertIn(str.encode(success_msg), response.data)
-    #     document = BeautifulSoup(response.data, features='html.parser')
-    #     assert document.find("div", {"class" : "parallax-container"})
+ #   def test_valid_user_registration(self):
+ #       response = self.register('ttester1', 'Test', 'Tester', 'Japan', 'test@tester.com', 100, 'http://res.cloudinary.com/c7oud0311/image/upload/v1594909482/project3/profile5_gg2qml.jpg')
+ #       time.sleep(3)
+ #       self.assertEqual(response.status_code, 200)
+ #       success_msg = "Profile Created Successfully"
+ #       self.assertIn(str.encode(success_msg), response.data)
+ #       document = BeautifulSoup(response.data, features='html.parser')
+ #       assert document.find("div", {"class" : "parallax-container"})
+
 
     """
     Test if user register with an invalid username
     """
-    def test_invalid_user_registration_duplicate_username(self):
-        response = self.register('ttester1', 'pied', 'piper', 'USA', 'pied@piper.com', 10, 'http://res.cloudinary.com/c7oud0311/image/upload/v1594909482/project3/profile5_gg2qml.jpg')
-        self.assertEqual(response.status_code, 200)
-        error_msg = "User already exists. Please choose another username."
-        self.assertIn(str.encode(error_msg), response.data)
-        #test form did not submit and page did not redirect
-        document = BeautifulSoup(response.data, features='html.parser')
-        assert document.find("form", {"action": "/create_profile"})
+ #   def test_invalid_user_registration_duplicate_username(self):
+ #       response = self.register('ttester1', 'Test', 'Tester', 'Japan', 'pied@piper.com', 10, 'http://res.cloudinary.com/c7oud0311/image/upload/v1594909482/project3/profile5_gg2qml.jpg')
+ #       self.assertEqual(response.status_code, 200)
+ #       error_msg = "User already exists. Please choose another username."
+ #       self.assertIn(str.encode(error_msg), response.data)
+ #       #test form did not submit and page did not redirect
+ #       document = BeautifulSoup(response.data, features='html.parser')
+ #       assert document.find("form", {"action": "/create_profile"})
 
     """
     Test if user register with an invalid e-mail address
     """
-    def test_user_registration_invalid_email(self):
-        response = self.register('iamtester', 'pied', 'pipper', 'USA', 'abcde.12345@gemailcom', 0, 'http://res.cloudinary.com/c7oud0311/image/upload/v1594909482/project3/profile5_gg2qml.jpg')
-        error_msg = "Not a valid e-mail address"
-        self.assertIn(str.encode(error_msg), response.data)
-        #check form did not submit and page did not redirect
-        document = BeautifulSoup(response.data, features='html.parser')
-        assert document.find("form", {"action" : "/create_profile"})
-        
-        
-    
+ #   def test_user_registration_invalid_email(self):
+ #       response = self.register('iamtester', 'Test', 'Tester', 'Japan', 'abcde.12345@gemailcom', 0, 'http://res.cloudinary.com/c7oud0311/image/upload/v1594909482/project3/profile5_gg2qml.jpg')
+ #       error_msg = "Not a valid e-mail address"
+ #       self.assertIn(str.encode(error_msg), response.data)
+ #       #check form did not submit and page did not redirect
+ #       document = BeautifulSoup(response.data, features='html.parser')
+ #       assert document.find("form", {"action" : "/create_profile"})
+
+
     def login(self, username, email):
         return self.app.post(
             '/login',
@@ -87,8 +88,8 @@ class TestApp(unittest.TestCase):
             follow_redirects=True
         )
 
-    def test_valid_user_login(self):
-        response = self.login('ttester1', 'pied@piper.com')
+def test_valid_user_login(self):
+        response = self.login('ttester1', 'test@tester.com')
         self.assertEqual(response.status_code, 200)
         success_msg = "You logged in successfully as ttester1"
         self.assertIn(str.encode(success_msg), response.data)
@@ -98,7 +99,7 @@ class TestApp(unittest.TestCase):
 
     
     def test_user_login_invalid_username(self):
-        response = self.login('ttester2', 'pied@piper.com')
+        response = self.login('ttester2', 'test@tester.com')
         error_msg = "Wrong username. Please try again."
         self.assertIn(str.encode(error_msg), response.data)
         ### check that page did not redirected
@@ -107,12 +108,30 @@ class TestApp(unittest.TestCase):
 
     
     def test_user_login_invalid_email(self):
-        response = self.login('ttester1', 'piedpi@per.com')
+        response = self.login('ttester1', 'test.tes@tercom')
         error_msg = "Wrong e-mail address. Please try again."
         self.assertIn(str.encode(error_msg), response.data)
         ### check that page did not redirected
         document = BeautifulSoup(response.data, features='html.parser')
         assert document.find("form", {"action" : "/login"})
+
+
+        ## have to put this part before logout
+
+    def post_comment(self, body, date_comment, hours_taken, minutes_taken, sightings, ratings, trailsId):
+        return self.app.post(
+            '/trails/new-comments/'+str(trails._id),
+            data=dict(body=body, date_comment=date_comment, hours_taken=hours_taken, minutes_taken=minutes_taken, sightings=sightings, ratings=ratings),
+            follow_redirects=True
+        )
+    
+    def test_post_comment(self):
+        trails = Trails.objects.get({'trail_name': testTrailName})
+        response = self.login('ttester1', 'test@tester.com')
+        self.assertEqual(response.status_code, 200)
+        success_msg = "You logged in successfully as ttester1"
+        response = self.app.get('/trails/new-comments/'+str(trails._id))
+        self.assertEqual(response.status_code, 200)
 
     def logout(self):
         return self.app.get('/logout',follow_redirects=True)
