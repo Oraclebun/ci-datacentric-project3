@@ -58,6 +58,7 @@ The compute_hex_hash and api_sign_request is taken from
 cloudinary-django
 """
 
+
 def compute_hex_hash(s):
     """
     Compute hash and convert the result to HEX string
@@ -160,13 +161,16 @@ Route to show all trails (searchable) in database as a directory
 """
 @app.route('/directory')
 def show_all():
-    auth_user= session.get('_user_id')
+    auth_user = session.get('_user_id')
     search_terms = request.args.get('query')
-    route_type_list = request.args.getlist('route-type')
+    route_types = request.args.getlist('route-type')
+    route_regex = "|".join(route_types)
+    difficulties = request.args.getlist('difficulty')
+    difficulty_regex = "|".join(difficulties)
     qs = Trails.objects.raw({})
 
-    # if there are search terms, add it to the critera dictionary
-    if search_terms != "" and search_terms is not None:
+    # if there are search terms and the lists are not empty
+    if (search_terms != "" and search_terms is not None) or (route_types) or (difficulties):
         cursor = qs.aggregate(
             {"$lookup":
              {
@@ -186,16 +190,19 @@ def show_all():
                         "$regex": search_terms, "$options": 'i'}},
                     {"location.town": {"$regex": search_terms, "$options": 'i'}},
                     {"trail_name": {"$regex": search_terms, "$options": 'i'}},
-                    {"difficulty": {"$regex": search_terms, "$options": 'i'}},
-                    {"route_type": {"$regex": search_terms, "$options": 'i'}},
+                    {"distance": {"$regex": search_terms, "$options": 'i'}},
+                    {"elevation": {"$regex": search_terms, "$options": 'i'}},
                     {"description": {"$regex": search_terms, "$options": 'i'}}
-                ]
-                },{
+                ]},
+                {
                 "$or": [
-                    {"difficulty": {"$regex": route_type, "$options": 'i'}},
-                    {"route_type": {"$regex": route_type, "$options": 'i'}}
-                ],
-                }]
+                    {"route_type": {"$regex": route_regex, "$options": 'i'}}
+                ]},
+                {
+                "$or": [
+                    {"difficulty": {"$regex": difficulty_regex, "$options": 'i'}}
+                ]}
+                ]
             }
             },
             {"$unwind": "$location"},
@@ -442,7 +449,7 @@ Route to create profile.
 """
 @app.route('/create_profile', methods=['GET', 'POST'])
 def create_profile():
-    auth_user= session.get('_user_id')
+    auth_user = session.get('_user_id')
     form = CreateProfile()
     if form.validate_on_submit():
         Hiker(fname=form.fname.data,
