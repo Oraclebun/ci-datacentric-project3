@@ -15,7 +15,8 @@ $(document).ready(function(){
     $('.datepicker').datepicker();
     //activate materialize material box
     $('.materialboxed').materialbox();
-        
+    //initialize dropdown select
+    $('select').formSelect();    
 
     $.fn.stars = function () {
         return $(this).each(function () {

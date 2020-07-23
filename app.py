@@ -162,6 +162,7 @@ Route to show all trails (searchable) in database as a directory
 def show_all():
     auth_user= session.get('_user_id')
     search_terms = request.args.get('query')
+    route_type_list = request.args.getlist('route-type')
     qs = Trails.objects.raw({})
 
     # if there are search terms, add it to the critera dictionary
@@ -176,6 +177,7 @@ def show_all():
              }
              },
             {"$match": {
+                "$and":[{
                 "$or": [
                     {"location.country": {"$regex": search_terms, "$options": 'i'}},
                     {"location.province.state": {
@@ -188,6 +190,12 @@ def show_all():
                     {"route_type": {"$regex": search_terms, "$options": 'i'}},
                     {"description": {"$regex": search_terms, "$options": 'i'}}
                 ]
+                },{
+                "$or": [
+                    {"difficulty": {"$regex": route_type, "$options": 'i'}},
+                    {"route_type": {"$regex": route_type, "$options": 'i'}}
+                ],
+                }]
             }
             },
             {"$unwind": "$location"},

@@ -8,12 +8,22 @@
     <h3>Trails</h3>
 <form methods="GET">
 	<div class="row">
-		<div class="input-field col s8 m4">
-			<input id="search" type="search" name="query">
+		<div class="input-field col s8 m3">
+			<input type="search" name="query">
 			<label for="search"><i class="material-icons">search</i></label>
 		</div>
-		<div class="input-field col s4 m4">
-			<button class="btn waves-effect waves-light" type="submit">Search</button>
+
+        <div class="input-field col s12 m3">
+        <select name="route-type" multiple>
+        <option value="out and back">Out and Back</option>
+        <option value="point to point">Point To Point</option>
+        <option value="loop">Loop</option>
+        </select>
+        <label>Route Type</label>
+        </div>
+
+		<div class="input-field col s4 m2">
+			<button id="search" class="btn waves-effect waves-light teal darken-4" type="submit">Search</button>
 		</div>
 	</div>
 </form>
@@ -21,9 +31,9 @@
 
 <div class="row">
 	{% for trail in all_trails %}
-	<div class="col s12 m10">
+	<div class="col s12">
 		<div class="card horizontal">
-			<div class="col s4 card-image dir-img">
+			<div class="col s4 card-image valign-wrapper">
 				<img src="{{trail.image}}" alt="" class="responsive-img"/>
 	        </div>
 				<div class="card-stacked">
@@ -32,11 +42,11 @@
 						<a href="trails/{{trail._id}}" class="green-text text-darken-2">{{trail.trail_name}}</a>
                     </h6>
 						<p>
-							Location: {{trail.location.province.town.town}},{{trail.location.province.state}},
+							{{trail.location.province.town.town}},{{trail.location.province.state}},
 							{{trail.location.country}},
 						</p>
-						<p>Route Type: {{trail.route_type}}</p>
-						<p>Trail Difficulty: {{trail.difficulty}}</p>
+						<span class="left-align">{{trail.route_type}}&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;{{trail.difficulty}}</span>
+                        <p> {{trail.distance}}km</p>
 						<p class="dir-desc">Trail Description: {{trail.description}}</p>
 					</div>
 				</div>
@@ -48,4 +58,10 @@
 
 </div>
 
+{% endblock %}
+
+{% block js%}
+<script>
+
+</script>
 {% endblock %}

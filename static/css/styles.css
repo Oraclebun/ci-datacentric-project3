@@ -3,6 +3,10 @@ body{
     font-size: 1rem;
 }
 
+.box-avg-rating{
+    margin-top: 15px;
+}
+
 .box-map {
  position: relative;
  padding-bottom: 100%;
@@ -58,11 +62,15 @@ font-style: italic;
     margin-left: -5px;
 }
 
+.details-title{
+    font-weight: 800;
+}
+
 .dir-desc{
 overflow: hidden;
 position: relative;
-line-height: 1.5em; /*height of a single line in body*/
-max-height: 3em; /*max height = 2 lines, 1.5*2 = 3em*/ 
+line-height: 1.2em; /*height of a single line in body*/
+max-height: 6em; /*max height = 5 lines, 1.2*5 = 6em*/ 
 padding-right: 1em; /*set this area for ...*/
 }
 
