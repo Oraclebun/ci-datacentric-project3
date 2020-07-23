@@ -192,6 +192,12 @@ textarea{
     height: 6rem;
 }
 
+.top-rated-body{
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
 @media(max-width: 768px) {
 .dir-img{
     display: none;

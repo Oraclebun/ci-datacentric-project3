@@ -234,7 +234,10 @@ def show_by_rating():
     qs = Trails.objects.raw({})
     cursor = qs.aggregate(
             {"$addFields": {
-                "rating_average": {"$avg": "$comments.ratings"}
+                "avrg_rating": {"$avg": "$comments.ratings"}        #add a new field that average all ratings
+            }},
+            {"$addFields": {
+                "rating_average": {"$round": ["$avrg_rating",0]}    #add a new field that rounds the average ratings
             }},
             {"$lookup":
              {
@@ -260,16 +263,23 @@ def show_by_rating():
                 "centrepoint": 1,
                 "waypoints": 1,
                 "location": 1,
-                "rating_average": {"$ifNull": ['$rating_average', 0]}
+                "rating_average": {"$ifNull": ['$rating_average', 0]}    
             }
             },
             {
+                "$group":{
+                    "_id": "$rating_average",
+                    "trails": { "$push": "$$ROOT" }
+                }
+            },
+            {
                 "$sort": {
-                    "rating_average": pymongo.DESCENDING
+                    "_id": pymongo.DESCENDING
                 }
             }
         )
-    return render_template('trails/top_rated.template.html', all_trails=cursor, auth_user=auth_user)
+
+    return render_template('trails/top_rated.template.html', rated=cursor, auth_user=auth_user)
 
 
 """ 
