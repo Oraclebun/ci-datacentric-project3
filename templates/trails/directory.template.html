@@ -32,7 +32,7 @@
         </div>
 
 		<div class="input-field col s4 m2">
-			<button id="search" class="btn waves-effect waves-light teal darken-4" type="submit">Search</button>
+			<button class="btn waves-effect waves-light teal darken-4" type="submit">Search</button>
 		</div>
 	</div>
 </form>
@@ -41,9 +41,9 @@
 <div class="row">
 	{% for trail in all_trails %}
 	<div class="col s12">
-		<div class="card horizontal">
+		<div class="card">
 			<div class="col s4 card-image valign-wrapper">
-				<img src="{{trail.image}}" alt="" class="responsive-img"/>
+				<img src="{{trail.image}}" alt="image of trail surroundings" class="responsive-img"/>
 	        </div>
 				<div class="card-stacked">
 					<div class="card-content">
@@ -54,8 +54,8 @@
 							{{trail.location.province.town.town}},{{trail.location.province.state}},
 							{{trail.location.country}},
 						</p>
-						<span class="left-align">{{trail.route_type}}&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;{{trail.difficulty}}</span>
-                        <p> {{trail.distance}}km</p>
+						<p><span class="chip">{{trail.route_type}}</span><span class="chip">{{trail.difficulty}}</span></p>
+                        <p>Distance: {{trail.distance}}km</p>
 						<p class="dir-desc">Trail Description: {{trail.description}}</p>
 					</div>
 				</div>
@@ -67,10 +67,4 @@
 
 </div>
 
-{% endblock %}
-
-{% block js%}
-<script>
-
-</script>
 {% endblock %}

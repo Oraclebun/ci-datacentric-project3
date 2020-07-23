@@ -191,7 +191,6 @@ def show_all():
                     {"location.town": {"$regex": search_terms, "$options": 'i'}},
                     {"trail_name": {"$regex": search_terms, "$options": 'i'}},
                     {"distance": {"$regex": search_terms, "$options": 'i'}},
-                    {"elevation": {"$regex": search_terms, "$options": 'i'}},
                     {"description": {"$regex": search_terms, "$options": 'i'}}
                 ]},
                 {

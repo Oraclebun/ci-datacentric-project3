@@ -93,6 +93,7 @@ padding-right: 1em; /*set this area for ...*/
 
 .dir-title{
     font-weight: 800;
+    display: inline-block;
 }
 
 .error-background{
