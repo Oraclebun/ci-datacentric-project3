@@ -43,7 +43,6 @@ def user_loader(id):
     try:
         # find the user from the database by its username
         user_in_db = Hiker.objects.get({"_id": ObjectId(id)})
-        print(user_in_db)
         user = User()
         # set the id of the user object to be the user's email
         user.id = user_in_db._id
@@ -420,7 +419,6 @@ def login():
                     flask_login.login_user(user)
                     flash(f" You logged in successfully as {db_user.username}")
                     return redirect(url_for('index'))
-                else:
                     flash(f" Wrong e-mail address. Please try again.")
         except Hiker.DoesNotExist:
             flash(f" Wrong username. Please try again.")

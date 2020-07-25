@@ -80,13 +80,13 @@
         </fieldset>
       </div>
 
-      <a class="waves-effect waves-light btn blue-grey lighten-1">{{form.submit()}}</a>
+      <a class="waves-effect waves-light btn teal darken-4">{{form.submit()}}</a>
     </form>
   </div>
 
   {% with messages = get_flashed_messages() %}
 	{% if messages %}
-	<div class="z-depth-3 deep-orange darken-2 flash">
+	<div class="z-depth-3 teal flash">
 		{% for message in messages %}
 		<p>{{ message }}</p>
 		{% endfor %}
