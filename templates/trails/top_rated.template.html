@@ -8,15 +8,23 @@
     
     <h3>Trails By Average Rating</h3>
 
-        {% for group in rated %}
-            
-                <h6>{{group._id}} stars</h6>
-                <div class="row">
+        {% for group in rated %}        
             {%for trail in group.trails %}
+            {% if loop.index0 ==0 %}
+                {% if group._id==0 %}
+                    <h6>Unrated</h6>
+                {%else%}
+                <h6>{{group._id}} stars</h6>
+                {% endif %}
+            {% endif %}
                 
-                {% if loop.index0 % 3 == 0 and loop.index0 != 0 %}
+                {% if loop.index0 % 3 == 0 %}
+                    {%if loop.index0 != 0 %}
+                    </div>  
+                    {%endif%}
                 <div class="row">
                 {% endif %}
+
                 <div class="col s12 m4">
                 <div class="card">
                 <div class="col s12 card-image">
@@ -27,7 +35,6 @@
                     <span class="stars">{{trail.rating_average}}</span>
                 </div>
             <div class="card-content">
-            {{loop.index0}}
             <p>{{trail.location.province.town.town}},{{trail.location.province.state}},{{trail.location.country}}</p>
             <span>{{trail.difficulty}}</span>
             <p>Distance: {{trail.distance}}</p>
@@ -36,11 +43,8 @@
             </div>
         </div>
         </div>
-        {% if loop.index0%3 == 0 and loop.index0 != 0%}
-        </div>
-        {% endif%}
             {% endfor %}
-                </div>
+            </div>
         {% endfor %}
       
 </div>

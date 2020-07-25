@@ -65,21 +65,21 @@
           {% endfor %}
     </div>
         <div class="row">
-          <p>{{com.body}}</p>
+          <p class="com-text">{{com.body}}</p>
         </div>
         <hr/>
         <div class="card-action">
-          <span>Hiked on: {{com.date_started}}</span>
-          <span>Time taken: {{com.hours_taken}} hour(s),{{com.minutes_taken}} minute(s)</span>
+          <span>Hiked on: {{com.date_started.strftime('%d %b %Y')}}</span>&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;
+          <span class="hike-period">Time taken: {{com.hours_taken}} hour(s),{{com.minutes_taken}} minute(s)</span>
         </div>
       </div>
-      {% if auth_user == com.author._id %}
+      {% if authenticated_user == com.author._id %}
       <div class = "col m4">
       <div class="col s6">
-          <a class="waves-effect waves-light blue darken-1 btn" href="{{ url_for('edit_comment', trail_id = trail._id, n=loop.index0) }}"><i class="material-icons left">content_cut</i><span class="hide-on-small-only">Edit</span></a>
+          <a class="waves-effect waves-light blue darken-1 btn com-btn tooltipped" href="{{ url_for('edit_comment', trail_id = trail._id, n=loop.index0) }}" data-position="bottom" data-tooltip="Edit"><i class="material-icons left">content_cut</i><span class="hide-on-small-only">Edit</span></a>
         </div>
         <div class="col s6">
-          <a class="waves-effect waves-light red darken-1 btn modal-trigger" href="#delete-comment-confirm-{{loop.index}}"><i class="material-icons left">delete_forever</i><span class="hide-on-small-only">Delete</span></a>
+          <a class="waves-effect waves-light red darken-1 btn modal-trigger com-btn tooltipped" href="#delete-comment-confirm-{{loop.index}}" data-position="bottom" data-tooltip="Delete"><i class="material-icons left">delete_forever</i><span class="hide-on-small-only">Delete</span></a>
         </div>
         </div>
         {% endif %}

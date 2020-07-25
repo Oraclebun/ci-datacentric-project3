@@ -20,6 +20,7 @@ body{
     background-color:#2f4f4f;
     color: #fff8e1;
     text-align: center;
+    padding-top: 0;
 }
 
 .card-title{
@@ -53,6 +54,10 @@ font-style: italic;
     background: white;
 }
 
+.com-btn{
+    font-size: 0.7rem;
+}
+
 .com-date{
     margin-top: 10px;
 }
@@ -60,6 +65,10 @@ font-style: italic;
 .com-ratings{
     margin-top: 10px;
     margin-left: -5px;
+}
+
+.com-text{
+    margin-left: 10px;
 }
 
 .details-title{
@@ -107,6 +116,12 @@ padding-right: 1em; /*set this area for ...*/
     filter: invert(86%) sepia(3%) saturate(3689%) hue-rotate(330deg) brightness(111%) contrast(101%);
   }
 
+.flash{
+    font-size: 1rem;
+    color: white;
+    border-radius: 0.2rem;
+}
+
 h1 {
     font-family: 'Ruluko', sans-serif;
     text-shadow: 2px 2px #000000;
@@ -115,6 +130,10 @@ h1 {
 h2, h3, h4, h5, h6{
     font-family: 'Ruluko', sans-serif;
     color: #000000;
+}
+
+.hike-period{
+    display: inline-block;
 }
 
 nav .brand-logo{
@@ -156,6 +175,10 @@ nav{
     float:right;
 }
 
+input#submit {
+    color:#fff8e1;
+}
+
 span.stars span {
     display: block;
     background: url("../image/star-yellow.png") 0 0 repeat-x;
@@ -167,7 +190,7 @@ span.stars span {
 span.stars {
     display: block;
     background: url("../image/star-grey.png") 0 0px repeat-x;
-    width: 120px;
+    width: 90px;
     height: 2rem;
     float: right;
 }

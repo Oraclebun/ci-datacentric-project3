@@ -8,9 +8,9 @@
 
 {% with messages = get_flashed_messages() %}
 {% if messages %}
-<div class="deep-orange lighten-4">
+<div class="z-depth-3 deep-orange darken-2 flash">
 	{% for message in messages %}
-	<p>{{ message }}</p>
+	<p><i class="material-icons">info</i>{{ message }}</p>
 	{% endfor %}
 </div>
 {% endif %}

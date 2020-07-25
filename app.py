@@ -397,9 +397,9 @@ def get_trail(trail_id):
             'comments': results.get("comments", [])
         }
         trails.append(dictionary)
-
-    auth_user = ObjectId(session.get('_user_id'))
-    return render_template('trails/trails.template.html', trails=trails, auth_user=auth_user)
+    auth_user = session.get('_user_id')  #for nav bar profile button
+    authenticated_user = ObjectId(session.get('_user_id'))
+    return render_template('trails/trails.template.html', trails=trails, auth_user=auth_user, authenticated_user=authenticated_user)
 
 
 """ 

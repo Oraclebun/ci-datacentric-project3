@@ -57,13 +57,13 @@
         </div>
         </div>
 
-        <a class="waves-effect waves-light btn blue-grey lighten-1 cloudinary-fileupload" id="profile-submit" data-cloudinary-field="image_id">{{form.submit()}}</a>
+        <a class="waves-effect waves-light btn teal darken-4 cloudinary-fileupload" id="profile-submit" data-cloudinary-field="image_id">{{form.submit()}}</a>
       </form>
     </div>
  
 {% with messages = get_flashed_messages() %}
 {% if messages %}
-<div class="deep-orange lighten-4">
+<div class="z-depth-3 deep-orange darken-2 flash">
 	{% for message in messages %}
 	<p>{{ message }}</p>
 	{% endfor %}

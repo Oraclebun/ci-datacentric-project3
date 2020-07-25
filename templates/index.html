@@ -12,18 +12,24 @@ Home Page
     </div>
 </div>
 
+<div class="row">
 {% with messages = get_flashed_messages() %}
 {% if messages %}
-<div class="deep-orange lighten-4">
+<div class="z-depth-3 deep-orange darken-2 flash">
 	{% for message in messages %}
-	<span>{{ message }}</span>
+	<span>
+    <i class="material-icons">info_outline</i>
+    {{ message }}
+    </span>
 	{% endfor %}
 </div>
 {% endif %}
 {% endwith %}
+</div>
 
 <div class="container">
-    <h3>Most Recent Comments</h3>
+    <h3>Come Share Your Passion With Us</h3>
+        <h5>Browse the Latest Community Comments</h5>
 	<div class="row">
 		{% for com in comments%}
 		<div class="col s12 m4">
@@ -53,7 +59,7 @@ Home Page
 
 <div class="container">
     <div class="row">
-		<h3>Browse Trails by Country</h3>
+		<h5>Browse Trails by Country</h5>
 			<div class="col s12 m3">
 				<ul class="collapsible">
 				{% for loc in location |groupby ("country")%}
