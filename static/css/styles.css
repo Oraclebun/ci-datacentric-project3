@@ -28,6 +28,10 @@ body{
     font-family: 'Ruluko', sans-serif;
 }
 
+.card-image{
+    margin: 10px;
+}
+
 .comments-body{
 overflow: hidden;
 position: relative;
@@ -226,6 +230,14 @@ textarea{
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
+}
+
+.top-rate-card-star{
+    margin-top:5px;   
+}
+
+.top-rate-star{
+    color: burlywood;
 }
 
 @media(max-width: 768px) {

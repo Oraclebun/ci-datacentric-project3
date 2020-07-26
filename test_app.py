@@ -1,13 +1,10 @@
-import unittest, os
+import unittest, os, time
 from pymodm import connect
 from models import Hiker, Trails, Location, Comment
 import pymongo
 from app import app
 from bson.objectid import ObjectId
 from bs4 import BeautifulSoup
-from forms import CommentsForm
-from flask import request, json
-from urllib import request, parse
 import re
 
 app.config['DEBUG'] = False
@@ -84,7 +81,9 @@ class TestApp(unittest.TestCase):
         document = BeautifulSoup(response.data, features='html.parser')
         assert document.find("form", {"action" : "/create_profile"})
 
-
+    """
+    Test user login with a valid username and e-mail
+    """
     def login(self, username, email):
         return self.app.post(
             '/login',
@@ -101,7 +100,9 @@ class TestApp(unittest.TestCase):
         document = BeautifulSoup(response.data, features='html.parser')
         assert document.find("div", {"class" : "parallax-container"})
 
-    
+    """
+    Test user login with an invalid username 
+    """
     def test_user_login_invalid_username(self):
         response = self.login('ttester2', 'test@tester.com')
         error_msg = "Wrong username. Please try again."
@@ -111,6 +112,9 @@ class TestApp(unittest.TestCase):
         assert document.find("form", {"action": "/login"})
 
     
+    """
+    Test user login with an invalid e-mail address 
+    """
     def test_user_login_invalid_email(self):
         response = self.login('ttester1', 'test.tes@tercom')
         error_msg = "Wrong e-mail address. Please try again."
@@ -120,6 +124,9 @@ class TestApp(unittest.TestCase):
         assert document.find("form", {"action" : "/login"})
 
 
+    """
+    Test login user can access manage user profile
+    """
     def test_manage_profile(self):
         response = self.login('ttester1', 'test@tester.com')
         self.assertEqual(response.status_code, 200)
@@ -128,7 +135,9 @@ class TestApp(unittest.TestCase):
         document = BeautifulSoup(response.data, features='html.parser')
         assert document.find("h4", text = re.compile('Welcome to Profile Manager'))
 
-    
+    """
+    Test login user can edit user profile
+    """
     def test_edit_profile(self):
         response = self.login('ttester1', 'test@tester.com')
         self.assertEqual(response.status_code, 200)
@@ -144,12 +153,21 @@ class TestApp(unittest.TestCase):
         success_msg = "Profile Updated Successfully"
         self.assertIn(str.encode(success_msg), response.data)
 
+    """
+    Test login user can post comment. Post Comment form submit test is unable to work for test because of the form structure.
+    Need to change form handling in route before posting comments work. The same goes for editting comment.
+    1. Get test trail by trail name
+    2. Get trails/new-comments/trail_id/0. Assert 404
+    3. Log in tester
+    4. Get trails/edit-comments/trail_id/0. Page redirects back to trails page with flash msg 
+    5. Get the last editted comment. Assert 200
+    6. Post data (edit form). This test fails because of technical problem of populating form with app.post data.
+    """
         ## have to put this part before logout
     def post_comment(self, body, date_started, hours_taken, minutes_taken, sightings, ratings, trails_id):
-        data=dict(body=body, date_started=date_started, hours_taken=hours_taken, minutes_taken=minutes_taken, sightings=sightings, ratings=ratings)
         return self.app.post(
             '/trails/new-comments/'+str(trails_id),
-            data=data, #data=dict(body=body, date_started=date_started, hours_taken=hours_taken, minutes_taken=minutes_taken, sightings=sightings, ratings=ratings),
+            data=dict(body=body, date_started=date_started, hours_taken=hours_taken, minutes_taken=minutes_taken, sightings=sightings, ratings=ratings),
             follow_redirects=True
         )
     
@@ -163,49 +181,72 @@ class TestApp(unittest.TestCase):
         response = self.login('ttester1', 'test@tester.com')
         self.assertEqual(response.status_code, 200)
         success_msg = "You logged in successfully as ttester1"
+        self.assertIn(str.encode(success_msg), response.data)
         response = self.app.get('/trails/new-comments/'+str(trails._id))
         self.assertEqual(response.status_code, 200)
 
-        #response = self.post_comment('Testing abc123', "Mar 17, 2019", 2, 20, [dict(tag='tree')], 3, trails._id)
-        #print(response.data)
-        inner_dict ={'tag':'tree'}
-        data = dict(body='Testing abc123', date_started="Mar 17, 2019", hours_taken=2, minutes_taken=20, sightings=json.dumps([inner_dict]),ratings=3)
-        response = self.app.post(
-            '/trails/new-comments/'+str(trails._id),
-            data= data,
-            follow_redirects=True
-        )
-        #print(response.data)
-
+        #posting the form with the data below does not work for test
+        response = self.post_comment('Testing abc123', "Mar 17, 2019", 2, 20, ['tree','birds'], 3, trails._id)
         
-        #with app.app_context():
-        #    with self.app as c:
-        #        form = CommentsForm(**data)
-                #form.body.data = 'Testing 123'
-                #form.date_started.data = "Mar 17, 2019"
-                #form.hours_taken.data = 2
-                #form.minutes_taken.data = 20
-                #tag = 'tree'
-                #form.sightings.data.append(tag.encode())
-                #form.ratings.data = 3
-                #response = c.post('/trails/new-comments/'+str(trails._id), data=form.data, follow_redirects = True)
-                #print(response.data)
+    """
+    Test login user can edit comment. Edit Comment form submit test is unable to work for test because of the form structure.
+    Need to change form handling in route before posting comments work. The same goes for editting comment. 
+    1. Get test trail by trail name
+    2. Get trails/edit-comments/trail_id/0. Assert 404
+    3. Log in tester
+    4. Get trails/edit-comments/trail_id/0. Page redirects back to trails page with flash msg 
+    5. Get the last editted comment. Assert 200
+    6. Post data (edit form). This test fails because of technical problem of populating form with app.post data.
+    """
 
-
-#    def test_edit_comment(self):
-#        trails = Trails.objects.get({'trail_name': testTrailName})
-#        ### html status code 401 if unauthorized to post comment
-#        response = self.app.get('/trails/edit-comments/'+str(trails._id))
-#        self.assertEqual(response.status_code, 404)
+    def test_edit_comment(self):
+        trails = Trails.objects.get({'trail_name': testTrailName})
+        ### html status code 401 if unauthorized to edit comment
+        response = self.app.get('/trails/edit-comment/'+str(trails._id)+'/0')
+        self.assertEqual(response.status_code, 404)
 
         #if log in success, able to access form to post comments
-#        response = self.login('ttester1', 'test@tester.com')
-#        self.assertEqual(response.status_code, 200)
-#        success_msg = "You logged in successfully as ttester1"
-#        response = self.app.get('/trails/edit-comments/'+str(trails._id))
-#        self.assertEqual(response.status_code, 200)
+        response = self.login('ttester1', 'test@tester.com')
+        self.assertEqual(response.status_code, 200)
+        
+        success_msg = "You logged in successfully as ttester1"
+        self.assertIn(str.encode(success_msg), response.data)
+        
+        user = Hiker.objects.get({'username':'ttester1'})
+        response = self.app.get('/trails/edit-comment/'+str(trails._id)+'/0')
+        response = self.app.get('/trails/'+str(trails._id))
+        error_msg = "You&#39;re not authorized to edit this comment"
+        self.assertIn(str.encode(error_msg), response.data)
+        
+        ''' get the final comment of the tester'''
+        for i,c in enumerate(trails.comments):
+            if c.author._id == user._id:
+                last_comment=i
+        response = self.app.get('/trails/edit-comment/'+str(trails._id)+'/'+str(last_comment))
+        self.assertEqual(response.status_code, 200)
 
-
+        #posting the form with the data below does not work for test
+        response = self.post_comment('Another comment to test', "Apr 18, 2019", 2, 25, ['squirrel','birds'], 3, trails._id)
+        
+    """
+    Test user delete comment. 
+    1. User will not be able to delete comment via method = Get
+    2. User will not be able to delete other's comments
+    3. User should only delete his own comments
+    """
+    def test_delete_comment(self):
+        trails = Trails.objects.get({'trail_name': testTrailName})
+        user = Hiker.objects.get({'username':'ttester1'})
+        ''' get the final comment of the tester'''
+        for i,c in enumerate(trails.comments):
+            if c.author._id == user._id:
+                last_comment=i
+        response = self.app.get('/trails/delete-comment/'+str(trails._id)+'/'+str(last_comment))
+        self.assertEqual(response.status_code, 405)
+        response = self.app.post('/trails/delete-comment/'+str(trails._id)+'/0')
+        self.assertEqual(response.status_code, 401)
+        response = self.app.post('/trails/delete-comment/'+str(trails._id)+'/'+str(last_comment))
+        #self.assertEqual(response.status_code, 200)
 
     def logout(self):
         return self.app.get('/logout',follow_redirects=True)
@@ -218,8 +259,13 @@ class TestApp(unittest.TestCase):
         document = BeautifulSoup(response.data, features='html.parser')
         assert document.find("form", {"action" : "/login"})
 
-    def deregister():
-        pass
+    def delete_user(self):
+        response = self.app.get('/profile')
+        self.assertEqual(response.status_code, 200)
+        document = BeautifulSoup(response.data, features='html.parser')
+        assert document.find("h4", text = re.compile('Welcome to Profile Manager'))
+
+        
 
 if __name__ == '__main__':
     unittest.main()

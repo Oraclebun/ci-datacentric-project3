@@ -540,9 +540,7 @@ def add_comment(trail_id):
     current_trail = Trails.objects.get({'_id': ObjectId(trail_id)})
     form = CommentsForm()
     if form.validate_on_submit():
-        print(form.sightings.data)
-        print(form.data)
-        print(request.form)
+        #sightings = request.form.getlist('sightings')          #this only works with test
         sightings = [objects['tag'] for objects in form.sightings.data]
         comment = Comment(
             author=profile,
@@ -572,13 +570,20 @@ Route to edit new comment
 1. get current logged in user, 
 2. check that logged in user is the author of the comment
 3. if form is validated, save the comments into the database.
+4. Add logic to flash error msg and prevent illegal access to editting comment by non comment owner
 """
 @app.route('/trails/edit-comment/<trail_id>/<int:n>', methods=['GET', 'POST'])
 @flask_login.login_required
 def edit_comment(trail_id, n):
+    user = flask_login.current_user
+    profile = Hiker.objects.get({'_id': user.id})
     current_trail = Trails.objects.get({'_id': ObjectId(trail_id)})
     comment_to_edit = current_trail.comments[n]
     trail_name = current_trail.trail_name
+    if comment_to_edit.author._id != user.id :
+        error_msg = "You're not authorized to edit this comment"
+        flash(error_msg, 'deep-orange darken-3')
+        return redirect(url_for('get_trail', trail_id=trail_id))
     form = CommentsForm(obj=comment_to_edit)
     if form.validate_on_submit():
         sightings = [objects['tag'] for objects in form.sightings.data]
@@ -630,15 +635,16 @@ def delete_comment(trail_id, n):
                 }
             }
             })
+        success_msg = "Comment Deleted"
+        flash(success_msg, 'teal')
     except ValidationError as ve:
         comment_errors = ve.message
         flash(comment_errors, 'deep-orange darken-3')
     return redirect(url_for('get_trail', trail_id=trail_id))
 
-#@app.errorhandler(404)
-#def page_not_found(e):
-#    # note that we set the 404 status explicitly
-#    return render_template('404_error.html'), 404
+@app.errorhandler(404)
+def page_not_found(e):
+    return render_template('404_error.html'), 404
 
 # "magic code" -- boilerplate
 if __name__ == '__main__':
