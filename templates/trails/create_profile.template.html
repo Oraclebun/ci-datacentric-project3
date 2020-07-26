@@ -64,13 +64,13 @@
       </form>
     </div>
 
-	{% with messages = get_flashed_messages() %}
+	{% with messages = get_flashed_messages(with_categories=true) %}
 	{% if messages %}
-	<div class="z-depth-3 teal flash">
-		{% for message in messages %}
+    {% for category,message in messages %}
+	<div class="z-depth-3 {{category}} flash">
 		<p>{{ message }}</p>
-		{% endfor %}
 	</div>
+    {% endfor %}
 	{% endif %}
 	{% endwith %}
  

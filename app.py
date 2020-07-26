@@ -287,10 +287,11 @@ Route to show trail in database and it's comments
 @app.route('/trails/<trail_id>')
 def get_trail(trail_id):
     pre_q = Trails.objects.raw({
-        '$and': [{
+        '$and': [
+            {
             "_id": ObjectId(trail_id)
-        },
-            {'comments': {'$exists': True}}
+            },
+            {'comments': {'$exists': True, '$not': {'$size': 0 }}},
         ]
     })
 
@@ -396,6 +397,7 @@ def get_trail(trail_id):
             'comments': results.get("comments", [])
         }
         trails.append(dictionary)
+    
     auth_user = session.get('_user_id')  #for nav bar profile button
     authenticated_user = ObjectId(session.get('_user_id'))
     return render_template('trails/trails.template.html', trails=trails, auth_user=auth_user, authenticated_user=authenticated_user)
@@ -417,11 +419,12 @@ def login():
                 user.id = db_user._id
                 if (db_user.email == email):
                     flask_login.login_user(user)
-                    flash(f" You logged in successfully as {db_user.username}")
+                    flash(f" You logged in successfully as {db_user.username}", 'teal')
                     return redirect(url_for('index'))
-                    flash(f" Wrong e-mail address. Please try again.")
+                else:
+                    flash(f" Wrong e-mail address. Please try again.", 'deep-orange darken-3')
         except Hiker.DoesNotExist:
-            flash(f" Wrong username. Please try again.")
+            flash(f" Wrong username. Please try again.", 'deep-orange darken-3')
     return render_template('trails/login.template.html', auth_user=auth_user)
 
 
@@ -431,7 +434,7 @@ Route to logout user.
 @app.route('/logout')
 def logout():
     flask_login.logout_user()
-    flash(f'You logged out successfully.')
+    flash('You logged out successfully.', 'teal')
     auth_user= session.get('_user_id')
     return render_template('trails/login.template.html', auth_user=auth_user)
 
@@ -467,12 +470,12 @@ def create_profile():
               trails_completed=form.trails_completed.data,
               profile_pic=form.profile_pic.data
               ).save()
-        flash("Profile Created Successfully.")
+        flash("Profile Created Successfully.", 'teal')
         return redirect(url_for('index'))
     else:
         if form.errors:
             message = [v for k, v in form.errors.items()]
-            flash(message)
+            flash(message, 'deep-orange darken-3')
     return render_template('trails/create_profile.template.html', form=form, cloud_name=CLOUD_NAME, upload_preset=UPLOAD_PRESET, api_key=API_KEY, auth_user=auth_user)
 
 
@@ -496,11 +499,11 @@ def edit_profile(hiker_id):
                                                                             "trails_completed": form.trails_completed.data,
                                                                             "profile_pic":form.profile_pic.data
                                                                             }}, upsert=False)
-            flash("Profile Updated Successfully.")
+            flash("Profile Updated Successfully.", 'teal')
             return redirect(url_for('index'))
         except ValidationError as ve:
             errors = ve.message
-            flash(errors)
+            flash(errors, 'deep-orange darken-3')
     return render_template('trails/edit_profile.template.html', form=form, profile=profile_to_edit, cloud_name=CLOUD_NAME,
                            upload_preset=UPLOAD_PRESET, api_key=API_KEY)
 
@@ -517,7 +520,7 @@ def delete_profile(hiker_id):
     flask_login.logout_user()
     profile_to_delete = Hiker.objects.get({'_id': ObjectId(hiker_id)})
     profile_to_delete.delete()
-    flash("Profile Deleted Successfully.")
+    flash("Profile Deleted Successfully.", 'teal')
     return redirect(url_for('index'))
 
 
@@ -537,6 +540,9 @@ def add_comment(trail_id):
     current_trail = Trails.objects.get({'_id': ObjectId(trail_id)})
     form = CommentsForm()
     if form.validate_on_submit():
+        print(form.sightings.data)
+        print(form.data)
+        print(request.form)
         sightings = [objects['tag'] for objects in form.sightings.data]
         comment = Comment(
             author=profile,
@@ -552,11 +558,11 @@ def add_comment(trail_id):
         comment_date = comment.date_comment.strftime("%b, %d %Y, %H:%M")
         try:
             current_trail.save()
-            flash(f"New comments by '{comment}', on '{comment_date}' have been created")
+            flash(f"New comments by '{comment}', on '{comment_date}' have been created", 'teal')
         except ValidationError as ve:
             current_trail.comments.pop()
             comment_errors = ve.message['comments'][-1]
-            flash(comment_errors)
+            flash(comment_errors, 'deep-orange darken-3')
         return redirect(url_for('get_trail', trail_id=trail_id))
     return render_template('trails/new_comments.template.html', form=form, current_trail=current_trail)
 
@@ -570,12 +576,10 @@ Route to edit new comment
 @app.route('/trails/edit-comment/<trail_id>/<int:n>', methods=['GET', 'POST'])
 @flask_login.login_required
 def edit_comment(trail_id, n):
-    user = flask_login.current_user
     current_trail = Trails.objects.get({'_id': ObjectId(trail_id)})
     comment_to_edit = current_trail.comments[n]
     trail_name = current_trail.trail_name
-    if(user.id == comment_to_edit.author._id):
-        form = CommentsForm(obj=comment_to_edit)
+    form = CommentsForm(obj=comment_to_edit)
     if form.validate_on_submit():
         sightings = [objects['tag'] for objects in form.sightings.data]
         try:
@@ -593,7 +597,7 @@ def edit_comment(trail_id, n):
         except ValidationError as ve:
             current_trail.comments.pop()
             comment_errors = ve.message['comments'][-1]
-            flash(comment_errors)
+            flash(comment_errors, 'deep-orange darken-3')
         return redirect(url_for('get_trail', trail_id=trail_id))
     return render_template('trails/edit_comments.template.html', form=form, comment = comment_to_edit, n=n, trail_id=trail_id, trailName = trail_name)
 
@@ -612,26 +616,23 @@ def delete_comment(trail_id, n):
     user = flask_login.current_user
     current_trail = Trails.objects.get({'_id': ObjectId(trail_id)})
     comment_to_delete = current_trail.comments[n]
-    if(user.id == comment_to_delete.author._id):
-        try:
-            Trails.objects.raw({'_id': ObjectId(trail_id)}).update(
-                {"$pull": {
-                    "comments": {
-                        "author": ObjectId(comment_to_delete.author._id),
-                        "date_comment": comment_to_delete.date_comment,
-                        "body": comment_to_delete.body,
-                        "date_started": comment_to_delete.date_started,
-                        "ratings": comment_to_delete.ratings,
-                        "hours_taken": comment_to_delete.hours_taken,
-                        "minutes_taken": comment_to_delete.minutes_taken
-                    }
+    try:
+        Trails.objects.raw({'_id': ObjectId(trail_id)}).update(
+            {"$pull": {
+                "comments": {
+                    "author": ObjectId(comment_to_delete.author._id),
+                    "date_comment": comment_to_delete.date_comment,
+                    "body": comment_to_delete.body,
+                    "date_started": comment_to_delete.date_started,
+                    "ratings": comment_to_delete.ratings,
+                    "hours_taken": comment_to_delete.hours_taken,
+                    "minutes_taken": comment_to_delete.minutes_taken
                 }
-                })
-        except ValidationError as ve:
-            comment_errors = ve.message
-            flash(comment_errors)
-    else:
-        flash("You're not authorized to delete this comment")
+            }
+            })
+    except ValidationError as ve:
+        comment_errors = ve.message
+        flash(comment_errors, 'deep-orange darken-3')
     return redirect(url_for('get_trail', trail_id=trail_id))
 
 #@app.errorhandler(404)

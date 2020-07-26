@@ -14,7 +14,11 @@
                 {% if group._id==0 %}
                     <h6>Unrated</h6>
                 {%else%}
-                <h6>{{group._id}} stars</h6>
+                <h6>
+                    {% for star in range(group._id|int) %}
+                <span class="material-icons">star_rate</span>
+                    {% endfor%}
+                </h6>
                 {% endif %}
             {% endif %}
                 

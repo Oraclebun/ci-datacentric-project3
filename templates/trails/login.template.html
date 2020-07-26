@@ -6,13 +6,13 @@
     <div class="col s12 m6">
   <h4>Welcome, Please login:</h4>
 
-{% with messages = get_flashed_messages() %}
+{% with messages = get_flashed_messages(with_categories=true) %}
 {% if messages %}
-<div class="z-depth-3 teal flash">
-	{% for message in messages %}
+{% for category,message in messages %}
+<div class="z-depth-3 {{category}} flash">
 	<p><i class="material-icons">info</i>{{ message }}</p>
-	{% endfor %}
 </div>
+{% endfor %}
 {% endif %}
 {% endwith %}
 

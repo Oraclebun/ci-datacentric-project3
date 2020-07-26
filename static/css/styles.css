@@ -125,6 +125,7 @@ padding-right: 1em; /*set this area for ...*/
 h1 {
     font-family: 'Ruluko', sans-serif;
     text-shadow: 2px 2px #000000;
+    color: white;
 }
 
 h2, h3, h4, h5, h6{
@@ -145,6 +146,12 @@ nav .brand-logo{
 
 nav{
     background-color: #1d3030;
+}
+
+.overlay{
+  margin: auto;
+  margin-top: 150px;
+  text-align:center;
 }
 
 [type="radio"]:not(:checked)+span.radio-star:before, 
