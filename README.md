@@ -29,6 +29,8 @@ A basic wireframe was drawn with AdobeXD to act as a the scaffold for laying out
 ### Features
 #### Index/ Home Page
 * The landing page/ index page is a parallax/jumbotron image of a hiking trail that welcomes the user. It has a Call-to-Action heading and a button that links the user to the directory of the trails.
+* At the top of the homepage, there is a nav bar to allow user to click the links to other pages. Each link serving its own function.
 * Below it, there is a row of cards to show the latest 3 comments, by the global hiking community.
 * Below the row of comments, user is able to browse the hiking trail by countries, sorted by region and towns.
+
 
