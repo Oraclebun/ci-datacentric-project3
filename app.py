@@ -642,9 +642,14 @@ def delete_comment(trail_id, n):
         flash(comment_errors, 'deep-orange darken-3')
     return redirect(url_for('get_trail', trail_id=trail_id))
 
+
+@app.errorhandler(401)
+def page_unauthorized(e):
+    return render_template('trails/401_error.html')
+
 @app.errorhandler(404)
 def page_not_found(e):
-    return render_template('404_error.html'), 404
+    return render_template('trails/404_error.html')
 
 # "magic code" -- boilerplate
 if __name__ == '__main__':

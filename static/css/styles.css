@@ -158,6 +158,20 @@ nav{
   text-align:center;
 }
 
+.overlay-row{
+    position: absolute;
+    margin-top: -400px;
+}
+
+.overlay-status-code{
+    
+}
+
+.overlay-status-code-1{
+    position: relative;
+    margin-left: 30px;
+}
+
 [type="radio"]:not(:checked)+span.radio-star:before, 
 [type="radio"]:not(:checked)+span.radio-star:after,
 [type="radio"]:checked+span.radio-star:before,
@@ -240,8 +254,17 @@ textarea{
     color: burlywood;
 }
 
-@media(max-width: 768px) {
+@media(max-width: 767px) {
 .dir-img{
     display: none;
 }
+.overlay-status-code{
+    margin-top: 0;
+}
+
+.overlay-status-code-1{
+    margin-top: 280px;
+    margin-left: 0;
+}
+
 }
