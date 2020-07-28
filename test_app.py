@@ -52,7 +52,7 @@ class TestApp(unittest.TestCase):
 #        response = self.register('ttester1', 'Test', 'Tester', 'Japan', 'test@tester.com', 100, 'http://res.cloudinary.com/c7oud0311/image/upload/v1594909482/project3/profile5_gg2qml.jpg')
 #        time.sleep(3)
 #        self.assertEqual(response.status_code, 200)
-#        success_msg = "Profile Created Successfully"
+#        success_msg = "Registration Successful."
 #        self.assertIn(str.encode(success_msg), response.data)
 #        document = BeautifulSoup(response.data, features='html.parser')
 #        assert document.find("div", {"class" : "parallax-container"})

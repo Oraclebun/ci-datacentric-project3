@@ -470,7 +470,7 @@ def create_profile():
               trails_completed=form.trails_completed.data,
               profile_pic=form.profile_pic.data
               ).save()
-        flash("Profile Created Successfully.", 'teal')
+        flash("Registration Successful.", 'teal')
         return redirect(url_for('index'))
     else:
         if form.errors:

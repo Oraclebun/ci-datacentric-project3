@@ -168,17 +168,20 @@ nav{
 }
 
 .overlay-row{
+    display: flex;
     position: absolute;
-    margin-top: -400px;
+    margin-top: -550px;
 }
 
 .overlay-status-code{
-    
+  display: flex;
+  margin-top: 0;
+  margin-left: 550px;
 }
 
 .overlay-status-code-1{
-    position: relative;
-    margin-left: 30px;
+    display: flex;
+    margin-top:0;
 }
 
 [type="radio"]:not(:checked)+span.radio-star:before, 
@@ -267,12 +270,19 @@ textarea{
 .dir-img{
     display: none;
 }
+
+.overlay-row{
+    margin-top: -400px;
+
+}
+
 .overlay-status-code{
-    margin-top: 0;
+    margin-top: 280px;
+    margin-left:60px;
 }
 
 .overlay-status-code-1{
-    margin-top: 280px;
+    margin-top: 180px;
     margin-left: 0;
 }
 
