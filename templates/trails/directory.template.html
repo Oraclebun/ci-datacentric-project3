@@ -1,6 +1,6 @@
 {% extends "base.template.html" %} 
 
-{%block title%}All Trails Directory{%endblock%}
+{%block title%}Trails Directory{%endblock%}
 
 {% block content %}
 
@@ -42,10 +42,11 @@
 	{% for trail in all_trails %}
 	<div class="col s12">
 		<div class="card">
-			<div class="col s4 card-image valign-wrapper">
-				<img src="{{trail.image}}" alt="image of trail surroundings" class="responsive-img"/>
-	        </div>
+			
 				<div class="card-stacked">
+                <div class="col s4 card-image valign-wrapper">
+				<img src="{{trail.image}}" alt="image of trail surroundings" class="responsive-img"/>
+	            </div>
 					<div class="card-content">
                     <h6 class="dir-title">
 						<a href="trails/{{trail._id}}" class="green-text text-darken-2">{{trail.trail_name}}</a>
