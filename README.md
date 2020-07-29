@@ -134,40 +134,38 @@ The database used in the project is MongoDB. MongoDB is a cross platform documen
 MongoDB Atlas and this database service is being used in this project.
 
 ### Database Structure
-A rough ERD diagram to illustrate the data structure is shown in the ERD.pdf[here](https://github.com/Oraclebun/ci-datacentric-project3/blob/master/documents/ERD.pdf).
+A rough ERD diagram to illustrate the data structure is shown in the [here](https://github.com/Oraclebun/ci-datacentric-project3/blob/master/documents/ERD.pdf).
+For a detail explaination of the database structure, please refer to database_structure.md in [here]
 
-### Database Structure Design
-The main database name is Project3DevDB
-The database consists of 3 collections. These collections are setup using PyMODM in models.py file via MongoModels class.
-From the models.py file the 3 collections and their details are as follows:
+## Testing
+This project is tested using automated testing partially and tested manually.
 
-1. Hiker model.
-* The hiker class is a MongoModel that defines the hiker or user object. It has field instances that represents the user/hiker entity 
-attributes.
-* In this project, the field instances are:
-    + first name
-    + last name
-    + username 
-    + country of origin
-    + e-mail address
-    + number of trails completed and 
-    + a profile image link of the user.
+### Automated testing
+Automated testing is done using unittest in test_app.py. Unit test is used as it comes packaged with python. The test and the results are tabulated as below:
 
-2. Location model
-* The location class defines the location object. Its field instance is as follows :
-    + Country name
-    + Embedded document list - Province(Region)
+| #  | Methods                                         | Methods summary                              | Test Results                 |  
+|----|-------------------------------------------------|----------------------------------------------|------------------------------|
+| 1  | Setup                                           | setup the test_client                        |                              |   
+| 2  | test_routes                                     | get all accessible routes                    | status_code 200              |   
+|    |                                                 | (that do not need authentication)            |                              |   
+| 3  | test_valid_user_registration                    | post valid data to the create_profile route  | success_msg is in response   |   
+| 4  | test invalid registration (duplicate username)  | post data with an existing username          | error_msg is in response     |   
+| 5  | test invalid registration (invalid e-mail)      | post data with an invalid e-mail address     | error_msg is in response     |   
+| 6  | test valid user login                           | post data with a valid username              | success_msg is in response   |   
+| 7  | test user login with invalid username           | post data with a non-existent username       | error_msg is in response     |   
+| 8  | test user login with invalid e-mail             | post data with a non-existent email address  | error_msg is in response     |   
+| 9  | test authenticated user can access show_profile | get route '/profile'                         | status_code 200              |   
+| 10 | test authenticated user is able to edit profile | get route '/profiles/edit/`<userid>`         | status_code 200              |
+|10a |                                                 | post editted data of test user               | success_msg is in response   |
+| 11 | test authenticated user post new comment        | get route '/trails/new-comments/`<trail_id>` | status_code 200              |
+| 11a|                                                 | post comment data                            | fail (form did not get       |
+|    |                                                 |                                              | populated for sightings field|
+| 12 | test authenticated user edit comments           |                                              
 
-3. Province model (Embedded mongo model)
-* The province class defines the region/province object. Its field instance is as follows:
-    + Name of Province(region) of the trail location.
-    + Embedded document field - town/city class.
 
-4. Town/City model (Embedded mongo model)
-    + Name of the town/city 
 
-5. Trails model
-* The Trails class is a Mongo Model that defines the trails object. Its field instances represents the trails entity attributes.
-* The field instances of Trails class are trail name, trail distance, trail elevation, trail route type, trail difficulty, trail
-description, trail image, trail embed route that holds the embedded google map route, the location field that reference the Location 
-model and finally the comments field which is an embedded document list field.
+
+
+
+
+

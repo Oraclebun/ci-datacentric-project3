@@ -510,15 +510,62 @@ def edit_profile(hiker_id):
 
 """
 Route to delete profile
-1. Log current user out
-2. Delete user from database
-3. Show homepage if request == 'POST'
+1. Get all comment objects associated with this profile
+2. Pull those objects out of the embedded comments array
+3. Log current user out
+4. Delete user from database
+5. Show homepage if request == 'POST'
 """
 @app.route('/profiles/delete/<hiker_id>', methods=['POST'])
 @flask_login.login_required
 def delete_profile(hiker_id):
-    flask_login.logout_user()
     profile_to_delete = Hiker.objects.get({'_id': ObjectId(hiker_id)})
+    qs = Trails.objects.raw({})
+    cursor = qs.aggregate(
+        {
+            "$unwind": "$comments"
+        },
+        {"$lookup":
+         {
+             "from": "hiker",
+             "localField": "comments.author",
+             "foreignField": "_id",
+             "as": "hiker"
+         }
+         }
+    )
+
+    trail_list=[]
+    results = list(cursor)
+    for r in results:
+        if str(r['comments']['author']) == hiker_id:
+            dictionary = {
+            '_id': r['_id'],
+            'date_comment': r['comments']['date_comment'],
+            'body': r['comments']['body'],
+            'date_started': r['comments']['date_started'],
+            'ratings': r['comments']['ratings'],
+            'hours_taken': r['comments']['hours_taken'],
+            'minutes_taken': r['comments']['minutes_taken']
+            }
+            trail_list.append(dictionary)
+    
+    for each in trail_list:
+        Trails.objects.raw({'_id': each['_id']}).update(
+                {"$pull": {
+                    "comments": {
+                        "author": ObjectId(hiker_id),
+                        "date_comment": each['date_comment'],
+                        "body": each['body'],
+                        "date_started": each['date_started'],
+                        "ratings": each['ratings'],
+                        "hours_taken": each['hours_taken'],
+                        "minutes_taken": each['minutes_taken']
+                    }
+                }
+                })
+
+    flask_login.logout_user()
     profile_to_delete.delete()
     flash("Profile Deleted Successfully.", 'teal')
     return redirect(url_for('index'))
@@ -540,7 +587,7 @@ def add_comment(trail_id):
     current_trail = Trails.objects.get({'_id': ObjectId(trail_id)})
     form = CommentsForm()
     if form.validate_on_submit():
-        #sightings = request.form.getlist('sightings')          #this only works with test
+        #sightings = request.form.getlist('sightings')          #enabling this line gets test to work
         sightings = [objects['tag'] for objects in form.sightings.data]
         comment = Comment(
             author=profile,
@@ -557,11 +604,11 @@ def add_comment(trail_id):
         try:
             current_trail.save()
             flash(f"New comments by '{comment}', on '{comment_date}' have been created", 'teal')
+            return redirect(url_for('get_trail', trail_id=trail_id))
         except ValidationError as ve:
             current_trail.comments.pop()
             comment_errors = ve.message['comments'][-1]
             flash(comment_errors, 'deep-orange darken-3')
-        return redirect(url_for('get_trail', trail_id=trail_id))
     return render_template('trails/new_comments.template.html', form=form, current_trail=current_trail)
 
 
@@ -586,6 +633,7 @@ def edit_comment(trail_id, n):
         return redirect(url_for('get_trail', trail_id=trail_id))
     form = CommentsForm(obj=comment_to_edit)
     if form.validate_on_submit():
+        print(form.data)
         sightings = [objects['tag'] for objects in form.sightings.data]
         try:
             Trails.objects.raw({'_id': ObjectId(trail_id)}).update(

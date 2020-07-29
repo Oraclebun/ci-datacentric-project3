@@ -1,7 +1,6 @@
-import unittest, os, time
-from pymodm import connect
-from models import Hiker, Trails, Location, Comment
-import pymongo
+import unittest
+import os
+from models import Hiker, Trails, Comment
 from app import app
 from bson.objectid import ObjectId
 from bs4 import BeautifulSoup
@@ -9,14 +8,16 @@ import re
 
 app.config['DEBUG'] = False
 app.config['TESTING'] = True
-app.config['WTF_CSRF_ENABLED']= False
+app.config['WTF_CSRF_ENABLED'] = False
 app.testing = True
 app.secret_key = os.environ.get("API_SECRET")
 MONGODB_URI = os.environ.get('MONGO_URI')
 
 testTrailName = 'The Great Sugar Loaf Trail'
 
-class TestApp(unittest.TestCase):
+
+class Test(unittest.TestCase):
+
     def setUp(self):
         self.app = app.test_client()
 
@@ -25,7 +26,7 @@ class TestApp(unittest.TestCase):
         pass
 
     def test_routes(self):
-        response = self.app.get('/',follow_redirects=True)
+        response = self.app.get('/', follow_redirects=True)
         self.assertEqual(response.status_code, 200)
 
         response = self.app.get('/directory')
@@ -40,35 +41,25 @@ class TestApp(unittest.TestCase):
         trails = Trails.objects.get({'trail_name': testTrailName})
         response = self.app.get('/trails/'+str(trails._id))
         self.assertEqual(response.status_code, 200)
-        
-    """
-    Test if valid user registration
-    """
-    def register(self, username, fname, lname, origin, email, trails_completed, profile_pic):
+
+    def register(self, username, fname, lname, origin, email,
+                 trails_completed, profile_pic):
         return self.app.post('/create_profile', data=dict(
-            username=username, fname=fname, lname=lname, origin=origin, email=email, trails_completed=trails_completed, profile_pic=profile_pic), follow_redirects=True)
-
-#    def test_valid_user_registration(self):
-#        response = self.register('ttester1', 'Test', 'Tester', 'Japan', 'test@tester.com', 100, 'http://res.cloudinary.com/c7oud0311/image/upload/v1594909482/project3/profile5_gg2qml.jpg')
-#        time.sleep(3)
-#        self.assertEqual(response.status_code, 200)
-#        success_msg = "Registration Successful."
-#        self.assertIn(str.encode(success_msg), response.data)
-#        document = BeautifulSoup(response.data, features='html.parser')
-#        assert document.find("div", {"class" : "parallax-container"})
-
-
+            username=username, fname=fname, lname=lname, origin=origin,
+            email=email, trails_completed=trails_completed,
+            profile_pic=profile_pic), follow_redirects=True)
+        
     """
     Test if user register with an invalid username
     """
- #   def test_invalid_user_registration_duplicate_username(self):
- #       response = self.register('ttester1', 'Test', 'Tester', 'Japan', 'pied@piper.com', 10, 'http://res.cloudinary.com/c7oud0311/image/upload/v1594909482/project3/profile5_gg2qml.jpg')
- #       self.assertEqual(response.status_code, 200)
- #       error_msg = "User already exists. Please choose another username."
- #       self.assertIn(str.encode(error_msg), response.data)
- #       #test form did not submit and page did not redirect
- #       document = BeautifulSoup(response.data, features='html.parser')
- #       assert document.find("form", {"action": "/create_profile"})
+    def test_invalid_user_registration_duplicate_username(self):
+        response = self.register('ttester1', 'Test', 'Tester', 'Japan', 'pied@piper.com', 100, 'http://res.cloudinary.com/c7oud0311/image/upload/v1594909482/project3/profile5_gg2qml.jpg')
+        self.assertEqual(response.status_code, 200)
+        error_msg = "User already exists. Please choose another username."
+        self.assertIn(str.encode(error_msg), response.data)
+        #test form did not submit and page did not redirect
+        document = BeautifulSoup(response.data, features='html.parser')
+        assert document.find("form", {"action": "/create_profile"})
 
     """
     Test if user register with an invalid e-mail address
@@ -170,18 +161,18 @@ class TestApp(unittest.TestCase):
             data=dict(body=body, date_started=date_started, hours_taken=hours_taken, minutes_taken=minutes_taken, sightings=sightings, ratings=ratings),
             follow_redirects=True
         )
+
+    def edit_comment(self, body, date_started, hours_taken, minutes_taken, sightings, ratings, trails_id, n):
+        return self.app.post(
+            '/trails/edit-comment/'+str(trails_id)+'/'+str(n),
+            data=dict(body=body, date_started=date_started, hours_taken=hours_taken, minutes_taken=minutes_taken, sightings=sightings, ratings=ratings),
+            follow_redirects=True
+        )
+    
     
     def test_post_comment(self):
         trails = Trails.objects.get({'trail_name': testTrailName})
         ### html status code 401 if unauthorized to post comment
-        response = self.app.get('/trails/new-comments/'+str(trails._id))
-        self.assertEqual(response.status_code, 401)
-
-        #if log in success, able to access form to post comments
-        response = self.login('ttester1', 'test@tester.com')
-        self.assertEqual(response.status_code, 200)
-        success_msg = "You logged in successfully as ttester1"
-        self.assertIn(str.encode(success_msg), response.data)
         response = self.app.get('/trails/new-comments/'+str(trails._id))
         self.assertEqual(response.status_code, 200)
 
@@ -201,32 +192,22 @@ class TestApp(unittest.TestCase):
 
     def test_edit_comment(self):
         trails = Trails.objects.get({'trail_name': testTrailName})
-        ### html status code 401 if unauthorized to edit comment
-        response = self.app.get('/trails/edit-comment/'+str(trails._id)+'/0')
-        self.assertEqual(response.status_code, 404)
-
-        #if log in success, able to access form to post comments
-        response = self.login('ttester1', 'test@tester.com')
-        self.assertEqual(response.status_code, 200)
-        
-        success_msg = "You logged in successfully as ttester1"
-        self.assertIn(str.encode(success_msg), response.data)
-        
         user = Hiker.objects.get({'username':'ttester1'})
-        response = self.app.get('/trails/edit-comment/'+str(trails._id)+'/0')
-        response = self.app.get('/trails/'+str(trails._id))
-        error_msg = "You&#39;re not authorized to edit this comment"
-        self.assertIn(str.encode(error_msg), response.data)
-        
         ''' get the final comment of the tester'''
         for i,c in enumerate(trails.comments):
-            if c.author._id == user._id:
-                last_comment=i
-        response = self.app.get('/trails/edit-comment/'+str(trails._id)+'/'+str(last_comment))
-        self.assertEqual(response.status_code, 200)
 
-        #posting the form with the data below does not work for test
-        response = self.post_comment('Another comment to test', "Apr 18, 2019", 2, 25, ['squirrel','birds'], 3, trails._id)
+            if c.author._id == user._id:
+                last_comment = i
+
+        
+        self.login('ttester1', 'test@tester.com')
+        response = self.app.get('/trails/edit-comment/'+str(trails._id)+'/'+str(last_comment))
+        document = BeautifulSoup(response.data, features='html.parser')
+        assert document.find("h4", text = re.compile('Edit Comments for '+testTrailName))
+
+        response = self.edit_comment('Another comment to test', "Apr 18, 2019", 2, 25, ['squirrel','birds'], 3, trails._id, last_comment)
+        document = BeautifulSoup(response.data, features='html.parser')
+        assert document.find("p", text = re.compile('Another comment to test'))
         
     """
     Test user delete comment. 
@@ -234,6 +215,8 @@ class TestApp(unittest.TestCase):
     2. User will not be able to delete other's comments
     3. User should only delete his own comments
     """
+
+    
     def test_delete_comment(self):
         trails = Trails.objects.get({'trail_name': testTrailName})
         user = Hiker.objects.get({'username':'ttester1'})
@@ -241,6 +224,7 @@ class TestApp(unittest.TestCase):
         for i,c in enumerate(trails.comments):
             if c.author._id == user._id:
                 last_comment=i
+                print(c)
         response = self.app.get('/trails/delete-comment/'+str(trails._id)+'/'+str(last_comment))
         self.assertEqual(response.status_code, 405)
         response = self.app.post('/trails/delete-comment/'+str(trails._id)+'/0')

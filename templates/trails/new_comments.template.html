@@ -82,8 +82,21 @@
 
       <a class="waves-effect waves-light btn teal darken-4">{{form.submit()}}</a>
     </form>
+ </div>
 
-  </div>
+    {% with messages = get_flashed_messages(with_categories=true) %}
+	{% if messages %}
+    {% for category,message in messages %}
+    <div class=row>
+	<div class="z-depth-3 {{category}} flash col s12 m6">
+		<p>{{ message }}</p>
+	</div>
+    </div>
+    {% endfor %}
+	{% endif %}
+	{% endwith %}
+
+ 
 </div>
 
 {% endblock %}
