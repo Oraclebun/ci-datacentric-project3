@@ -1,18 +1,14 @@
 import unittest
 import os
-from models import Hiker, Trails, Location, Comment
-import pymongo
 from app import app
-from bson.objectid import ObjectId
+from models import Trails
 from bs4 import BeautifulSoup
-import re
 
 app.config['DEBUG'] = False
 app.config['TESTING'] = True
 app.config['WTF_CSRF_ENABLED'] = False
 app.testing = True
 app.secret_key = os.environ.get("API_SECRET")
-MONGODB_URI = os.environ.get('MONGO_URI')
 
 testTrailName = 'The Great Sugar Loaf Trail'
 
@@ -20,13 +16,14 @@ testTrailName = 'The Great Sugar Loaf Trail'
 class TestReg(unittest.TestCase):
     def setUp(self):
         self.app = app.test_client()
+        print("Setting Up Test ...")
 
     # executed after each test
     def tearDown(self):
         pass
 
     """
-    Test if valid user registration
+    Test valid user registration
     """
 
     def register(self, username, fname, lname, origin, email,
@@ -45,6 +42,27 @@ class TestReg(unittest.TestCase):
         self.assertIn(str.encode(success_msg), response.data)
         document = BeautifulSoup(response.data, features='html.parser')
         assert document.find("div", {"class": "parallax-container"})
+
+    """
+    Test get routes
+    """
+
+    def test_routes(self):
+        response = self.app.get('/', follow_redirects=True)
+        self.assertEqual(response.status_code, 200)
+
+        response = self.app.get('/directory')
+        self.assertEqual(response.status_code, 200)
+
+        response = self.app.get('/top-rated')
+        self.assertEqual(response.status_code, 200)
+
+        response = self.app.get('/create_profile')
+        self.assertEqual(response.status_code, 200)
+
+        trails = Trails.objects.get({'trail_name': testTrailName})
+        response = self.app.get('/trails/'+str(trails._id))
+        self.assertEqual(response.status_code, 200)
 
 
 if __name__ == '__main__':

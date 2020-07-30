@@ -22,7 +22,7 @@ class CreateProfile(FlaskForm):
             message = 'User already exists. Please choose another username.'
             db_user = Hiker.objects.get({"username": username.data})
             if db_user:
-                raise ValidationError(message)    
+                raise ValidationError(message)
         except Hiker.DoesNotExist:
             pass
 

@@ -633,7 +633,6 @@ def edit_comment(trail_id, n):
         return redirect(url_for('get_trail', trail_id=trail_id))
     form = CommentsForm(obj=comment_to_edit)
     if form.validate_on_submit():
-        print(form.data)
         sightings = [objects['tag'] for objects in form.sightings.data]
         try:
             Trails.objects.raw({'_id': ObjectId(trail_id)}).update(
