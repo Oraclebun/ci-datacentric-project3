@@ -603,7 +603,7 @@ def add_comment(trail_id):
         comment_date = comment.date_comment.strftime("%b, %d %Y, %H:%M")
         try:
             current_trail.save()
-            flash(f"New comments by '{comment}', on '{comment_date}' have been created", 'teal')
+            flash(f"New comments by '{comment}', on '{comment_date}' have been added.", 'teal')
             return redirect(url_for('get_trail', trail_id=trail_id))
         except ValidationError as ve:
             current_trail.comments.pop()
@@ -646,6 +646,8 @@ def edit_comment(trail_id, n):
                     "comments."+str(n)+".minutes_taken": form.minutes_taken.data
                 }
                 })
+            comment_date = datetime.datetime.now().strftime("%b, %d %Y, %H:%M")
+            flash(f"Comments have been editted by '{comment_to_edit.author}', on '{comment_date}'.", 'teal')
         except ValidationError as ve:
             current_trail.comments.pop()
             comment_errors = ve.message['comments'][-1]

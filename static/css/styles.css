@@ -198,13 +198,11 @@ nav {
 
 [type="radio"]:checked + span.radio-star:after {
   border: none;
-  color: none;
   background: none;
-  background-color: none;
 }
 
 [type="radio"]:checked + span.radio-star.hover {
-  color: "gold";
+  color: gold;
 }
 
 .rating {

@@ -1,6 +1,7 @@
 ### Database Structure Design
 The main database name is Project3DevDB
 The database consists of 3 collections. These collections are setup using PyMODM in models.py file via MongoModels class.
+With reference to the ERD.pdf each field in the model represents the attribute in the entity. While the model itself represents the entity.
 From the models.py file the 3 collections and their details are as follows:
 
 1. Hiker model.

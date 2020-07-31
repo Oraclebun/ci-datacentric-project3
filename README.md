@@ -122,11 +122,13 @@ PyMODM is the generic ODM (Object Document Mapper) that works on top of Pymongo 
 WTForms is a form validation and rendering library for Python development. It is used in this project to simplify forms building.
 13. [Flask-WTF Release 0.14.3](https://flask-wtf.readthedocs.io/en/stable/)  
 Flask-WTF is an integration of Flask and WTF that provides CSRF, file upload, and reCAPTCHA.
-14 [DNS Python??]
-15. [Cloudinary]
-16. [Google Fonts](https://fonts.google.com/)
+14. [Cloudinary](https://cloudinary.com/)
+Cloudinary is used for its cloud-based image and video management platform to enhance user experience in this project's profile registration process.
+15. [Google Fonts](https://fonts.google.com/)
 Google Font Ruluko (sans-serif) is used primarily to style the headings in the HTML documents in this projects.
 Google Font Crimson Text (serif font) is used as the content font in the HTML documents in this projects. 
+16. [Font Awesome 5](https://fontawesome.com/start)
+Font Awesome Icon is used in the footer for Instagram, Pinterest and Github links 
 
 ### Database
 The database used in the project is MongoDB. MongoDB is a cross platform document oriented database program. It is classified as a NoSQL
@@ -135,37 +137,20 @@ MongoDB Atlas and this database service is being used in this project.
 
 ### Database Structure
 A rough ERD diagram to illustrate the data structure is shown in the [here](https://github.com/Oraclebun/ci-datacentric-project3/blob/master/documents/ERD.pdf).
-For a detail explaination of the database structure, please refer to database_structure.md in [here]
+For a detail explaination of the database structure, please refer to database_structure.md in [here](https://github.com/Oraclebun/ci-datacentric-project3/tree/master/documents/Database_structure.md)
 
 ## Testing
-This project is tested using automated testing partially and tested manually.
+This project is partially tested using automated testing and fully tested manually. The testing process is detailed [here](https://github.com/Oraclebun/ci-datacentric-project3/Tests.md)
 
-### Automated testing
-Automated testing is done using unittest in test_app.py. Unit test is used as it comes packaged with python. The test and the results are tabulated as below:
-
-| #  | Methods                                         | Methods summary                              | Test Results                 |  
-|----|-------------------------------------------------|----------------------------------------------|------------------------------|
-| 1  | Setup                                           | setup the test_client                        |                              |   
-| 2  | test_routes                                     | get all accessible routes                    | status_code 200              |   
-|    |                                                 | (that do not need authentication)            |                              |   
-| 3  | test_valid_user_registration                    | post valid data to the create_profile route  | success_msg is in response   |   
-| 4  | test invalid registration (duplicate username)  | post data with an existing username          | error_msg is in response     |   
-| 5  | test invalid registration (invalid e-mail)      | post data with an invalid e-mail address     | error_msg is in response     |   
-| 6  | test valid user login                           | post data with a valid username              | success_msg is in response   |   
-| 7  | test user login with invalid username           | post data with a non-existent username       | error_msg is in response     |   
-| 8  | test user login with invalid e-mail             | post data with a non-existent email address  | error_msg is in response     |   
-| 9  | test authenticated user can access show_profile | get route '/profile'                         | status_code 200              |   
-| 10 | test authenticated user is able to edit profile | get route '/profiles/edit/`<userid>`         | status_code 200              |
-|10a |                                                 | post editted data of test user               | success_msg is in response   |
-| 11 | test authenticated user post new comment        | get route '/trails/new-comments/`<trail_id>` | status_code 200              |
-| 11a|                                                 | post comment data                            | fail (form did not get       |
-|    |                                                 |                                              | populated for sightings field|
-| 12 | test authenticated user edit comments           |                                              
-
-
-
-
-
-
-
-
+## Deployment
+### Running the project locally
+This project is build using Gitpod.
+The steps to run the project locally are as follows:
+1. Install the gitpod extensions for your browser.
+2. Sign up for a github account and login.
+3. Go to the github repository in this [link](https://github.com/Oraclebun/ci-datacentric-project3)
+4. Click on the fork button on the upper right of the 
+website just below your navbar profile image. ![Fork Button](/static/image/readme_image/blob/master/Bootcamp-Fork.png?raw=true)
+5. You will now be able to see the project in your own repository in your github page.
+6. On your own repository, look for this project and click to go into the site.
+7. At the top right of your repository

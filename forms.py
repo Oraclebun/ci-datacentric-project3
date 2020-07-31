@@ -2,7 +2,6 @@ from flask_wtf import FlaskForm
 from wtforms import StringField, RadioField, SubmitField, SelectField, DateField, TextAreaField, FieldList, FormField, HiddenField, validators
 from wtforms.validators import DataRequired, InputRequired, NumberRange, Length, Optional, ValidationError
 from wtforms.fields.html5 import EmailField, IntegerField
-from bson.objectid import ObjectId
 from models import Hiker
 import re
 
@@ -50,7 +49,7 @@ class UpdateProfile(FlaskForm):
 
 
 class SightingsForm(FlaskForm):
-    tag = StringField('e.g. Birds', validators=[Optional()])
+    tag = StringField('e.g. Birds', validators=[InputRequired(message = "Please input 1 word for sightings.")])
 
 
     class Meta:
@@ -58,10 +57,16 @@ class SightingsForm(FlaskForm):
 
 
 class CommentsForm(FlaskForm):
-    body = TextAreaField('Comments', validators=[InputRequired()])
-    sightings = FieldList(FormField(SightingsForm, label='e.g. Birds'), label=None, min_entries=1, max_entries=6)
-    ratings = RadioField('Ratings', coerce=int, choices = [(1,'1'),(2,'2'),(3,'3'),(4,'4'),(5,'5')])      #, Unique(model= Hiker)])
-    date_started = DateField('Date Started Hiking', format='%b %d, %Y')
-    hours_taken = IntegerField('Hours Taken', validators=[NumberRange(min=0, max=23, message="Number of hours cannot exceed 23")])
-    minutes_taken = IntegerField('Minutes Taken',validators=[NumberRange(min=0, max=59, message="Number of minutes cannot exceed 59")])
+    body = TextAreaField('Comments', validators=[
+                         InputRequired(message="Please enter some comments.")])
+    sightings = FieldList(FormField(
+        SightingsForm, label='e.g. Birds'), label=None, min_entries=1, max_entries=6)
+    ratings = RadioField('Ratings', coerce=int, choices=[
+                         (1, '1'), (2, '2'), (3, '3'), (4, '4'), (5, '5')])
+    date_started = DateField('Date Started Hiking', format='%b %d, %Y', validators=[
+                             InputRequired(message="Please pick a date.")])
+    hours_taken = IntegerField('Hours Taken', validators=[NumberRange(
+        min=0, max=23, message="Number of hours cannot exceed 23.")])
+    minutes_taken = IntegerField('Minutes Taken', validators=[NumberRange(
+        min=0, max=59, message="Number of minutes cannot exceed 59.")])
     submit = SubmitField('Submit')
