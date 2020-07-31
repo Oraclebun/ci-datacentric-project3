@@ -145,13 +145,39 @@ This project is partially tested using automated testing and fully tested manual
 ## Deployment
 ### Running the project locally
 This project is build using Gitpod.
-The steps to run the project locally are as follows:
-1. Install the gitpod extensions for your browser.
-2. Sign up for a github account and login.
-3. Go to the github repository in this [link](https://github.com/Oraclebun/ci-datacentric-project3)
-4. Click on the fork button on the upper right of the 
-website just below your navbar profile image. ![Fork Button](https://github.com/Oraclebun/ci-datacentric-project3/blob/master/static/image/readme_image/Bootcamp-Fork.png)
-5. You will now be able to see the project in your own repository in your github page.
-6. On your own repository, look for this project and click to go into the site.
-7. At the top right of your repository, you will be able to see the green coloured Gitpod button like the picture below:
+The steps I went through to run the project locally are as follows:
+
+1. Sign up for a MongoDB Atlas account [here](https://www.mongodb.com/cloud/atlas/register)
+2. Follow the steps to creating an Atlas cluster [here](https://docs.atlas.mongodb.com/getting-started/)
+3. Install the gitpod extensions for the local machine browser.
+4. Sign up for a github account and login.
+5. Sign up for a gitpod account and link it to github account.
+6. Go to the personal github pages and start a new repository using the [Code Institute Gitpod Full Template](https://github.com/Code-Institute-Org/gitpod-full-template)
+7. The project folder will be available on the personal github page repository.
+8. At the top right of the personal repository, you will be able to see the green coloured Gitpod button like the picture below:
 ![Gitpod Button](https://github.com/Oraclebun/ci-datacentric-project3/blob/master/static/image/readme_image/Gitpod_link.png)
+9. Click on the Gitpod link to open up the development environment for this project in Gitpod.
+10. Once the project has fully loaded in the browser, a Visual Studio Code-like edittor with a terminal will be seen.
+11. In the terminal, type in the below command to install the dependencies.
+
+```console
+
+$ pip3 -r requirements.txt 
+
+```
+12. In the main directory of the gitpod project, a .env file have to be created. In the .env file the following environment variables have to be setup.
+a. MONGO_URI = mongodb+srv://[database_root_username]:[database_root_user_password]@[cluster_name].mongodb.net/[database_name]?retryWrites=true&w=majority
+the above is just an example mongodb connection string. The string can be found in the mongodb atlas connection in each project folder created.
+b. SECRET_KEY = a random string generated from any random key generator sites
+c. CLOUD_NAME = cloudinary name provided when signed up for cloudinary account.
+d. UPLOAD_PRESET = cloudinary upload preset. 
+e. API_SECRET = api secret provided by cloudinary.
+f. API_KEY = api key provided by cloudinary.
+
+13. Finally, run the app on the terminal / command line interface by typing the below into the terminal like so:
+```console
+
+$ python3 app.py
+
+```
+
