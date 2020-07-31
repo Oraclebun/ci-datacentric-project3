@@ -289,9 +289,9 @@ also be found in the terminal message just right after executing step 11.
 7. Appstore Badge in Footer [WorldVectorLogo](https://worldvectorlogo.com/logo/download-on-the-app-store-apple-4)
 8. Playstore Badge in Footer [WorldVectorLogo](https://worldvectorlogo.com/logo/google-play-badge)
 
-### Technical Related Attribution
-1. My teachers in Trent Global College for teaching me the basics to do this project
-2. My peers for giving me encouragement and the opportunity to learn 
+### Technical Related Acknowledgements and Attribution
+1. My teachers in Trent Global College for teaching me the basics to do this project.
+2. The college teaching assistants John and Arif, for giving me valuable feedback. 
 3. MongoDB Manual [Manual](https://docs.mongodb.com/manual/crud/) 
 4. StackOverflow community [StackOverflow](https://stackoverflow.com/) for various post I can refer to when I encounter mongoDB query 
 related problems and flask, python and jinja related problems.

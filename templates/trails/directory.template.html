@@ -9,7 +9,7 @@
 <form methods="GET">
 	<div class="row">
 		<div class="input-field col s8 m3">
-			<input type="search" name="query">
+			<input type="search" name="query" value="{{search_terms}}">
 			<label for="search"><i class="material-icons">search</i></label>
 		</div>
 
@@ -39,6 +39,14 @@
 
 
 <div class="row">
+    <div class="row">
+        <p id="search-text">You searched for 
+        {{search_terms}}
+        {% for words in query %}
+        ,{{words}} 
+        {% endfor %}
+        </p>
+    </div>
 	{% for trail in all_trails %}
 	<div class="col s12">
 		<div class="card">
@@ -55,7 +63,7 @@
 							{{trail.location.province.town.town}},{{trail.location.province.state}},
 							{{trail.location.country}},
 						</p>
-						<p><span class="chip">{{trail.route_type}}</span><span class="chip">{{trail.difficulty}}</span></p>
+						<p><span class="chip blue-grey darken-2 white-text">{{trail.route_type}}</span><span class="chip blue-grey darken-2 white-text">{{trail.difficulty}}</span></p>
                         <p>Distance: {{trail.distance}}km</p>
 						<p class="dir-desc">Trail Description: {{trail.description}}</p>
 					</div>

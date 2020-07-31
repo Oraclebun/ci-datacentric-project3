@@ -1,5 +1,6 @@
-from flask import Flask, render_template, request, redirect, url_for, session, flash, Markup
-from models import Hiker, Trails, Location, Comment
+from flask import Flask, render_template, request, redirect, url_for, session
+from flask import flash, Markup
+from models import Hiker, Trails, Comment
 import os
 import pymongo
 import hashlib
@@ -29,14 +30,17 @@ API_KEY = os.environ.get("API_KEY")
 
 # Create the login manager
 login_manager = flask_login.LoginManager()
-#
+
 login_manager.init_app(app)
 
 # get the user object from flask-login mixin
+
+
 class User(flask_login.UserMixin):
     pass
 
 # user loader for the Flask-Login login manager
+
 
 @login_manager.user_loader
 def user_loader(id):
@@ -81,9 +85,11 @@ def signUploadRequest():
     return {"signature": signature}
 
 
-""" 
+"""
 Route to show homepage
 """
+
+
 @app.route('/')
 def index():
     qs = Trails.objects.raw({})
@@ -151,13 +157,19 @@ def index():
             'town': loc.location.province[0].town.town
         }
         trails_loc.append(locations)
-    auth_user=session.get('_user_id')
-    return render_template('index.html', location=trails_loc, comments=reviews, auth_user=auth_user)
+    auth_user = session.get('_user_id')
+    return render_template('index.html', location=trails_loc, comments=reviews,
+                           auth_user=auth_user)
 
 
-""" 
-Route to show all trails (searchable) in database as a directory
 """
+Route to show all trails (searchable) in database as a directory
+1. Get search terms and searched route-types and route difficulties
+2. Match the queries with items in the fields
+3. Else if search terms and search is empty, return everything
+"""
+
+
 @app.route('/directory')
 def show_all():
     auth_user = session.get('_user_id')
@@ -166,10 +178,15 @@ def show_all():
     route_regex = "|".join(route_types)
     difficulties = request.args.getlist('difficulty')
     difficulty_regex = "|".join(difficulties)
+    if search_terms is None:
+        search_terms = ''
+    if not (route_types) and not (difficulties):
+        query = ''
+    else:
+        query = route_types+difficulties
     qs = Trails.objects.raw({})
-
     # if there are search terms and the lists are not empty
-    if (search_terms != "" and search_terms is not None) or (route_types) or (difficulties):
+    if (search_terms != "" or (route_types) or (difficulties)):
         cursor = qs.aggregate(
             {"$lookup":
              {
@@ -180,26 +197,40 @@ def show_all():
              }
              },
             {"$match": {
-                "$and":[{
-                "$or": [
-                    {"location.country": {"$regex": search_terms, "$options": 'i'}},
-                    {"location.province.state": {
-                        "$regex": search_terms, "$options": 'i'}},
-                    {"location.province.town.town": {
-                        "$regex": search_terms, "$options": 'i'}},
-                    {"location.town": {"$regex": search_terms, "$options": 'i'}},
-                    {"trail_name": {"$regex": search_terms, "$options": 'i'}},
-                    {"distance": {"$regex": search_terms, "$options": 'i'}},
-                    {"description": {"$regex": search_terms, "$options": 'i'}}
-                ]},
-                {
-                "$or": [
-                    {"route_type": {"$regex": route_regex, "$options": 'i'}}
-                ]},
-                {
-                "$or": [
-                    {"difficulty": {"$regex": difficulty_regex, "$options": 'i'}}
-                ]}
+                "$and": [{
+                    "$or": [
+                        {"location.country":
+                            {"$regex": search_terms, "$options": 'i'}
+                         },
+                        {"location.province.state": {
+                            "$regex": search_terms, "$options": 'i'}},
+                        {"location.province.town.town": {
+                            "$regex": search_terms, "$options": 'i'}},
+                        {"location.town":
+                            {"$regex": search_terms, "$options": 'i'}
+                         },
+                        {"trail_name":
+                            {"$regex": search_terms, "$options": 'i'}
+                         },
+                        {"distance":
+                            {"$regex": search_terms, "$options": 'i'}
+                         },
+                        {"description":
+                            {"$regex": search_terms, "$options": 'i'}
+                         }
+                    ]},
+                    {
+                    "$or": [
+                        {"route_type":
+                            {"$regex": route_regex, "$options": 'i'}
+                         }
+                    ]},
+                    {
+                    "$or": [
+                        {"difficulty":
+                            {"$regex": difficulty_regex, "$options": 'i'}
+                         }
+                    ]}
                 ]
             }
             },
@@ -221,12 +252,16 @@ def show_all():
             {"$unwind": "$location.province"},
             {"$unwind": "$location.province.town"}
         )
-    return render_template('trails/directory.template.html', all_trails=cursor, auth_user = auth_user)
+    return render_template('trails/directory.template.html', all_trails=cursor,
+                           auth_user=auth_user, search_terms=search_terms,
+                           query=query)
 
 
-""" 
+"""
 Route to show trail in database sorted by average user ratings
 """
+
+
 @app.route('/top-rated')
 def show_by_rating():
     auth_user= session.get('_user_id')
@@ -289,9 +324,9 @@ def get_trail(trail_id):
     pre_q = Trails.objects.raw({
         '$and': [
             {
-            "_id": ObjectId(trail_id)
+                "_id": ObjectId(trail_id)
             },
-            {'comments': {'$exists': True, '$not': {'$size': 0 }}},
+            {'comments': {'$exists': True, '$not': {'$size': 0}}},
         ]
     })
 
