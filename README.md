@@ -3,9 +3,13 @@
 # Global Community Hiking Trails Reviews
 
 ## Project Objectives
-Hiking is a favourite past time of mine. Hiking time represents a respite from work, time with nature and it is an activity that heals the mind, body and soul.  This project 
-is a dedication to the love of hiking and to allow the global community to share their experience be it in joy or in frustrations of their time spent during 
-their hikes.
+Hiking is a favourite past time of mine. Hiking time represents a respite from work, time with nature and it is an activity that heals the 
+mind, body and soul. Travelling globally to hike is not be possible now but it is still possible to hike locally and often, we may find
+gems along the way. This project is my dedication to the love of hiking. It is to be a platform for the global community to share their 
+experience be it in joy or in frustrations of their time spent during their hikes. 
+
+## Deployed Link
+The deployed website can be found [here](https://oraclebun-project3.herokuapp.com/)
 
 ## UX/UI
 ### Overview and Colour
@@ -140,7 +144,7 @@ A rough ERD diagram to illustrate the data structure is shown in the [here](http
 For a detail explaination of the database structure, please refer to database_structure.md in [here](https://github.com/Oraclebun/ci-datacentric-project3/tree/master/documents/Database_structure.md)
 
 ## Testing
-This project is partially tested using automated testing and fully tested manually. The testing process is detailed [here](https://github.com/Oraclebun/ci-datacentric-project3/Tests.md)
+This project is partially tested using automated testing and fully tested manually. The testing process is detailed [here](https://github.com/Oraclebun/ci-datacentric-project3/blob/master/Tests.md)
 
 ## Deployment
 ### Running the project locally
@@ -157,7 +161,7 @@ The steps I went through to run the project locally are as follows:
 8. At the top right of the personal repository, you will be able to see the green coloured Gitpod button like the picture below:
 ![Gitpod Button](https://github.com/Oraclebun/ci-datacentric-project3/blob/master/static/image/readme_image/Gitpod_link.png)
 9. Click on the Gitpod link to open up the development environment for this project in Gitpod.
-10. Once the project has fully loaded in the browser, a Visual Studio Code-like edittor with a terminal will be seen.
+10. Once the project has fully loaded in the browser, a Visual Studio Code-like editor with a terminal will be seen.
 11. In the terminal, type in the below command to install the dependencies.
 
 ```console
@@ -165,19 +169,139 @@ The steps I went through to run the project locally are as follows:
 $ pip3 -r requirements.txt 
 
 ```
-12. In the main directory of the gitpod project, a .env file have to be created. In the .env file the following environment variables have to be setup.
-a. MONGO_URI = mongodb+srv://[database_root_username]:[database_root_user_password]@[cluster_name].mongodb.net/[database_name]?retryWrites=true&w=majority
-the above is just an example mongodb connection string. The string can be found in the mongodb atlas connection in each project folder created.
-b. SECRET_KEY = a random string generated from any random key generator sites
-c. CLOUD_NAME = cloudinary name provided when signed up for cloudinary account.
-d. UPLOAD_PRESET = cloudinary upload preset. 
-e. API_SECRET = api secret provided by cloudinary.
+12. In the main directory of the gitpod project, an .env file have to be created. In the .env file the following environment variables have to be setup.  
+a. MONGO_URI = mongodb+srv://[database_root_username]:[database_root_user_password]@[cluster_name].mongodb.net/[database_name]?retryWrites=true&w=majority  
+   The above is just an example mongodb connection string. The string can be found in the mongodb atlas connection in each project folder created.  
+b. SECRET_KEY = a random string generated from any random key generator sites  
+c. CLOUD_NAME = cloudinary name provided when signed up for cloudinary account.  
+d. UPLOAD_PRESET = cloudinary upload preset.   
+e. API_SECRET = api secret provided by cloudinary.  
 f. API_KEY = api key provided by cloudinary.
 
-13. Finally, run the app on the terminal / command line interface by typing the below into the terminal like so:
-```console
+13. After setting up the environment variables and installing all dependencies, the database collection need to be setup to ensure 
+consistencies in the data. This is done by running the models.py file as below:
 
+```console
+$ python3 models.py
+```
+
+14. After that, the database need to be populated with the data. This is done by automating the process as below:
+
+```console
+$ python3 insert.py
+```
+
+15. Finally, run the app on the terminal / command line interface by typing the below into the terminal like so:
+
+```console
 $ python3 app.py
+```
+
+### Deployment on Heroku
+The steps taken to deploy this project on Heroku are as follows:
+1. Sign up for Heroku account
+2. Install Heroku CLI in the gitpod terminal if it hasn't been installed
+3. If Heroku CLI has been installed, type in the below to login Heroku
+
+```console
+$ heroku login
 
 ```
 
+4. Login Heroku via the opened browser. If browser window is not able to display, open the site in a new window and login heroku.
+5. Type in the below to create a heroku app, where `<the_name_of_the_project>` is the name of the project to be deployed.  
+
+```console
+$ heroku create <name_of_the_project>
+
+```
+
+6. then create a remote repository by typing in 
+
+```console
+$ git remote -v
+```
+
+7. Install gunicorn with pip3
+
+```console
+$ pip3 install gunicorn
+```
+
+8. Create a Procfile with the content "web gunicorn `<name of the project>`:app"
+9. Freeze all project dependencies by keying in to the terminal 
+
+```console
+$ pip3 freeze --local > requirements.txt 
+```
+10. commit the project to github again
+11. Finally push the project to git as below:
+
+```console
+$ git push heroku master
+```
+
+12. Before opening the deployed project url, the same environment variables like the local deployment have to be set up.
+To do that, in the terminal, type the following (the empty strings have to be filled in with the appropriate variable):
+
+```console
+$ heroku config:set MONGODB_URI='mongodb+srv://...'
+$ heroku config:set SECRET_KEY=''
+$ heroku config:set CLOUD_NAME=''
+$ heroku config:set API_KEY=''
+$ heroku config:set API_SECRET=''
+$ heroku config:set UPLOAD_PRESET=''
+```
+
+13. Finally, the deployed url can be accessed from Heroku dashboard in their website (https://dashboard.heroku.com/apps/`<projectname>`)
+where the `<project name>` is the name of the deployed project via an 'Open App" button on the dashboard, else the deployed link can 
+also be found in the terminal message just right after executing step 11.
+
+## Acknowledgements and Credits
+
+### Trails Images 
+1. Sugar Loaf Trail Image: [Shutterstock](https://www.shutterstock.com/)
+2. Powerscourt Waterfall Trail Image: [Flickr](https://www.flickr.com/photos/76257358@N00/3472567195/)
+3. Black Castle Wicklow Image: [Shutterstock](https://www.shutterstock.com/g/domenic+redl)
+4. Mulaghcleevaun Image: [Flickr](https://www.flickr.com/photos/leondolman/4406997558/)
+5. Torc Waterfall Image: [Flickr](https://www.flickr.com/photos/zoltanszabo/33698452810/in/photolist-TkPnZ5-ViHbrQ-VkrmLY-Ei8iRK-JDRKPv-YbdN6w-Wb6FSo-2c8XWeG-MaFLp2-8jMXb9-29uWtPL-mpmS5z-7K1Pxd-M2bqUP-JHWcKy-25fL5s9-PDQr5d-QuJmLQ-9bnSg8-JXoznQ-28d3uWm-28AGHP2-ZpPSJu-22wnqxK-yF87yg-2cweLR6-LQdscf-pcRZTM-LCAMM3-murxSe-LUft7B-eaKAib-otGjn9-qsc7pk-dJcTDY-NDDDVy-xMJDnW-24sGYyc-275LZcn-Ka1H6a-pjWHEv-uXxhm4-anCwVy-N5fk3C-AHkSwy-2bsXZkL-8ZSwmF-QmXVwy-24EKnEd-ASv3Sg)
+6. City Centre to Shannon Fields Image: [Limerick](https://www.limerick.ie/discover/eat-see-do/sports-recreation/activities/walking-routes/limerick-city-routes/shannon-fields)
+7. Minoo Park Trail Image: [Japan Visitor](https://www.japanvisitor.com/osaka/minoo-park)
+8. Mount Ikoma Image: [Getty Images](https://media.gettyimages.com/photos/photo-taken-may-1-shows-poppies-in-full-bloom-on-ikoma-plateau-at-the-picture-id958285104?s=2048x2048)
+9. Shijonowate Suihen-Shizen-en Trail Image[Muroike WaterPark](http://osaka-midori.jp/mori/muroike/waterPark.html)
+10. Kanmangafuchi Abyss Trail Image[Image](https://www.atlasobscura.com/places/kanmangafuchi-abyss)
+11. Hiji Falls Trail [Wikipedia](https://en.wikipedia.org/wiki/Hiji_Falls)
+12. Hooker Valley Track [Flickr](https://www.flickr.com/photos/dangerousbiz/16139983682)
+13. Kea Point from Mount Cook Village [Image](https://commons.wikimedia.org/wiki/File:Kea_Point_Track_in_Mount_Cook_National_Park_04.jpg)
+14. Orakei Basin Walk [Flickr](https://www.flickr.com/photos/craigsyd/6827696545)
+15. One Tree Hill Walk [Flickr](https://www.flickr.com/photos/125493053@N04/40327077615)
+16. Queenstown Gardens Lakefront Walk [Flickr](https://www.flickr.com/photos/markdefleury/30649091336/in/photostream/)
+17. Queenstown Hill [Flickr](https://www.flickr.com/photos/itravelnz/15935556068/)
+18. Coney Island Park [NParks](https://www.nparks.gov.sg/-/media/nparks-real-content/gardens-parks-and-nature/parks-and-nature-reserve/coney-island-park/2.jpg)
+
+### Non-Trail Images
+1. Parallax Image on Landing Page: [Zotx](https://pixabay.com/users/Zotx-14174246/?utm_source=link-attribution&amp;utm_medium=referral&amp;utm_campaign=image&amp;utm_content=4697056)
+2. Hiker Henry Profile Photo: [Unsplash Credit](https://images.unsplash.com/photo-1489980557514-251d61e3eeb6?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1950&q=80)
+3. Joe Jogger Profile Photo: [Man in Red Jacket](https://www.pexels.com/@creationhill)
+4. Website Logo: [Flaticon](https://www.flaticon.com/free-icon/map_2082595?term=hiking&page=5&position=49)
+5. 404 Error Image: [Freepik](https://www.freepik.com/free-vector/error-404-concept-landing-page_4730713.htm#query=pikisuperstar%20404%20&position=7)
+6. 401 Error Image: [Freepik](https://www.freepik.com/free-vector/error-404-concept-landing-page_4660892.htm#page=2&query=pikisuperstar+404&position=12)
+7. Appstore Badge in Footer [WorldVectorLogo](https://worldvectorlogo.com/logo/download-on-the-app-store-apple-4)
+8. Playstore Badge in Footer [WorldVectorLogo](https://worldvectorlogo.com/logo/google-play-badge)
+
+### Technical Related Attribution
+1. My teachers in Trent Global College for teaching me the basics to do this project
+2. My peers for giving me encouragement and the opportunity to learn 
+3. MongoDB Manual [Manual](https://docs.mongodb.com/manual/crud/) 
+4. StackOverflow community [StackOverflow](https://stackoverflow.com/) for various post I can refer to when I encounter mongoDB query 
+related problems and flask, python and jinja related problems.
+5. PyMODM example on pip3 page [Pypi](https://pypi.org/project/pymodm/)
+6. PyMODM documentation [Pymodm read the docs](https://pymodm.readthedocs.io/en/stable/getting-started.html)
+7. Rating Stars Display by [Tatu Ulmanen](https://stackoverflow.com/questions/1987524/turn-a-number-into-star-rating-display-using-jquery-and-css/1987545#1987545)
+8. Rating Star Radio Button inspired partially by [Lea Verou](https://jsfiddle.net/leaverou/CGP87/).
+9. Dynamic form for the comments is totally creditted to [Rafael Medina](https://www.rmedgar.com/blog/dynamic-fields-flask-wtf). 
+Without this tutorial, I would never have been able to add forms dynamically.
+10. Jinja Documentation [Jinja](https://jinja.palletsprojects.com/en/2.11.x/) on how to manipulate variables in template.
+
+## Disclaimer
+Any content and images used on this website is purely for personal development and educational purpose. They are not meant for profit or for income purposes.

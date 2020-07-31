@@ -90,7 +90,7 @@ trails completed.
 in the home page.
 
 #### Logout Page
-* User is logged out if he/she clicks this link.
+* User is logged out when he/she clicks this link.
 
 #### Trails Page
 * In the individual trails page, user will see a responsive image of the trail. He/she should be able to click this image and enlarge it.
