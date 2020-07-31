@@ -64,7 +64,7 @@ class Trails(MongoModel):
         'Point to Point', 'Loop', 'Out and Back'), required=True)
     difficulty = fields.CharField(max_length=20, choices=(
         'Easy', 'Moderate', 'Difficult'), required=True)
-    description = fields.CharField(max_length=500, required=True)
+    description = fields.CharField(max_length=600, required=True)
     centrepoint = fields.PointField(required=False)
     waypoints = fields.LineStringField(required=False)
     image = fields.URLField(required = True)

@@ -4,9 +4,9 @@
 
 ## Project Objectives
 Hiking is a favourite past time of mine. Hiking time represents a respite from work, time with nature and it is an activity that heals the 
-mind, body and soul. Travelling globally to hike is not be possible now but it is still possible to hike locally and often, we may find
-gems along the way. This project is my dedication to the love of hiking. It is to be a platform for the global community to share their 
-experience be it in joy or in frustrations of their time spent during their hikes. 
+mind, body and soul. Travelling globally to hike is not going to be possible for awhile due to the global pandemic but it is still possible 
+to hike locally and often, we may find some undiscovered gems along the way. This project is my dedication to the love of hiking. It is to be 
+a platform for the global community to share their experience be it in joy or in frustrations of their time spent during their hikes. 
 
 ## Deployed Link
 The deployed website can be found [here](https://oraclebun-project3.herokuapp.com/)
@@ -300,8 +300,8 @@ related problems and flask, python and jinja related problems.
 7. Rating Stars Display by [Tatu Ulmanen](https://stackoverflow.com/questions/1987524/turn-a-number-into-star-rating-display-using-jquery-and-css/1987545#1987545)
 8. Rating Star Radio Button inspired partially by [Lea Verou](https://jsfiddle.net/leaverou/CGP87/).
 9. Dynamic form for the comments is totally creditted to [Rafael Medina](https://www.rmedgar.com/blog/dynamic-fields-flask-wtf). 
-Without this tutorial, I would never have been able to add forms dynamically.
-10. Jinja Documentation [Jinja](https://jinja.palletsprojects.com/en/2.11.x/) on how to manipulate variables in template.
+Without this tutorial, I would never have been able to add fields dynamically in forms.
+10. Jinja Documentation [Jinja Documentation](https://jinja.palletsprojects.com/en/2.11.x/) on how to manipulate variables in template.
 
 ## Disclaimer
 Any content and images used on this website is purely for personal development and educational purpose. They are not meant for profit or for income purposes.

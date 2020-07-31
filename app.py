@@ -259,19 +259,26 @@ def show_all():
 
 """
 Route to show trail in database sorted by average user ratings
+1. Add a field to average all comments ratings for that field
+2. Add a field to round the average rating to the nearest integer
+3. Project the results and if Null for average rating, give it a value of 0
+4. Group all trails by their ratings
+5. Sort it in average rating descending order
 """
 
 
 @app.route('/top-rated')
 def show_by_rating():
-    auth_user= session.get('_user_id')
+    auth_user = session.get('_user_id')
     qs = Trails.objects.raw({})
     cursor = qs.aggregate(
             {"$addFields": {
-                "avrg_rating": {"$avg": "$comments.ratings"}        #add a new field that average all ratings
+                # add a new field that average all ratings
+                "avrg_rating": {"$avg": "$comments.ratings"}
             }},
             {"$addFields": {
-                "rating_average": {"$round": ["$avrg_rating",0]}    #add a new field that rounds the average ratings
+                # add a new field that rounds the average ratings
+                "rating_average": {"$round": ["$avrg_rating", 0]}
             }},
             {"$lookup":
              {
@@ -297,13 +304,13 @@ def show_by_rating():
                 "centrepoint": 1,
                 "waypoints": 1,
                 "location": 1,
-                "rating_average": {"$ifNull": ['$rating_average', 0]}    
+                "rating_average": {"$ifNull": ['$rating_average', 0]}
             }
             },
             {
-                "$group":{
+                "$group": {
                     "_id": "$rating_average",
-                    "trails": { "$push": "$$ROOT" }
+                    "trails": {"$push": "$$ROOT"}
                 }
             },
             {
@@ -313,12 +320,21 @@ def show_by_rating():
             }
         )
 
-    return render_template('trails/top_rated.template.html', rated=cursor, auth_user=auth_user)
+    return render_template('trails/top_rated.template.html', rated=cursor,
+                           auth_user=auth_user)
 
 
-""" 
-Route to show trail in database and it's comments
 """
+Route to show each trail in database and it's comments
+1. Do a pre-query to get all trails where id = trail_id and comments exists
+and is not an empty array.
+2. If prequery returns an empty list (where the comments are empty), set
+comments ratings to 0 if Null and project all fields.
+3. Else if prequery contains something, sort the comments by latest to
+earliest date posted.
+"""
+
+
 @app.route('/trails/<trail_id>')
 def get_trail(trail_id):
     pre_q = Trails.objects.raw({
@@ -400,7 +416,7 @@ def get_trail(trail_id):
                 "trail_name": 1,
                 "description": 1,
                 "embed_route": 1,
-                "image":1,
+                "image": 1,
                 "distance": 1,
                 "route_type": 1,
                 "elevation": 1,
@@ -432,18 +448,27 @@ def get_trail(trail_id):
             'comments': results.get("comments", [])
         }
         trails.append(dictionary)
-    
-    auth_user = session.get('_user_id')  #for nav bar profile button
+    auth_user = session.get('_user_id')  # for nav bar profile button
     authenticated_user = ObjectId(session.get('_user_id'))
-    return render_template('trails/trails.template.html', trails=trails, auth_user=auth_user, authenticated_user=authenticated_user)
+    return render_template('trails/trails.template.html', trails=trails,
+                           auth_user=auth_user,
+                           authenticated_user=authenticated_user)
 
 
 """ 
 Route to login user.
+1. Get username and e-mail from request.POST
+2. Get the Hiker object with the username
+3. If no such user, a Validation Error will be raised with Pymodm
+4. If user exists, check the user's e-mail.
+5. If user's e-mail is wrong, flash error message
+6. If user's e-mail is correct, allow user to login.
 """
+
+
 @app.route('/login', methods=['GET', 'POST'])
 def login():
-    auth_user= session.get('_user_id')
+    auth_user = session.get('_user_id')
     if request.method == 'POST':
         username = request.form.get('username')
         email = request.form.get('email')
@@ -454,30 +479,36 @@ def login():
                 user.id = db_user._id
                 if (db_user.email == email):
                     flask_login.login_user(user)
-                    flash(f" You logged in successfully as {db_user.username}", 'teal')
+                    flash(f" You logged in successfully as {db_user.username}",
+                          'teal')
                     return redirect(url_for('index'))
                 else:
-                    flash(f" Wrong e-mail address. Please try again.", 'deep-orange darken-3')
+                    flash("Wrong e-mail address. Please try again.",
+                          'deep-orange darken-3')
         except Hiker.DoesNotExist:
-            flash(f" Wrong username. Please try again.", 'deep-orange darken-3')
+            flash(" Wrong username. Please try again.", 'deep-orange darken-3')
     return render_template('trails/login.template.html', auth_user=auth_user)
 
 
-""" 
+"""
 Route to logout user.
 """
+
+
 @app.route('/logout')
 def logout():
     flask_login.logout_user()
     flash('You logged out successfully.', 'teal')
-    auth_user= session.get('_user_id')
+    auth_user = session.get('_user_id')
     return render_template('trails/login.template.html', auth_user=auth_user)
 
 
-""" 
+"""
 Route to show user profiles.
 Route only accessible if user is logged in.
 """
+
+
 @app.route('/profile')
 @flask_login.login_required
 def show_profile():
@@ -487,11 +518,13 @@ def show_profile():
 
 
 """
-Route to create profile. 
+Route to create profile.
 1. If method = GET, create form from CreateProfile class in form.py
 2. If form validated, save profile information into Database
 3. Show homepage if form is validated
 """
+
+
 @app.route('/create_profile', methods=['GET', 'POST'])
 def create_profile():
     auth_user = session.get('_user_id')
@@ -511,7 +544,9 @@ def create_profile():
         if form.errors:
             message = [v for k, v in form.errors.items()]
             flash(message, 'deep-orange darken-3')
-    return render_template('trails/create_profile.template.html', form=form, cloud_name=CLOUD_NAME, upload_preset=UPLOAD_PRESET, api_key=API_KEY, auth_user=auth_user)
+    return render_template('trails/create_profile.template.html', form=form,
+                           cloud_name=CLOUD_NAME, upload_preset=UPLOAD_PRESET,
+                           api_key=API_KEY, auth_user=auth_user)
 
 
 """
@@ -520,6 +555,8 @@ Route to edit profile
 2. If form validated, save profile information into Database
 3. Show homepage if form is validated
 """
+
+
 @app.route('/profiles/edit/<hiker_id>', methods=['GET', 'POST'])
 @flask_login.login_required
 def edit_profile(hiker_id):
@@ -527,19 +564,22 @@ def edit_profile(hiker_id):
     form = UpdateProfile(obj=profile_to_edit)
     if form.validate_on_submit():
         try:
-            Hiker.objects.raw({"_id": ObjectId(hiker_id)}).update({"$set": {"fname": form.fname.data,
-                                                                            "lname": form.lname.data,
-                                                                            "origin": form.origin.data,
-                                                                            "email": form.email.data,
-                                                                            "trails_completed": form.trails_completed.data,
-                                                                            "profile_pic":form.profile_pic.data
-                                                                            }}, upsert=False)
+            Hiker.objects.raw({"_id": ObjectId(hiker_id)}).update(
+                {"$set": {"fname": form.fname.data,
+                          "lname": form.lname.data,
+                          "origin": form.origin.data,
+                          "email": form.email.data,
+                          "trails_completed": form.trails_completed.data,
+                          "profile_pic": form.profile_pic.data
+                          }
+                 }, upsert=False)
             flash("Profile Updated Successfully.", 'teal')
             return redirect(url_for('index'))
         except ValidationError as ve:
             errors = ve.message
             flash(errors, 'deep-orange darken-3')
-    return render_template('trails/edit_profile.template.html', form=form, profile=profile_to_edit, cloud_name=CLOUD_NAME,
+    return render_template('trails/edit_profile.template.html', form=form,
+                           profile=profile_to_edit, cloud_name=CLOUD_NAME,
                            upload_preset=UPLOAD_PRESET, api_key=API_KEY)
 
 
@@ -551,6 +591,8 @@ Route to delete profile
 4. Delete user from database
 5. Show homepage if request == 'POST'
 """
+
+
 @app.route('/profiles/delete/<hiker_id>', methods=['POST'])
 @flask_login.login_required
 def delete_profile(hiker_id):
@@ -570,21 +612,20 @@ def delete_profile(hiker_id):
          }
     )
 
-    trail_list=[]
+    trail_list = []
     results = list(cursor)
     for r in results:
         if str(r['comments']['author']) == hiker_id:
             dictionary = {
-            '_id': r['_id'],
-            'date_comment': r['comments']['date_comment'],
-            'body': r['comments']['body'],
-            'date_started': r['comments']['date_started'],
-            'ratings': r['comments']['ratings'],
-            'hours_taken': r['comments']['hours_taken'],
-            'minutes_taken': r['comments']['minutes_taken']
+                            '_id': r['_id'],
+                            'date_comment': r['comments']['date_comment'],
+                            'body': r['comments']['body'],
+                            'date_started': r['comments']['date_started'],
+                            'ratings': r['comments']['ratings'],
+                            'hours_taken': r['comments']['hours_taken'],
+                            'minutes_taken': r['comments']['minutes_taken']
             }
             trail_list.append(dictionary)
-    
     for each in trail_list:
         Trails.objects.raw({'_id': each['_id']}).update(
                 {"$pull": {
@@ -608,12 +649,14 @@ def delete_profile(hiker_id):
 
 """
 Route to add new comment
-1. get current logged in user, 
+1. get current logged in user,
 2. get trails object, get user profile, display form
 3. if form is validated, try save the comments into the database.
 4. if there's an exception, pull the save comment from database
 5. flash the error message
 """
+
+
 @app.route('/trails/new-comments/<trail_id>', methods=['GET', 'POST'])
 @flask_login.login_required
 def add_comment(trail_id):
@@ -622,7 +665,8 @@ def add_comment(trail_id):
     current_trail = Trails.objects.get({'_id': ObjectId(trail_id)})
     form = CommentsForm()
     if form.validate_on_submit():
-        #sightings = request.form.getlist('sightings')          #enabling this line gets test to work
+        # sightings = request.form.getlist('sightings')
+        # this line makes test_comments.py work
         sightings = [objects['tag'] for objects in form.sightings.data]
         comment = Comment(
             author=profile,
@@ -638,31 +682,36 @@ def add_comment(trail_id):
         comment_date = comment.date_comment.strftime("%b, %d %Y, %H:%M")
         try:
             current_trail.save()
-            flash(f"New comments by '{comment}', on '{comment_date}' have been added.", 'teal')
+            flash(f"New comments by '{comment}', on '{comment_date}'"
+                  f'have been added.',
+                  'teal')
             return redirect(url_for('get_trail', trail_id=trail_id))
         except ValidationError as ve:
             current_trail.comments.pop()
-            comment_errors = ve.message['comments'][-1]
-            flash(comment_errors, 'deep-orange darken-3')
-    return render_template('trails/new_comments.template.html', form=form, current_trail=current_trail)
+            print(ve)
+            print(ve.message)
+            flash(ve, 'deep-orange darken-3')
+    return render_template('trails/new_comments.template.html', form=form,
+                           current_trail=current_trail)
 
 
 """
 Route to edit new comment
-1. get current logged in user, 
+1. get current logged in user,
 2. check that logged in user is the author of the comment
 3. if form is validated, save the comments into the database.
-4. Add logic to flash error msg and prevent illegal access to editting comment by non comment owner
+4. add logic to flash error msg and prevent illegal access to editting comment by non comment owner
 """
+
+
 @app.route('/trails/edit-comment/<trail_id>/<int:n>', methods=['GET', 'POST'])
 @flask_login.login_required
 def edit_comment(trail_id, n):
     user = flask_login.current_user
-    profile = Hiker.objects.get({'_id': user.id})
     current_trail = Trails.objects.get({'_id': ObjectId(trail_id)})
     comment_to_edit = current_trail.comments[n]
     trail_name = current_trail.trail_name
-    if comment_to_edit.author._id != user.id :
+    if comment_to_edit.author._id != user.id:
         error_msg = "You're not authorized to edit this comment"
         flash(error_msg, 'deep-orange darken-3')
         return redirect(url_for('get_trail', trail_id=trail_id))
@@ -672,37 +721,46 @@ def edit_comment(trail_id, n):
         try:
             Trails.objects.raw({'_id': ObjectId(trail_id)}).update(
                 {"$set": {
-                    "comments."+str(n)+".date_comment": datetime.datetime.now(),
+                    "comments."+str(n)+".date_comment":
+                    datetime.datetime.now(),
                     "comments."+str(n)+".body": form.body.data,
                     "comments."+str(n)+".sightings": sightings,
-                    "comments."+str(n)+".date_started": datetime.datetime.combine(form.date_started.data, datetime.time()),
+                    "comments."+str(n)+".date_started":
+                    datetime.datetime.combine(form.date_started.data,
+                                              datetime.time()),
                     "comments."+str(n)+".ratings": form.ratings.data,
                     "comments."+str(n)+".hours_taken": form.hours_taken.data,
-                    "comments."+str(n)+".minutes_taken": form.minutes_taken.data
+                    "comments."+str(n)+".minutes_taken":
+                    form.minutes_taken.data
                 }
                 })
             comment_date = datetime.datetime.now().strftime("%b, %d %Y, %H:%M")
-            flash(f"Comments have been editted by '{comment_to_edit.author}', on '{comment_date}'.", 'teal')
+            flash("Comments have been editted by"
+                  f"'{comment_to_edit.author}', on '{comment_date}'.", 'teal')
         except ValidationError as ve:
             current_trail.comments.pop()
             comment_errors = ve.message['comments'][-1]
             flash(comment_errors, 'deep-orange darken-3')
         return redirect(url_for('get_trail', trail_id=trail_id))
-    return render_template('trails/edit_comments.template.html', form=form, comment = comment_to_edit, n=n, trail_id=trail_id, trailName = trail_name)
+    return render_template('trails/edit_comments.template.html', form=form,
+                           comment=comment_to_edit, n=n, trail_id=trail_id,
+                           trailName=trail_name)
 
 
 """
 Route to delete comment
-1. get current logged in user, 
+1. get current logged in user,
 2. check that logged in user is the author of the comment
-3. if he/she/they are the authenticated user, delete the comments from the database
+3. if he/she/they are the authenticated user,
+   delete the comments from the database
 4. else flash the error message
 5. return back to the trails view
 """
+
+
 @app.route('/trails/delete-comment/<trail_id>/<int:n>', methods=['POST'])
 @flask_login.login_required
 def delete_comment(trail_id, n):
-    user = flask_login.current_user
     current_trail = Trails.objects.get({'_id': ObjectId(trail_id)})
     comment_to_delete = current_trail.comments[n]
     try:
@@ -731,9 +789,11 @@ def delete_comment(trail_id, n):
 def page_unauthorized(e):
     return render_template('trails/401_error.html')
 
+
 @app.errorhandler(404)
 def page_not_found(e):
     return render_template('trails/404_error.html')
+
 
 # "magic code" -- boilerplate
 if __name__ == '__main__':

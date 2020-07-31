@@ -136,3 +136,7 @@ he/she will see a modal to confirm the deletion.
 * If the deletion is confirmed, all the user's comments are pulled out of the database (the comments are in embedded list).
 * Then the user will be logged out of the session.
 * Finally the user's profile will be deleted in the database.
+
+### Bugs
+1. One of the major bugs encountered is during the writing of the automated test for post,edit and delete comment. The form will not validated
+when posting the data back to the route. This is due to the way the dynamic field for the form is being created. This needs more time to debug.
