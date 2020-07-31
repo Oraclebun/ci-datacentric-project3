@@ -150,7 +150,7 @@ The steps to run the project locally are as follows:
 2. Sign up for a github account and login.
 3. Go to the github repository in this [link](https://github.com/Oraclebun/ci-datacentric-project3)
 4. Click on the fork button on the upper right of the 
-website just below your navbar profile image. ![Fork Button](/static/image/readme_image/blob/master/Bootcamp-Fork.png?raw=true)
+website just below your navbar profile image. ![Fork Button](https://github.com/Oraclebun/ci-datacentric-project3/blob/master/static/image/readme_image/Bootcamp-Fork.png)
 5. You will now be able to see the project in your own repository in your github page.
 6. On your own repository, look for this project and click to go into the site.
 7. At the top right of your repository
