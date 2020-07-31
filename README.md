@@ -153,4 +153,5 @@ The steps to run the project locally are as follows:
 website just below your navbar profile image. ![Fork Button](https://github.com/Oraclebun/ci-datacentric-project3/blob/master/static/image/readme_image/Bootcamp-Fork.png)
 5. You will now be able to see the project in your own repository in your github page.
 6. On your own repository, look for this project and click to go into the site.
-7. At the top right of your repository
+7. At the top right of your repository, you will be able to see the green coloured Gitpod button like the picture below:
+![Gitpod Button](https://github.com/Oraclebun/ci-datacentric-project3/blob/master/static/image/readme_image/Gitpod_link.png)
