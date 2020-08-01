@@ -253,8 +253,8 @@ $ heroku config:set API_SECRET=''
 $ heroku config:set UPLOAD_PRESET=''
 ```
 
-13. Finally, the deployed url can be accessed from Heroku dashboard in their website (https://dashboard.heroku.com/apps/`<projectname>`)
-where the project name is the name of the deployed project via an 'Open App" button on the dashboard, else the deployed link can 
+13. Finally, the deployed url can be accessed from Heroku dashboard in their website : `https://dashboard.heroku.com/apps/projectname`
+where the [project name] is the name of the deployed project via an 'Open App" button on the dashboard, else the deployed link can 
 also be found in the terminal message just right after executing step 11.
 
 ## Acknowledgements and Credits
