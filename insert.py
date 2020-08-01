@@ -152,7 +152,7 @@ trail_ids = Trails.objects.bulk_create([
         elevation=50,
         route_type='Loop',
         difficulty='Moderate',
-        description='Torc Waterfall is approximately 7 kilometres from Killarney Town and approx 2.5 kilometres from the motor entrance to Muckross House and is signposted from a carpark off the N71. A short walk of approx 200 metres brings you to the waterfall. From that point steps lead to another viewing point at a higher altitude that provides a view over the Middle Lake. The path is also part of the Kerry Way long distance walking route and a starting point for circular walking routes which are indicated by a map down at the start of the trail beside the car park. The waterfall which is approximately 20 metres high is at its best after heavy rainfall.',
+        description='Torc Waterfall is approximately 7 kilometres from Killarney Town and approx 2.5 kilometres from the motor entrance to Muckross House and is signposted from a carpark off the N71. A short walk of approx 200 metres brings you to the waterfall. From that point steps lead to another viewing point at a higher altitude that provides a view over the Middle Lake. The path is also part of the Kerry Way long distance walking route. The waterfall which is approximately 20 metres high is at its best after heavy rainfall.',
         centrepoint={'type': 'Point', 'coordinates': [-9.506368, 52.012555]},
         waypoints={'type': 'LineString', 'coordinates': [
             [-9.502423, 52.019564], [-9.506909, 52.016831], [-9.508434, 52.008956], [-9.507466, 52.006069], [-9.5066471, 52.005025]]},
@@ -295,7 +295,7 @@ trail_ids = Trails.objects.bulk_create([
         route_type='Loop',
         difficulty='Easy',
         description="Maungakiekie / One Tree Hill is a 182-metre (597 ft) volcanic peak in Auckland, New Zealand. It is an important memorial place for both Māori and other New Zealanders. The suburb around the base of the hill is also called One Tree Hill. It is surrounded by the suburbs of Royal Oak to the west, and clockwise, Epsom, Greenlane, Oranga, and Onehunga. The summit provides views across the Auckland area, and allows visitors to see both of Auckland's harbours.",
-        centrepoint={'type': 'Point', 'coordinates': []},
+        centrepoint={'type': 'Point', 'coordinates': [174.782990, -36.898316]},
         waypoints={'type': 'LineString', 'coordinates': [[174.786884, -36.896078], [174.787086, -36.901807], [174.780146, -36.904514], [
             174.783205, -36.899682], [174.778881, -36.900085], [174.781735, -36.897434], [174.786884, -36.896078]]},
         image="https://res.cloudinary.com/c7oud0311/image/upload/v1595141835/project3/loca15_ieytlt.jpg",

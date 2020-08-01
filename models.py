@@ -17,9 +17,9 @@ connect(MONGODB_URI)
 
 class Hiker(MongoModel):
     """
-    A model defining hiker, with hiker attribute, first name, last name, 
-    country of origin and e-mail. Profile pic is a url field that stores 
-    the link to the hiker's profile photo. Trails completed field refers 
+    A model defining hiker, with hiker attribute, first name, last name,
+    country of origin and e-mail. Profile pic is a url field that stores
+    the link to the hiker's profile photo. Trails completed field refers
     to the no. of trails completed by hiker currently.
     """
     fname = fields.CharField(min_length=2, max_length=30)
@@ -28,7 +28,7 @@ class Hiker(MongoModel):
     origin = fields.CharField(max_length=30)
     email = fields.EmailField()
     trails_completed = fields.IntegerField(min_value=0, default=0)
-    profile_pic = fields.URLField(required = True)
+    profile_pic = fields.URLField(required=True)
 
     def __str__(self):
         return f'{self.fname}({self.lname})'
@@ -36,7 +36,7 @@ class Hiker(MongoModel):
 
 class Location(MongoModel):
     """
-    A model defining location entity with embedded province and town 
+    A model defining location entity with embedded province and town
     information.
     """
     country = fields.CharField(max_length=30, required=True)
@@ -54,7 +54,7 @@ class Town(EmbeddedMongoModel):
 
 class Trails(MongoModel):
     """
-    A model defining trails entity undertaken by hikers. It has embedded 
+    A model defining trails entity undertaken by hikers. It has embedded
     comments which reference the hiker.
     """
     trail_name = fields.CharField(max_length=100, required=True)
@@ -67,7 +67,7 @@ class Trails(MongoModel):
     description = fields.CharField(max_length=600, required=True)
     centrepoint = fields.PointField(required=False)
     waypoints = fields.LineStringField(required=False)
-    image = fields.URLField(required = True)
+    image = fields.URLField(required=True)
     embed_route = fields.CharField(max_length=800, required=True)
     location = fields.ReferenceField(Location)
     comments = fields.EmbeddedDocumentListField('Comment', required=False)
@@ -78,15 +78,15 @@ class Trails(MongoModel):
 
 class Comment(EmbeddedMongoModel):
     """
-    A model that defines the reviews entity created by hikers. This 
+    A model that defines the reviews entity created by hikers. This
     model is embedded in each trail.
     """
     author = fields.ReferenceField(Hiker)
     date_comment = fields.DateTimeField(default=datetime.datetime.now())
-    body = fields.CharField(max_length=250, blank = False)
+    body = fields.CharField(max_length=250, blank=False)
     sightings = fields.ListField(fields.CharField(max_length=20))
     ratings = fields.IntegerField(min_value=1, max_value=5)
-    date_started = fields.DateTimeField(blank = False)
+    date_started = fields.DateTimeField(blank=False)
     hours_taken = fields.IntegerField(min_value=0, max_value=48)
     minutes_taken = fields.IntegerField(min_value=0, max_value=59)
 

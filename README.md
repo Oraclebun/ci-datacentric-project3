@@ -289,6 +289,12 @@ also be found in the terminal message just right after executing step 11.
 7. Appstore Badge in Footer [WorldVectorLogo](https://worldvectorlogo.com/logo/download-on-the-app-store-apple-4)
 8. Playstore Badge in Footer [WorldVectorLogo](https://worldvectorlogo.com/logo/google-play-badge)
 
+### Data
+1. The Embedded maps are from [Google Map](https://www.google.com/maps/)
+2. Some of the trail data are from [All Trails](https://www.alltrails.com/)
+3. The others are manually obtained from Google Map by looking at the route on google map.
+4. City Centre to Shannon Fields Riverside Walk Trail data is taken from [Limerick.ie](https://www.limerick.ie/discover/eat-see-do/sports-recreation/activities/walking-routes/limerick-city-routes/shannon-fields)
+
 ### Technical Related Acknowledgements and Attribution
 1. My teachers in Trent Global College for teaching me the basics to do this project.
 2. The college teaching assistants John and Arif, for giving me valuable feedback. 

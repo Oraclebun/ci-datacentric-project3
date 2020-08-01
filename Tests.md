@@ -140,3 +140,14 @@ he/she will see a modal to confirm the deletion.
 ### Bugs
 1. One of the major bugs encountered is during the writing of the automated test for post,edit and delete comment. The form will not validated
 when posting the data back to the route. This is due to the way the dynamic field for the form is being created. This needs more time to debug.
+2. Another major bug happens if a comment is posted by a user. Then if the admin for some reason deletes the user profile in the database,
+Some of the trail pages that has his/her comments will not show up. This is because the comments are embedded in the trails models. And this
+causes inconsistencies in the data that will mess up the programming logic serving the webpages. The only way to handle this is to delete
+the profile via the application and not directly at the database.
+
+## Mobile Responsiveness
+1. The website is tested on [Amiresponsive](http://ami.responsivedesign.is/#) and the screenshot is show as below:
+![Responsive Screen Shot](https://github.com/Oraclebun/ci-datacentric-project3/blob/master/static/image/readme_image/Amiresponsive.jpg)
+2. It is also tested on [search.google/test/mobile-friendly](https://search.google.com/test/mobile-friendly) and the screenshot results:
+![Responsive Screen Shot](https://github.com/Oraclebun/ci-datacentric-project3/blob/master/static/image/readme_image/Mobile_responsivess.jpg)
+3. Next the website is tested on my personal phone which is an Iphone 6. The website fits into the mobile screen and the layout if fine.
