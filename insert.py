@@ -86,7 +86,7 @@ trail1 = Trails(
     elevation=192,
     route_type='Out and Back',
     difficulty='Moderate',
-    description='Lightly trafficked trail located near Wicklow, County Wicklow, Ireland. The trail is primarily used for hiking, walking, and nature trips. The summit of the Sugar Loaf is the place to be if you want the best views of Dublin and Wicklow.',
+    description='Lightly trafficked trail located near Wicklow, County Wicklow, Ireland. The trail is primarily used for hiking, walking, and nature trips. The summit of the Sugar Loaf is the place to be if you want the best views of Dublin and Wicklow. The highest point is 500m high. The route starts in a car park on Red Lane under a concrete arch.',
     centrepoint={'type': 'Point', 'coordinates': [-6.151483, 53.151632]},
     waypoints={'type': 'LineString', 'coordinates': [[-6.15454, 53.14446], [-6.151379, 53.151431], [-6.154846,
                                                                                                     53.158786], [-6.148495, 53.163254], [-6.139857, 53.157922], [-6.151379, 53.151431], [-6.15454, 53.14446]]},

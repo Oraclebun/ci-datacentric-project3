@@ -144,6 +144,14 @@ when posting the data back to the route. This is due to the way the dynamic fiel
 Some of the trail pages that has his/her comments will not show up. This is because the comments are embedded in the trails models. And this
 causes inconsistencies in the data that will mess up the programming logic serving the webpages. The only way to handle this is to delete
 the profile via the application and not directly at the database.
+3. While testing the website, I also discover a bug that on my locally run webpages and my website does not seem to match. While the deployed 
+website shows the layout to be just fine, the local website shows layout inconsistencies. Please see the images attached below. 
+As I have tried the deployed website on Google Chrome as well, I did not manage to find the bug or problem that cause the locally run webpages
+to have the bad layout.
+
+![Deployed Screen Shot](https://github.com/Oraclebun/ci-datacentric-project3/blob/master/static/image/readme_image/DeployedSS.jpg)
+
+![Local Screen Shot](https://github.com/Oraclebun/ci-datacentric-project3/blob/master/static/image/readme_image/LocalSS.jpg)
 
 ## Mobile Responsiveness
 1. The website is tested on [Amiresponsive](http://ami.responsivedesign.is/#) and the screenshot is show as below:
