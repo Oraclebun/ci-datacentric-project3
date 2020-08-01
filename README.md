@@ -27,7 +27,7 @@ The cards are chosen to be white to make the text and content stand out.
 7. The user presumably would want to see the trails sorted by ratings.
 
 ### Wireframes
-A basic wireframe was drawn with AdobeXD to act as a the scaffold for laying out the website. The wireframe can be found [here](https://github.com/Oraclebun/ci-datacentric-project3/tree/master/documents).
+A basic wireframe was drawn with AdobeXD to act as a the scaffold for laying out the website. The wireframe can be found [here](https://github.com/Oraclebun/ci-datacentric-project3/tree/master/documents/Project3_Wireframe.pdf).
 
 ### Features
 #### Index/ Home Page
