@@ -39,6 +39,7 @@
                     <span class="stars">{{trail.rating_average}}</span>
                 </div>
             <div class="card-content">
+            <a class="green-text" href="{{url_for('get_trail', trail_id = trail._id)}}"> <i class="material-icons">play_arrow</i></a>
             <p>{{trail.location.province.town.town}},{{trail.location.province.state}},{{trail.location.country}}</p>
             <span>{{trail.difficulty}}</span>
             <p>Distance: {{trail.distance}}</p>
