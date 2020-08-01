@@ -153,6 +153,10 @@ to have the bad layout.
 
 ![Local Screen Shot](https://github.com/Oraclebun/ci-datacentric-project3/blob/master/static/image/readme_image/LocalSS.jpg)
 
+** Latest note :
+Adjusted the iframe styling and added an additional div to embed the iframe to fix the layout bug issue as mentioned above. It seems to have 
+solve this bug.
+
 ## Mobile Responsiveness
 1. The website is tested on [Amiresponsive](http://ami.responsivedesign.is/#) and the screenshot is show as below:
 ![Responsive Screen Shot](https://github.com/Oraclebun/ci-datacentric-project3/blob/master/static/image/readme_image/Amiresponsive.jpg)
