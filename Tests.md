@@ -158,4 +158,4 @@ to have the bad layout.
 ![Responsive Screen Shot](https://github.com/Oraclebun/ci-datacentric-project3/blob/master/static/image/readme_image/Amiresponsive.jpg)
 2. It is also tested on [search.google/test/mobile-friendly](https://search.google.com/test/mobile-friendly) and the screenshot results:
 ![Responsive Screen Shot](https://github.com/Oraclebun/ci-datacentric-project3/blob/master/static/image/readme_image/Mobile_responsivess.jpg)
-3. Next the website is tested on my personal phone which is an Iphone 6. The website fits into the mobile screen and the layout if fine.
+3. Next the website is tested on my personal phone which is an Iphone 6. The website fits into the mobile screen and the layout is fine.
