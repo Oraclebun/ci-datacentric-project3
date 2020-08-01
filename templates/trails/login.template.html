@@ -6,34 +6,34 @@ Login Page
 
 {% block content %}
 <div class="container">
-<div class = "row">
-    <div class="col s12 m6">
-  <h4>Welcome, Please login:</h4>
+	<div class="row">
+		<div class="col s12 m6">
+			<h4>Welcome, Please login:</h4>
 
-{% with messages = get_flashed_messages(with_categories=true) %}
-{% if messages %}
-{% for category,message in messages %}
-<div class="z-depth-3 {{category}} flash">
-	<p><i class="material-icons">info</i>{{ message }}</p>
-</div>
-{% endfor %}
-{% endif %}
-{% endwith %}
+			{% with messages = get_flashed_messages(with_categories=true) %}
+			{% if messages %}
+			{% for category,message in messages %}
+			<div class="z-depth-3 {{category}} flash">
+				<p><i class="material-icons">info</i>{{ message }}</p>
+			</div>
+			{% endfor %}
+			{% endif %}
+			{% endwith %}
 
-   <form action = "{{url_for('login')}}" method="POST">
-          <div class="input-field col s12">
-          <input id="username" name="username" size="20" type="text" value="">
-          <label for="username" class="active">Username</label>
-          </div>
-          <div class="input-field col s12">
-          <input id="email" name="email" required="" type="email" value="">
-            <label for="email" class="active">E-mail</label>
-        </div>
-        <a class="waves-effect waves-light btn teal darken-4">
-        <input id="submit" name="submit" type="submit" value="Submit">
+			<form action="{{url_for('login')}}" method="POST">
+				<div class="input-field col s12">
+					<input id="username" name="username" size="20" type="text" value="">
+					<label for="username" class="active">Username</label>
+				</div>
+				<div class="input-field col s12">
+					<input id="email" name="email" required="" type="email" value="">
+					<label for="email" class="active">E-mail</label>
+				</div>
+				<a class="waves-effect waves-light btn teal darken-4">
+					<input id="submit" name="submit" type="submit" value="Submit">
         </a>
-    </form>
-        </div>
-    </div>
-  </div>
+			</form>
+		</div>
+	</div>
+</div>
 {% endblock %}

@@ -1,114 +1,125 @@
 <!DOCTYPE html>
-  <html lang="en">
-    <head>
-    <!--Let browser know website is optimized for mobile-->
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<html lang="en">
 
-    <!--Import Google Icon Font-->
-    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Ruluko&display=swap" rel="stylesheet">   <!--Headings-->
-    <link href="https://fonts.googleapis.com/css2?family=Crimson+Text&display=swap" rel="stylesheet">  <!--Body-->
+<head>
+	<!--Let browser know website is optimized for mobile-->
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-    <!--Font Awesome-->
-    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.14.0/css/all.css" integrity="sha384-HzLeBuhoNPvSl5KYnjx0BT+WB0QEEqLprO+NBkkk5gbc67FTaL7XIGa2w1L0Xbgc" crossorigin="anonymous">
+	<!--Import Google Icon Font-->
+	<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+	<link href="https://fonts.googleapis.com/css2?family=Ruluko&display=swap" rel="stylesheet">
+	<!--Headings-->
+	<link href="https://fonts.googleapis.com/css2?family=Crimson+Text&display=swap" rel="stylesheet">
+	<!--Body-->
 
-    <!-- Compiled and minified Materialize CSS -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+	<!--Font Awesome-->
+	<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.14.0/css/all.css"
+		integrity="sha384-HzLeBuhoNPvSl5KYnjx0BT+WB0QEEqLprO+NBkkk5gbc67FTaL7XIGa2w1L0Xbgc" crossorigin="anonymous">
 
-    <!-- Custom CSS -->
-    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/styles.css') }}">
-    
-    <title>{% block title %}{% endblock %}</title>
-    </head>
-    <body class="amber lighten-5">
-    
-    <nav>
-    <div class="nav-wrapper">
-      <a href="{{url_for('index')}}" class="brand-logo"><img class="filter-blanched" src="{{ url_for('static', filename='image/hiker.svg') }}"/></a>
-      <a href="#" data-target="mobile-nav" class="sidenav-trigger"><i class="material-icons">menu</i></a>
-      <ul class="right hide-on-med-and-down">
-        <li><a href="{{url_for('index')}}">Home</a></li>
-        <li><a href="{{url_for('show_all')}}">Directory</a></li>
-        <li><a href="{{url_for('show_by_rating')}}">Top Rated</a></li>
-        {% if auth_user != None %}
-        <li><a class="dropdown-trigger" href="#" data-target="dropdown1">
-            <i class="material-icons right">person</i></a></li>
-        {% else %}
-        <li><a href="{{url_for('create_profile')}}">Register</a></li>
-        <li><a href="{{url_for('login')}}">Login</a></li>
-        {% endif %}
-      </ul>
-    </div>
-  </nav>
+	<!-- Compiled and minified Materialize CSS -->
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
 
-  <!-- Dropdown Structure -->
-    <ul id="dropdown1" class="dropdown-content">
-    <li><a href="{{url_for('show_profile')}}">Manage Profile</a></li>
-    <li><a href="{{url_for('logout')}}">Logout</a></li>
-    </ul>
+	<!-- Custom CSS -->
+	<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/styles.css') }}">
 
-  <ul class="sidenav" id="mobile-nav">
-    <li><a href="{{url_for('index')}}">Home</a></li>
-    <li><a href="{{url_for('show_all')}}">Directory</a></li>
-    <li><a href="{{url_for('show_by_rating')}}">Top Rated</a></li>
-    {% if auth_user != None %}
-    <li><a class="dropdown-trigger" href="#" data-target="dropdown2">My Profile<i class="material-icons">arrow_drop_down</i></a></li>
-    {% else %}
-    <li><a href="{{url_for('create_profile')}}">Register</a></li>
-     <li><a href="{{url_for('login')}}">Login</a></li>
-    {% endif %}
-  </ul>
+	<title>{% block title %}{% endblock %}</title>
+</head>
 
-  <!-- Dropdown Structure -->
-        <ul id="dropdown2" class="dropdown-content">
-        <li><a href="{{url_for('show_profile')}}">Manage Profile</a></li>
-        <li><a href="{{url_for('logout')}}">Logout</a></li>
-        </ul>
-        
-    {% block content %}
-    {% endblock %}
+<body class="amber lighten-5">
 
-    <!-- Just include jQuery first just in case it is needed -->
-    <script src="https://code.jquery.com/jquery-3.5.1.js" integrity="sha256-QWo7LDvxbWT2tbbQ97B53yJnYU3WhH/C8ycbRAkjPDc=" crossorigin="anonymous"></script>
-    <!-- Compiled and minified JavaScript -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
-    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
-    {% block js %}
-    {% endblock %}
-    </body>
+	<nav>
+		<div class="nav-wrapper">
+			<a href="{{url_for('index')}}"
+				class="brand-logo"><img class="filter-blanched" src="{{ url_for('static', filename='image/hiker.svg') }}"/></a>
+				<a href="#" data-target="mobile-nav" class="sidenav-trigger"><i class="material-icons">menu</i></a>
+				<ul class="right hide-on-med-and-down">
+					<li><a href="{{url_for('index')}}">Home</a></li>
+					<li><a href="{{url_for('show_all')}}">Directory</a></li>
+					<li><a href="{{url_for('show_by_rating')}}">Top Rated</a></li>
+					{% if auth_user != None %}
+					<li><a class="dropdown-trigger" href="#" data-target="dropdown1">
+							<i class="material-icons right">person</i></a></li>
+					{% else %}
+					<li><a href="{{url_for('create_profile')}}">Register</a></li>
+					<li><a href="{{url_for('login')}}">Login</a></li>
+					{% endif %}
+				</ul>
+		</div>
+	</nav>
+
+	<!-- Dropdown Structure -->
+	<ul id="dropdown1" class="dropdown-content">
+		<li><a href="{{url_for('show_profile')}}">Manage Profile</a></li>
+		<li><a href="{{url_for('logout')}}">Logout</a></li>
+	</ul>
+
+	<ul class="sidenav" id="mobile-nav">
+		<li><a href="{{url_for('index')}}">Home</a></li>
+		<li><a href="{{url_for('show_all')}}">Directory</a></li>
+		<li><a href="{{url_for('show_by_rating')}}">Top Rated</a></li>
+		{% if auth_user != None %}
+		<li><a class="dropdown-trigger" href="#" data-target="dropdown2">My
+				Profile<i class="material-icons">arrow_drop_down</i></a></li>
+		{% else %}
+		<li><a href="{{url_for('create_profile')}}">Register</a></li>
+		<li><a href="{{url_for('login')}}">Login</a></li>
+		{% endif %}
+	</ul>
+
+	<!-- Dropdown Structure -->
+	<ul id="dropdown2" class="dropdown-content">
+		<li><a href="{{url_for('show_profile')}}">Manage Profile</a></li>
+		<li><a href="{{url_for('logout')}}">Logout</a></li>
+	</ul>
+
+	{% block content %}
+	{% endblock %}
+
+	<!-- Just include jQuery first just in case it is needed -->
+	<script src="https://code.jquery.com/jquery-3.5.1.js"
+		integrity="sha256-QWo7LDvxbWT2tbbQ97B53yJnYU3WhH/C8ycbRAkjPDc=" crossorigin="anonymous"></script>
+	<!-- Compiled and minified JavaScript -->
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+	<script src="{{ url_for('static', filename='js/main.js') }}"></script>
+	{% block js %}
+	{% endblock %}
+</body>
 
 
-        <footer class="page-footer">
-          <div class="container">
-            <div class="row">
-              <div class="col l4 s12">
-              <img class="filter-blanched" src="{{ url_for('static', filename='image/hiker.svg') }}"/>
-                <h5 class="white-text">Get the app</h5>
-                <a href="https://www.apple.com/uk/ios/app-store/"><img src="{{ url_for('static', filename='image/appstore.svg') }}"/></a>
-                <a href="https://play.google.com/store?hl=en"><img src="{{ url_for('static', filename='image/google-play.svg') }}"/></a>
-              </div>
-              <div class="col l6 offset-l2 s12">
-                <h5 class="white-text">Company</h5>
-                <ul>
-                  <li><a class="grey-text text-lighten-3" href="#!">About us</a></li>
-                  <li><a class="grey-text text-lighten-3" href="#!">Community Members</a></li>
-                  <li><a class="grey-text text-lighten-3" href="#!">Help and FAQ</a></li>
-                  <li><a class="grey-text text-lighten-3" href="#!">Contact Us</a></li>
-                </ul>
-                <h5 class="white-text">Connect With Us On:</h5>
-                <a class="grey-text text-lighten-4 right" href="https://www.instagram.com/?hl=en"><span class="media"><i class="fab fa-instagram"></i></span></a>
-                <a class="grey-text text-lighten-4 right" href="https://www.pinterest.com/"><span class="media"><i class="fab fa-pinterest"></i></span></a>
-                <a class="grey-text text-lighten-4 right" href="https://github.com/Oraclebun/"><span class="media"><i class="fab fa-github"></i></span></a>
-              </div>
-            </div>
-          </div>
-          <div class="footer-copyright">
-            <div class="container">
-            © 2020 
-            
-            </div>
-          </div>
-        </footer>
-            
-  </html>
+<footer class="page-footer">
+	<div class="container">
+		<div class="row">
+			<div class="col l4 s12">
+				<img class="filter-blanched" src="{{ url_for('static', filename='image/hiker.svg') }}"/>
+				<h5 class="white-text">Get the app</h5>
+				<a href="https://www.apple.com/uk/ios/app-store/"><img src="{{ url_for('static', filename='image/appstore.svg') }}"/></a>
+					<a href="https://play.google.com/store?hl=en"><img src="{{ url_for('static', filename='image/google-play.svg') }}"/></a>
+			</div>
+			<div class="col l6 offset-l2 s12">
+				<h5 class="white-text">Company</h5>
+				<ul>
+					<li><a class="grey-text text-lighten-3" href="#!">About us</a></li>
+					<li><a class="grey-text text-lighten-3" href="#!">Community Members</a></li>
+					<li><a class="grey-text text-lighten-3" href="#!">Help and FAQ</a></li>
+					<li><a class="grey-text text-lighten-3" href="#!">Contact Us</a></li>
+				</ul>
+				<h5 class="white-text">Connect With Us On:</h5>
+				<a class="grey-text text-lighten-4 right"
+					href="https://www.instagram.com/?hl=en"><span class="media"><i class="fab fa-instagram"></i></span></a>
+				<a class="grey-text text-lighten-4 right"
+					href="https://www.pinterest.com/"><span class="media"><i class="fab fa-pinterest"></i></span></a>
+				<a class="grey-text text-lighten-4 right"
+					href="https://github.com/Oraclebun/"><span class="media"><i class="fab fa-github"></i></span></a>
+			</div>
+		</div>
+	</div>
+	<div class="footer-copyright">
+		<div class="container">
+			© 2020
+
+		</div>
+	</div>
+</footer>
+
+</html>

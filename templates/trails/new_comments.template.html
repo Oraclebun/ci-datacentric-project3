@@ -6,101 +6,103 @@ Add Comments
 
 {% block content %}
 <div class="container">
-  <h4>Add Comments for {{current_trail.trail_name}}</h4>
+	<h4>Add Comments for {{current_trail.trail_name}}</h4>
 
-  <div class="row">
-    <form class="col s12" action="{{url_for('add_comment', trail_id=current_trail._id)}}" method="POST">
-      <div class="row">
-        {{form.csrf_token}}
-        <div class="input-field col s12 m6">
-          {{form.body(maxlength="250")}}
-          {{form.body.label}}
-        </div>
-      </div>
+	<div class="row">
+		<form class="col s12" action="{{url_for('add_comment', trail_id=current_trail._id)}}" method="POST">
+			<div class="row">
+				{{form.csrf_token}}
+				<div class="input-field col s12 m6">
+					{{form.body(maxlength="250")}}
+					{{form.body.label}}
+				</div>
+			</div>
 
-      <div class="row">
-        <div class="pre-label col s12 m4">
-          Date hiked:
-          <div class="input-field inline">
-            {{form.date_started (class="datepicker")}}
-            {{form.date_started.label}}
-          </div>
-        </div>
-        <div class="pre-label col s12 m4">
-          Time spent hiking this trail:
-          <div class="input-field inline">
-            {{form.hours_taken (type = "number")}}
-            {{form.hours_taken.label}}
-          </div>
-          <div class="input-field inline">
-            {{form.minutes_taken (type = "number")}}
-            {{form.minutes_taken.label}}
-          </div>
-        </div>
-      </div>
+			<div class="row">
+				<div class="pre-label col s12 m4">
+					Date hiked:
+					<div class="input-field inline">
+						{{form.date_started (class="datepicker")}}
+						{{form.date_started.label}}
+					</div>
+				</div>
+				<div class="pre-label col s12 m4">
+					Time spent hiking this trail:
+					<div class="input-field inline">
+						{{form.hours_taken (type = "number")}}
+						{{form.hours_taken.label}}
+					</div>
+					<div class="input-field inline">
+						{{form.minutes_taken (type = "number")}}
+						{{form.minutes_taken.label}}
+					</div>
+				</div>
+			</div>
 
-      <div class="row">
-        <div class="input-field col s12 m7">
-          <a class="btn-floating btn-small waves-effect waves-light green darken-1 lighten-2 tooltipped" id="add-sightings"
-            data-position="bottom" data-tooltip="Add Sightings"><i class="material-icons">add</i></a>
-          <table>
-            <thead>
-              <tr>
-                <th>
-                  Please input a phrase or a word to describe your sighting here:
-                </th>
-              </tr>
-            </thead>
-            <tbody id="sightings-container">
-              {% for subform in form.sightings %}
-              <tr id="sightings-{{loop.index0}}-form" class="subform" data-index="{{loop.index0}}">
-                <td>
-                  {{subform.tag}}
-                </td>
-                <td>
-                  <a class="remove btn-floating btn-small waves-effect waves-light blue accent-1 tooltipped"
-                    data-position="bottom" data-tooltip="Remove Sightings"><i class="material-icons">remove</i></a>
-                </td>
-              </tr>
-              {% endfor %}
+			<div class="row">
+				<div class="input-field col s12 m7">
+					<a class="btn-floating btn-small waves-effect waves-light green darken-1 lighten-2 tooltipped"
+						id="add-sightings" data-position="bottom"
+						data-tooltip="Add Sightings"><i class="material-icons">add</i></a>
+					<table>
+						<thead>
+							<tr>
+								<th>
+									Please input a phrase or a word to describe your sighting here:
+								</th>
+							</tr>
+						</thead>
+						<tbody id="sightings-container">
+							{% for subform in form.sightings %}
+							<tr id="sightings-{{loop.index0}}-form" class="subform" data-index="{{loop.index0}}">
+								<td>
+									{{subform.tag}}
+								</td>
+								<td>
+									<a class="remove btn-floating btn-small waves-effect waves-light blue accent-1 tooltipped"
+										data-position="bottom"
+										data-tooltip="Remove Sightings"><i class="material-icons">remove</i></a>
+								</td>
+							</tr>
+							{% endfor %}
 
-            </tbody>
-          </table>
-        </div>
-      </div>
+						</tbody>
+					</table>
+				</div>
+			</div>
 
-      <div class="row">
-        <fieldset class="rating">
-          Rate your hike experience:
-          <span class="star-form">
+			<div class="row">
+				<fieldset class="rating">
+					Rate your hike experience:
+					<span class="star-form">
           {% for rating in form.ratings %}
           <label>
             {{rating}}
             <span class="radio-star">
             </span>
-          </label>
-          {% endfor %}
-          </span>
-        </fieldset>
-      </div>
+					</label>
+					{% endfor %}
+					</span>
+				</fieldset>
+			</div>
 
-      <a class="waves-effect waves-light btn teal darken-4">{{form.submit()}}</a>
-    </form>
- </div>
-
-    {% with messages = get_flashed_messages(with_categories=true) %}
-	{% if messages %}
-    {% for category,message in messages %}
-    <div class=row>
-	<div class="z-depth-3 {{category}} flash col s12 m6">
-		<p>{{ message }}</p>
+			<a class="waves-effect waves-light btn teal darken-4">{{form.submit()}}</a>
+		</form>
 	</div>
-    </div>
-    {% endfor %}
+
+	{% with messages = get_flashed_messages(with_categories=true) %}
+	{% if messages %}
+	{% for category,message in messages %}
+	<div class="row">
+		<div class="z-depth-3 {{category}} flash col s12 m6">
+			<p>{{ message }}</p>
+		</div>
+	</div>
+	{% endfor %}
 	{% endif %}
 	{% endwith %}
 
- 
+
 </div>
 
 {% endblock %}

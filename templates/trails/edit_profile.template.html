@@ -2,84 +2,84 @@
 
 {% block content %}
 <div class="container">
-  <h4>Update Profile For: {{profile.username}}</h4>
-    
-  <div class="row">
-      <form class="col s12" action = "{{url_for('edit_profile', hiker_id=profile._id)}}" method="POST">
-        <div class="row">
-          {{form.csrf_token}}
-          <div class="input-field col s12 m6">
-            {{form.fname(size=30)}}
-            {{form.fname.label}}
-          </div>
-          <div class="input-field col s12 m6">
-            {{form.lname(size=20)}}
-            {{form.lname.label}}
-          </div>
-        </div>
+	<h4>Update Profile For: {{profile.username}}</h4>
 
-        <div class="row">
-          <div class="input-field col s12 m6">
-            {{form.origin(size=30)}}
-            {{form.origin.label}}
-          </div>
-          <div class="input-field col s12 m6">
-            {{form.email}}
-            {{form.email.label}}
-          </div>
-        </div>
-        
-        <div class="row">
-          <div class="pre-label col s12 m6">
-            No of trails completed:
-            <div class="input-field inline">
-              {{form.trails_completed}}
-              {{form.trails_completed.label}}
-              <span class="helper-text" data-error="invalid" data-success="valid">No. of trails completed in lifetime</span>
-            </div>
-          </div>
-        
-          <div class="pre-label col s12 m6">
-            Upload profile image:
-            <div class="file-field input-field">
-              <div class="file-path-wrapper">
-                <p class="file-path"></p>
-              </div>
-              <div class="btn cloudinary-button" id="upload_widget">
-                <span>Upload File</span>
-                {{form.profile_pic (id="uploaded_file_url") }}
-              </div>
-              <div class="col s3 m4">
-              <br/>
-                <img src="{{form.profile_pic.data}}" id="uploaded-image" class="responsive-img circle"/>
-              </div>
-            </div>
-        </div>
-        </div>
+	<div class="row">
+		<form class="col s12" action="{{url_for('edit_profile', hiker_id=profile._id)}}" method="POST">
+			<div class="row">
+				{{form.csrf_token}}
+				<div class="input-field col s12 m6">
+					{{form.fname(size=30)}}
+					{{form.fname.label}}
+				</div>
+				<div class="input-field col s12 m6">
+					{{form.lname(size=20)}}
+					{{form.lname.label}}
+				</div>
+			</div>
 
-        <a class="waves-effect waves-light btn teal darken-4 cloudinary-fileupload" id="profile-submit" data-cloudinary-field="image_id">{{form.submit()}}</a>
-      </form>
-    </div>
- 
-{% with messages = get_flashed_messages() %}
-{% if messages %}
-<div class="z-depth-3 deep-orange darken-2 flash">
-	{% for message in messages %}
-	<p>{{ message }}</p>
-	{% endfor %}
-</div>
-{% endif %}
-{% endwith %}
+			<div class="row">
+				<div class="input-field col s12 m6">
+					{{form.origin(size=30)}}
+					{{form.origin.label}}
+				</div>
+				<div class="input-field col s12 m6">
+					{{form.email}}
+					{{form.email.label}}
+				</div>
+			</div>
+
+			<div class="row">
+				<div class="pre-label col s12 m6">
+					No of trails completed:
+					<div class="input-field inline">
+						{{form.trails_completed}}
+						{{form.trails_completed.label}}
+						<span class="helper-text" data-error="invalid" data-success="valid">No. of trails completed in lifetime</span>
+					</div>
+				</div>
+
+				<div class="pre-label col s12 m6">
+					Upload profile image:
+					<div class="file-field input-field">
+						<div class="file-path-wrapper">
+							<p class="file-path"></p>
+						</div>
+						<div class="btn cloudinary-button" id="upload_widget">
+							<span>Upload File</span>
+							{{form.profile_pic (id="uploaded_file_url") }}
+						</div>
+						<div class="col s3 m4">
+							<br/>
+							<img src="{{form.profile_pic.data}}" id="uploaded-image" class="responsive-img circle"/>
+              </div>
+						</div>
+					</div>
+				</div>
+
+				<a class="waves-effect waves-light btn teal darken-4 cloudinary-fileupload" id="profile-submit"
+					data-cloudinary-field="image_id">{{form.submit()}}</a>
+		</form>
+	</div>
+
+	{% with messages = get_flashed_messages() %}
+	{% if messages %}
+	<div class="z-depth-3 deep-orange darken-2 flash">
+		{% for message in messages %}
+		<p>{{ message }}</p>
+		{% endfor %}
+	</div>
+	{% endif %}
+	{% endwith %}
 
 </div>
 
 {% endblock %}
 
 {% block js %}
-<script src="https://widget.cloudinary.com/v2.0/global/all.js" type="text/javascript"></script> 
+<script src="https://widget.cloudinary.com/v2.0/global/all.js" type="text/javascript"></script>
 <script>
-
-var generateSignature = function(callback, params_to_sign){
+	var generateSignature = function(callback, params_to_sign){
     $.ajax({
      url     : "{{url_for('signUploadRequest')}}",
      type    : "GET",
